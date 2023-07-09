@@ -1,10 +1,11 @@
-import AboutSection from "@/components/home/AboutSection";
-import Image from "next/image";
+import AboutSection from "@/components/home/about/AboutSection";
+import SkillSection from "@/components/home/skills/SkillsSection";
 
 export default function Page() {
   return (
     <>
       <AboutSection />
+      <SkillSection />
     </>
   );
 }

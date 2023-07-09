@@ -6,22 +6,43 @@ import Link from "next/link";
 import NavBarItem from "./NavBarItem";
 import { usePathname } from "next/navigation";
 import classNames from "classnames";
-
+import GlowingCircles from "./GlowingCircles";
+import { useScrollSpy } from "@raddix/use-scroll-spy";
 // TODO: Change Image to Netural Logo
 
 const Navbar = () => {
   const pathname = usePathname();
+  const activeIndex = useScrollSpy(["about", "skills"], { threshold: 0.7 });
+
   return (
-    <nav className="w-full container mx-auto border-b">
+    <nav className="w-full py-6 container mx-auto border-b bg-black">
       <div className="flex justify-between items-center">
-        <Link href={"/"}>
-          <Image
-            src="/logo/ld_tr_logo_nodetail.png"
-            width={120}
-            height={30}
-            alt="logo"
-          />
-        </Link>
+        <div className="grid grid-cols-1 justify-items-center place-items-center">
+          {pathname === "/" ? (
+            <a className="z-10 col-start-1 row-start-1" href={"#about"}>
+              <Image
+                src="/brand_only_white.png"
+                width={60}
+                height={60}
+                alt="logo"
+              />
+            </a>
+          ) : (
+            <Link href={"/"} className="z-10 col-start-1 row-start-1">
+              <Image
+                src="/brand_only_white.png"
+                width={60}
+                height={60}
+                alt="logo"
+              />
+            </Link>
+          )}
+          {pathname === "/" ? (
+            <GlowingCircles hidden={activeIndex === "about" ? false : true} />
+          ) : (
+            <GlowingCircles hidden={false} />
+          )}
+        </div>
         <div className="flex justify-evenly items-center space-x-4">
           {pathname === "/" ? (
             <></>
@@ -37,9 +58,12 @@ const Navbar = () => {
           >
             <ul className="flex justify-between items-center space-x-3">
               <li>
-                <Link href={""}>
-                  <NavBarItem name={"Skills"} />
-                </Link>
+                <a href={"#skills"}>
+                  <NavBarItem
+                    name={"Skills"}
+                    selected={activeIndex === "skills"}
+                  />
+                </a>
               </li>
               <li>
                 <Link href={""}>
