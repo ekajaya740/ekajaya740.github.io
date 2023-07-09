@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body className={`${jost.className} container mx-auto`}>
         <header className="z-[9999] sticky top-0">
           <Navbar />
