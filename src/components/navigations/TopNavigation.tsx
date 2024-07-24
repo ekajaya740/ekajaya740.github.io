@@ -31,8 +31,7 @@ export default function TopNavigation(props: TopNavigationProps) {
       onMenuOpenChange={setIsMenuOpen}
       className='bg-white border-b-1 border-black'
       maxWidth='2xl'>
-      <NavbarContent justify='start'></NavbarContent>
-      <NavbarContent justify='start'>
+      <NavbarContent justify='center'>
         <NavbarBrand>
           <Logo />
         </NavbarBrand>
