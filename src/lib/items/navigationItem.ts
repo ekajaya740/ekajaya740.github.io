@@ -9,11 +9,15 @@ export const navigationItems: NavigationItemProps[] = [
     href: '/',
   },
   {
-    title: 'Experiences',
-    href: '/experiences',
+    title: 'Projects',
+    href: '/projects',
   },
   {
-    title: 'Works',
-    href: '/works',
+    title: 'Blogs',
+    href: '/blogs',
+  },
+  {
+    title: 'Contact',
+    href: '/contact',
   },
 ];
