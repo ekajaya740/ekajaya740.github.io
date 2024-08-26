@@ -19,29 +19,55 @@ import {
 } from '@/lib/items/navigationItem';
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useMediaQuery, useToggle } from '@uidotdev/usehooks';
+import { Icon } from '@iconify/react';
 
 export type TopNavigationProps = {
   items: NavigationItemProps[];
 };
 
 export default function TopNavigation(props: TopNavigationProps) {
+  const [on, toggle] = useToggle(false);
+
+  const NavigationItemsComponent = () => (
+    <div className='flex flex-col md:flex-row py-6 md:items-center gap-4 md:gap-10 bg-primary'>
+      {navigationItems.map((item) => (
+        <ul key={item.href}>
+          <li>
+            {/* TODO: hover effect */}
+            <Link href={item.href} className='text-accent'>
+              {item.title}
+            </Link>
+          </li>
+        </ul>
+      ))}
+    </div>
+  );
+
   return (
-    <nav className='flex items-center justify-between sticky top-0 z-[9999] pt-3'>
-      <div></div>
-      <div className='flex gap-10 bg-white p-6 rounded-tl-lg rounded-bl-lg border-1 border-black items-center'>
-        {navigationItems.map((item) => (
-          <ul key={item.href}>
-            <li>
-              <Link href={item.href}>{item.title}</Link>
-            </li>
-          </ul>
-        ))}
+    <nav className=' sticky top-0 z-[9999] py-3 px-6 bg-primary'>
+      <div className='flex items-center justify-between'>
         <Image
           src={'/logo.svg'}
           alt='Work of Ekajaya Logo'
           width={48}
           height={48}
         />
+        <div className='hidden md:block'>
+          <NavigationItemsComponent />
+        </div>
+        {/* TODO: add button effect */}
+        <button
+          onClick={() => {
+            toggle();
+          }}
+          className='block md:hidden'>
+          <Icon icon='charm:menu-hamburger' className='text-3xl' />
+        </button>
+      </div>
+      {/* TODO: add animation */}
+      <div className={classNames({ hidden: !on, block: on })}>
+        <NavigationItemsComponent />
       </div>
     </nav>
   );

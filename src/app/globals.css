@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-[#FFFEEE];
+}
+
+h1 {
+  @apply text-accent;
+}
+
+h2 {
+  @apply text-accent;
+}
+
+h3 {
+  @apply text-accent;
+}
+
+h4 {
+  @apply text-accent;
+}
+
+h5 {
+  @apply text-accent;
+}
+
+h6 {
+  @apply text-accent;
+}
+
+p {
+  @apply text-accent;
+}
+
+.text-stroke {
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black;
+}
