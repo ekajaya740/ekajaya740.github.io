@@ -11,13 +11,15 @@ const config: Config = {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    colors: {
-      ...colors,
-      primary: '#FFFEEE',
-      accent: '#1E1E1E',
+    extend: {
+      colors: {
+        primary: '#FFFEEE',
+        secondary: '#1E1E1E',
+        linkedin: '#0072B1',
+        github: '#171515',
+      },
     },
   },
-  // darkMode: 'class',
   // plugins: [nextui()],
 };
 export default config;

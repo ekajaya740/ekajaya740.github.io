@@ -7,34 +7,34 @@ body {
 }
 
 h1 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 h2 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 h3 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 h4 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 h5 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 h6 {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 p {
-  @apply text-accent;
+  @apply text-secondary;
 }
 
 .text-stroke {
-  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
-    1px 1px 0 black;
+  text-shadow: -1px -1px 0 #1e1e1e, 1px -1px 0 #1e1e1e, -1px 1px 0 #1e1e1e,
+    1px 1px 0 #1e1e1e;
 }
