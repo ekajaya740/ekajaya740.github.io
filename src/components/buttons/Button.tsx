@@ -12,7 +12,7 @@ export type ButtonProps = {
 
 export default function Button(props: ButtonProps) {
   const classes = classNames(
-    'inline-flex rounded-xl shadow-md p-2',
+    'inline-flex rounded-xl shadow-md p-2 items-center gap-3',
     props.className
   );
 

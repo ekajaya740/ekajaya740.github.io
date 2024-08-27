@@ -17,6 +17,8 @@ const config: Config = {
         secondary: '#1E1E1E',
         linkedin: '#0072B1',
         github: '#171515',
+        indonesia: '#FFFFFF',
+        uk: '#012169',
       },
     },
   },
