@@ -4,22 +4,28 @@ import classNames from 'classnames';
 import ChipsGroup from '../groups/ChipsGroup';
 
 export default function AboutMeSection() {
+  const ResumeButton = () => (
+    <Button
+      title='Look at My Resumé'
+      icon='openmoji:eyes'
+      className='bg-white'
+    />
+  );
+
   const aboutMe =
     'Results-oriented full-stack developer with 3+ years of experience crafting scalable web applications. Proficient in Next.js, React, and Figma to deliver exceptional user experiences. Successfully architected and implemented a complex internal information system, including a geolocation-based absence management module. Passionate about driving innovation and creating impactful digital solutions.';
   return (
     <section>
-      <div className='w-full h-full bg-secondary py-16 px-24'>
+      <div className='w-full h-full bg-secondary py-16 md:px-24 px-2'>
         <div className='md:rounded-md md:border md:border-white'>
-          <div className='px-14 py-16 space-y-10'>
+          <div className='px-14 py-16 space-y-6 md:space-y-10'>
             <div className='flex justify-between items-center'>
               <h2 className='text-white font-bold text-5xl'>About Me</h2>
-              <Button
-                title='Look at My Resumé'
-                icon='openmoji:eyes'
-                className='bg-white'
-              />
+              <div className='hidden md:block'>
+                <ResumeButton />
+              </div>
             </div>
-            <div className='grid grid-cols-2 gap-20'>
+            <div className='grid md:grid-cols-2 gap-20'>
               <div>
                 <p
                   className={classNames(
