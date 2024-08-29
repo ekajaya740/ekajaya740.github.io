@@ -15,7 +15,11 @@ export default function HyperUIImage(props: HyperUIImageProps) {
           {props.children && (
             <div className='absolute p-4 grid'>{props.children}</div>
           )}
-          <Image {...props.image} alt={props.image.alt} className='w-full' />
+          <Image
+            {...props.image}
+            alt={props.image.alt}
+            className='w-full aspect-video object-cover object-center'
+          />
         </div>
       </div>
     </div>

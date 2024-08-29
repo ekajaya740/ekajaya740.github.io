@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Email",
+    "icon": "material-symbols:mail",
+    "href": "mailto:ekajaya740@gmail.com"
+  },
+  {
+    "name": "GitHub",
+    "icon": "line-md:github-loop",
+    "href": "https://github.com/ekajaya740"
+  },
+  {
+    "name": "LinkedIn",
+    "icon": "line-md:linkedin",
+    "href": "https://linkedin.com/in/ekajaya740"
+  }
+]

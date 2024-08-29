@@ -1,31 +1,36 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import classNames from 'classnames';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
+import { ReactNode } from 'react';
 
 export type ButtonProps = {
   icon?: string;
-  title?: string;
+  title: string;
+  hideTitle?: boolean;
   className?: string;
   as?: 'link';
-  href?: string;
+  linkProps: LinkProps;
 };
 
 export default function Button(props: ButtonProps) {
   const classes = classNames(
     'inline-flex rounded-xl shadow-md p-2 items-center gap-3',
-    props.className
+    props.className,
+    'bg-white'
   );
 
   const Children = () => (
     <>
       {props.icon && <Icon icon={props.icon} />}
-      {props.title}
+      <span className={props.hideTitle ? 'hidden' : 'block'}>
+        {props.title}
+      </span>
     </>
   );
 
   if (props.as === 'link') {
     return (
-      <Link href={props.href ?? ''} className={classes}>
+      <Link {...props.linkProps} className={classes}>
         <Children />
       </Link>
     );

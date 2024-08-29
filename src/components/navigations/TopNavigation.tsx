@@ -19,42 +19,28 @@ import {
 } from '@/lib/items/navigationItem';
 import classNames from 'classnames';
 import Image from 'next/image';
-import { useMediaQuery, useToggle } from '@uidotdev/usehooks';
+import { useToggle } from '@uidotdev/usehooks';
 import { Icon } from '@iconify/react';
+import NavigationItems from './items/NavigationItems';
 
 export type TopNavigationProps = {
   items: NavigationItemProps[];
 };
 
-export default function TopNavigation(props: TopNavigationProps) {
+export default function TopNavigation() {
   const [on, toggle] = useToggle(false);
 
-  const NavigationItemsComponent = () => (
-    <div className='flex flex-col md:flex-row py-6 md:items-center gap-4 md:gap-10 bg-primary'>
-      {navigationItems.map((item) => (
-        <ul key={item.href}>
-          <li>
-            {/* TODO: hover effect */}
-            <Link href={item.href} className='text-accent'>
-              {item.title}
-            </Link>
-          </li>
-        </ul>
-      ))}
-    </div>
-  );
-
   return (
-    <nav className=' sticky top-0 z-[9999] py-3 px-6 bg-primary'>
+    <nav className='sticky top-0 z-[9999] py-6 px-6 bg-primary'>
       <div className='flex items-center justify-between'>
         <Image
           src={'/logo.svg'}
           alt='Work of Ekajaya Logo'
-          width={48}
-          height={48}
+          width={64}
+          height={64}
         />
         <div className='hidden md:block'>
-          <NavigationItemsComponent />
+          <NavigationItems />
         </div>
         {/* TODO: add button effect */}
         <button
@@ -67,7 +53,7 @@ export default function TopNavigation(props: TopNavigationProps) {
       </div>
       {/* TODO: add animation */}
       <div className={classNames({ hidden: !on, block: on })}>
-        <NavigationItemsComponent />
+        <NavigationItems />
       </div>
     </nav>
   );
