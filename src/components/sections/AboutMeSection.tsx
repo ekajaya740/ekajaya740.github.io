@@ -1,180 +1,65 @@
 import { lora } from '@/lib/fonts/lora';
-import Button from '../buttons/Button';
-import classNames from 'classnames';
 import ChipsGroup from '../groups/ChipsGroup';
+
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { languages, techStacks } from '@/lib/static/about-me';
+import clsx from 'clsx';
+import { Button } from '@nextui-org/react';
 
 export default function AboutMeSection() {
   const ResumeButton = () => (
-    <Button
-      title='Look at My Resumé'
-      icon='openmoji:eyes'
-      className='bg-white'
-    />
+    <Button color='primary' className='dark'>
+      <Icon icon={'openmoji:eyes'} /> Look at My Resumé
+    </Button>
   );
 
   const aboutMe =
     'Results-oriented full-stack developer with 3+ years of experience crafting scalable web applications. Proficient in Next.js, React, and Figma to deliver exceptional user experiences. Successfully architected and implemented a complex internal information system, including a geolocation-based absence management module. Passionate about driving innovation and creating impactful digital solutions.';
   return (
     <section>
-      <div className='w-full h-full bg-secondary py-16 md:px-24 px-2'>
-        <div className='md:rounded-md md:border md:border-white'>
-          <div className='px-14 py-16 space-y-6 md:space-y-10'>
+      <div className='bg-secondary px-2 md:px-24 py-16 w-full h-full'>
+        <div className='md:border-white md:border md:rounded-md'>
+          <div className='space-y-6 md:space-y-10 px-14 py-16'>
             <div className='flex justify-between items-center'>
-              <h2 className='text-white font-bold text-5xl'>About Me</h2>
-              <div className='hidden md:block'>
+              <h2 className='font-bold text-4xl text-white md:text-5xl'>
+                About Me
+              </h2>
+              <div className='md:block hidden'>
                 <ResumeButton />
               </div>
             </div>
-            <div className='grid md:grid-cols-2 gap-20'>
+            <div className='gap-20 grid lg:grid-cols-2'>
               <div>
                 <p
-                  className={classNames(
+                  className={clsx(
                     lora.className,
                     'text-white text-xl text-justify'
                   )}>
                   {aboutMe}
                 </p>
               </div>
-              <div className='grid gap-10'>
+              <div className='gap-10 grid'>
                 <ChipsGroup
                   title='Technical Skills'
-                  titleClassName='text-white'
-                  items={[
-                    {
-                      title: 'Next.js',
-                      icon: 'logos:nextjs-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'React.js',
-                      icon: 'logos:react',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Node.js',
-                      icon: 'logos:nodejs-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Flutter',
-                      icon: 'logos:flutter',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Dart',
-                      icon: 'logos:dart',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Figma',
-                      icon: 'logos:figma',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Google Cloud',
-                      icon: 'logos:google-cloud',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Google Maps API',
-                      icon: 'logos:google-maps',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'TypeScript',
-                      icon: 'logos:typescript-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'JavaScript',
-                      icon: 'logos:javascript',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Tailwind',
-                      icon: 'logos:tailwindcss-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Material UI',
-                      icon: 'logos:material-ui',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'HTML',
-                      icon: 'logos:html-5',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'CSS',
-                      icon: 'logos:css-3',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Docker',
-                      icon: 'logos:docker-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Git',
-                      icon: 'logos:git-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'GitHub',
-                      icon: 'logos:github-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Linux',
-                      icon: 'logos:linux-tux',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'SQL',
-                      icon: 'vscode-icons:file-type-sql',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Strapi',
-                      icon: 'logos:strapi-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'MySQL',
-                      icon: 'logos:mysql-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'PostgreSQL',
-                      icon: 'logos:postgresql',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'Postman',
-                      icon: 'logos:postman-icon',
-                      className: 'bg-white',
-                    },
-                    {
-                      title: 'REST API',
-                      icon: 'dashicons:rest-api',
-                      className: 'bg-white',
-                    },
-                  ]}
+                  titleClassName='text-white font-bold text-xl'
+                  items={techStacks.map((item) => ({
+                    children: item.name,
+                    startContent: <Icon icon={item.icon} />,
+                  }))}
                 />
                 <ChipsGroup
                   title='Languages'
-                  titleClassName='text-white'
-                  items={[
-                    {
-                      title: 'Indonesia',
-                      icon: 'twemoji:flag-indonesia',
-                    },
-                    { title: 'Englsh', icon: 'twemoji:flag-united-kingdom' },
-                  ]}
+                  titleClassName='text-white font-bold text-xl'
+                  items={languages.map((item) => ({
+                    children: item.name,
+                    startContent: <Icon icon={item.icon} />,
+                  }))}
                 />
               </div>
             </div>
+          </div>
+          <div className='flex justify-center items-center md:hidden'>
+            <ResumeButton />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import './globals.css';
 import { poppins } from '@/lib/fonts/poppins';
 import Footer from '@/components/footer/Footer';
 import { Providers } from './providers';
+import { navigationItems } from '@/lib/items/navigationItem';
 
 export default function RootLayout({
   children,
@@ -13,7 +14,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={poppins.className}>
         <Providers>
-          <TopNavigation />
+          <TopNavigation items={navigationItems} />
           {children}
           <Footer />
         </Providers>
