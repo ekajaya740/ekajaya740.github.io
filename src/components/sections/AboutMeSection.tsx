@@ -5,10 +5,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { languages, techStacks } from '@/lib/static/about-me';
 import clsx from 'clsx';
 import { Button } from '@nextui-org/react';
+import Link from 'next/link';
 
 export default function AboutMeSection() {
   const ResumeButton = () => (
-    <Button color='primary' className='dark'>
+    <Button color='primary' className='dark' as={Link} href='/resume'>
       <Icon icon={'openmoji:eyes'} /> Look at My Resumé
     </Button>
   );

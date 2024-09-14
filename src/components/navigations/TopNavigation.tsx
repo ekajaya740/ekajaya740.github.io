@@ -11,8 +11,6 @@ import {
   NavbarMenuToggle,
 } from '@nextui-org/react';
 import Logo from '../logo/Logo';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
 export type NavigationItemProps = {
   title: string;
