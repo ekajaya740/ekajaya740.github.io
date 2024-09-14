@@ -9,16 +9,16 @@ export type HyperUIImageProps = {
 export default function HyperUIImage(props: HyperUIImageProps) {
   return (
     <div>
-      <div className='group relative block'>
+      <div className='block relative w-full group'>
         <span className='absolute inset-0 bg-secondary'></span>
-        <div className='relative flex h-full transform items-end bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2'>
+        <div className='relative flex items-center bg-white w-full h-full transform transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2'>
           {props.children && (
-            <div className='absolute p-4 grid'>{props.children}</div>
+            <div className='absolute grid p-4'>{props.children}</div>
           )}
           <Image
             {...props.image}
             alt={props.image.alt}
-            className='w-full aspect-video object-cover object-center'
+            className='w-full aspect-video object-center object-cover'
           />
         </div>
       </div>

@@ -10,7 +10,6 @@ export default function FeaturedProjectsSection() {
             <br />
             Projects
           </h2>
-          {/* <ResumeButton /> */}
         </div>
         <FeaturedProjectsList />
       </div>

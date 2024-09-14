@@ -5,6 +5,7 @@ export const BaseProjectSchema = z.object({
   alt: z.string(),
   title: z.string(),
   period: z.string(),
+  href: z.string(),
 });
 
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
