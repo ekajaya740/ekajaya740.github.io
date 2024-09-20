@@ -32,8 +32,8 @@ export default function FeaturedProjectsCarousel() {
       <div className='embla' ref={emblaRef}>
         <div className='embla__container'>
           {featuredProjectsItem.map((item, index) => (
-            <div className='px-4 embla__slide'>
-              <ProjectsCard {...item} key={index} />
+            <div className='px-4 embla__slide' key={index}>
+              <ProjectsCard {...item} />
             </div>
           ))}
         </div>

@@ -26,7 +26,9 @@ export default function Footer() {
           <p className='font-bold text-white text-xl'>Explore Site</p>
           <div className='space-x-4'>
             {navigationItems.map((item) => (
-              <Link href={item.href}>{item.title}</Link>
+              <Link href={item.href} key={item.href}>
+                {item.title}
+              </Link>
             ))}
           </div>
         </div>
