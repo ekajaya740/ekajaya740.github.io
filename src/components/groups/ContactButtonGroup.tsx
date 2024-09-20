@@ -10,6 +10,7 @@ export type ContactButtonGroupProps = {
   hideTitle?: boolean;
   titleOrientation?: 'horizontal' | 'vertical';
   titleClassName?: string;
+  color?: 'primary' | 'secondary';
 };
 
 export default function ContactButtonGroup(props: ContactButtonGroupProps) {
@@ -34,11 +35,11 @@ export default function ContactButtonGroup(props: ContactButtonGroupProps) {
         {contacts.map((item, index) => (
           <Button
             size='lg'
-            color='secondary'
+            color={props.color ?? 'secondary'}
             key={index}
-            title={item.name}
             as={Link}
             isIconOnly
+            href={item.href}
             className={'text-2xl'}>
             <Icon icon={item.icon} />
           </Button>

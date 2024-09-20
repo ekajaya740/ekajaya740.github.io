@@ -21,7 +21,7 @@ export default function FeaturedProjectsCarousel() {
 
   return (
     <div className='space-y-4'>
-      <div className='flex justify-end space-x-3'>
+      <div className='flex justify-end gap-x-3'>
         <Button isIconOnly color='secondary' onPress={scrollPrev}>
           <Icon icon={'ion:chevron-back-circle-outline'} />
         </Button>

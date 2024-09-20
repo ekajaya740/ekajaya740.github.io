@@ -1,6 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import ContactButtonGroup from '../groups/ContactButtonGroup';
+import { navigationItems } from '@/lib/items/navigationItem';
+import { Link } from '@nextui-org/react';
 
 export default function Footer() {
   const copyright = `Copyright © ${new Date(
@@ -17,14 +20,18 @@ export default function Footer() {
           height={64}
         />
         <div className='block md:hidden'>
-          {/* <ContactButtonGroup hideTitle classNames={cbgCns} /> */}
+          <ContactButtonGroup hideTitle color='primary' />
         </div>
         <div className='space-y-4 md:place-self-end'>
           <p className='font-bold text-white text-xl'>Explore Site</p>
-          {/* <NavigationItems textColor='light' /> */}
+          <div className='space-x-4'>
+            {navigationItems.map((item) => (
+              <Link href={item.href}>{item.title}</Link>
+            ))}
+          </div>
         </div>
         <div className='md:block hidden'>
-          {/* <ContactButtonGroup hideTitle classNames={cbgCns} /> */}
+          <ContactButtonGroup hideTitle color='primary' />
         </div>
         <p className='md:block hidden font-thin text-sm text-white place-self-end'>
           {copyright}

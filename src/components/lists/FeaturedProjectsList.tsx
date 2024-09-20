@@ -4,7 +4,7 @@ import FeaturedProjectsCarousel from '../carousel/FeaturedProjectsCarousel';
 
 export default function FeaturedProjectsList() {
   return (
-    <div className='px-8'>
+    <div>
       <FeaturedProjectsCarousel />
     </div>
   );

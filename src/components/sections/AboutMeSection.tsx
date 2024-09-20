@@ -20,7 +20,7 @@ export default function AboutMeSection() {
     <section>
       <div className='bg-secondary px-2 md:px-24 py-16 w-full h-full'>
         <div className='md:border-white md:border md:rounded-md'>
-          <div className='space-y-6 md:space-y-10 px-14 py-16'>
+          <div className='space-y-6 md:space-y-10 px-8 md:px-14 py-4 md:py-16'>
             <div className='flex justify-between items-center'>
               <h2 className='font-bold text-4xl text-white md:text-5xl'>
                 About Me
@@ -57,10 +57,10 @@ export default function AboutMeSection() {
                   }))}
                 />
               </div>
+              <div className='flex justify-center items-center md:hidden'>
+                <ResumeButton />
+              </div>
             </div>
-          </div>
-          <div className='flex justify-center items-center md:hidden'>
-            <ResumeButton />
           </div>
         </div>
       </div>
