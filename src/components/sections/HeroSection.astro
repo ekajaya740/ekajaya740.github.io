@@ -1,5 +1,6 @@
 ---
 import { WoeHeatmap } from '@/components/react/shaders/WoeHeatmap';
+import { Icon } from 'astro-icon/components';
 ---
 
 <section id="hero" class="relative w-full h-screen overflow-hidden">
@@ -34,7 +35,7 @@ import { WoeHeatmap } from '@/components/react/shaders/WoeHeatmap';
           rel="noopener noreferrer"
           class="px-6 py-3 border border-border rounded-md font-mono text-sm font-medium hover:bg-secondary hover:border-foreground active:scale-[0.96] transition-colors"
         >
-          <iconify-icon icon="lucide:file-text" width="14" height="14" class="align-middle mr-1"></iconify-icon>
+          <Icon name="lucide:file-text" size={14} class="inline-block align-middle mr-1" />
           CV
         </a>
         <a

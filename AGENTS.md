@@ -6,7 +6,7 @@
 - **Framework**: Astro 6 (`astro.config.mjs`), static output mode (SSG)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (NOT `@astrojs/tailwind`)
 - **React Islands**: Only `WoeHeatmap.tsx` uses `client:only="react"` — all other sections are `.astro` components
-- **Icons**: Iconify web component (`<iconify-icon>`) via CDN loader in `<head>`. Do NOT use inline SVGs or `@iconify-icon/react`
+- **Icons**: `astro-icon` with `@iconify-json/lucide` — icons are inlined as SVG at build time. Use `<Icon name="lucide:icon-name" size={16} />` from `astro-icon/components`. New icons must be added to the `include` list in `astro.config.mjs`.
 - **Fonts**: Fontsource CSS imports in `src/styles/global.css` (Goldman, Sansation, Share Tech Mono)
 - **Blog**: Astro Content Collections v2 (loader: `glob`) with MDX support. Schema defined in `src/content.config.ts`
 
