@@ -1,0 +1,62 @@
+---
+import JsonLd from './JsonLd.astro';
+
+const personData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "I Putu Ekajaya Awidya Putra",
+  alternateName: "Ekajaya",
+  jobTitle: "Full-Stack Engineer",
+  description: "Full-stack engineer focused on building scalable, production-ready web applications, with strong expertise in backend systems and cloud-native infrastructure.",
+  url: Astro.site?.toString() || "https://workofekajaya.com",
+  image: new URL('/og-default.png', Astro.site).toString(),
+  sameAs: [
+    "https://github.com/ekajaya740",
+    "https://profill.link/ekajaya740",
+    "https://linkedin.com/in/ekajaya740",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Tabanan",
+    addressRegion: "Bali",
+    addressCountry: "Indonesia",
+  },
+  knowsAbout: [
+    "Spring Boot",
+    "Node.js",
+    "Next.js",
+    "Astro",
+    "React",
+    "TypeScript",
+    "PostgreSQL",
+    "Docker",
+    "Cloud Infrastructure",
+    "DevOps",
+  ],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Stikom Bali Institute of Technology and Business",
+  },
+  worksFor: [
+    {
+      "@type": "Organization",
+      name: "Re:creation via PT SUM Digital Konsultan",
+      jobTitle: "Fullstack Web Developer",
+      startDate: "2025-12",
+    },
+    {
+      "@type": "Organization",
+      name: "PT SUM Digital Konsultan",
+      jobTitle: "Fullstack Web Developer",
+      startDate: "2024-10",
+    },
+  ],
+  speaks: [
+    { "@type": "Language", name: "English" },
+    { "@type": "Language", name: "Indonesian" },
+    { "@type": "Language", name: "Japanese" },
+  ],
+};
+---
+
+<JsonLd data={personData} />

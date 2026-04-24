@@ -1,17 +1,21 @@
 ---
-
+import Layout from '@/layouts/BaseLayout.astro';
+import HeroSection from '@/components/sections/HeroSection.astro';
+import AboutSection from '@/components/sections/AboutSection.astro';
+import ExperienceSection from '@/components/sections/ExperienceSection.astro';
+import ProjectsSection from '@/components/sections/ProjectsSection.astro';
+import SkillsSection from '@/components/sections/SkillsSection.astro';
+import ContactSection from '@/components/sections/ContactSection.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Work of Ekajaya — Full-Stack Engineer"
+  description="I Putu Ekajaya Awidya Putra. Full-stack engineer building scalable, production-ready web applications with Spring Boot, Node.js, Next.js, Astro, and cloud-native infrastructure."
+>
+  <HeroSection />
+  <AboutSection />
+  <ExperienceSection />
+  <ProjectsSection />
+  <SkillsSection />
+  <ContactSection />
+</Layout>

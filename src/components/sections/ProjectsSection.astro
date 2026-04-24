@@ -1,0 +1,57 @@
+---
+const projects = [
+  {
+    name: 'Profill.link',
+    href: 'https://profill.link',
+    period: 'Aug 2025 — Present',
+    description:
+      'High-performance, customizable digital identity platform supporting multi-language profiles, dynamic theming, and contact-sharing features.',
+    stack: ['Astro', 'Hono', 'PostgreSQL', 'TimescaleDB', 'Redis', 'Cloudflare Workers'],
+  },
+  {
+    name: 'Confection Information System',
+    period: 'Jan — May 2024',
+    description:
+      'End-to-end web-based information system for CV. Khris Production, from UI/UX design to deployment.',
+    stack: ['Next.js', 'TypeScript', 'Golang', 'Fiber', 'Google Cloud Run'],
+  },
+];
+
+---
+
+<section id="projects" class="relative z-20 bg-background border-t border-border">
+  <div class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-16">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">PROJECTS</p>
+      <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground">
+        Selected projects.
+      </h2>
+    </header>
+
+    <div class="space-y-8">
+      {projects.map((p) => (
+        <article class="group p-6 md:p-8 border border-border rounded-xl hover:border-accent transition-colors">
+          <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-3">
+            <h3 class="text-lg font-bold text-foreground group-hover:text-accent transition-colors">
+              {p.href
+                ? <a href={p.href} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:underline underline-offset-4 decoration-accent/50">{p.name}<iconify-icon icon="lucide:external-link" width="14" height="14" class="opacity-50"></iconify-icon></a>
+                : p.name
+              }
+            </h3>
+            <time class="font-mono text-xs text-muted-foreground">{p.period}</time>
+          </div>
+
+          <p class="text-sm text-muted-foreground leading-relaxed mb-4">{p.description}</p>
+
+          <div class="flex flex-wrap gap-2">
+            {p.stack.map((tech) => (
+              <span class="px-2 py-1 text-[10px] font-mono border border-border rounded-full text-muted-foreground">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

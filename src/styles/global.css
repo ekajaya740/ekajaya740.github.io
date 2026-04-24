@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@import "@fontsource/sansation/300.css";
+@import "@fontsource/sansation/400.css";
+@import "@fontsource/sansation/700.css";
+@import "@fontsource/goldman/400.css";
+@import "@fontsource/goldman/700.css";
+@import "@fontsource/share-tech-mono/400.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@theme {
+  --color-background: #141414;
+  --color-foreground: #f5f5f5;
+  --color-card: #1c1c1c;
+  --color-card-foreground: #f5f5f5;
+  --color-border: #2e2e2e;
+  --color-input: #2e2e2e;
+  --color-primary: #f5f5f5;
+  --color-primary-foreground: #0a0a0a;
+  --color-secondary: #1e1e1e;
+  --color-secondary-foreground: #f5f5f5;
+  --color-muted: #2a2a2a;
+  --color-muted-foreground: #a0a0a0;
+  --color-accent: #dd0303;
+  --color-accent-foreground: #f5f5f5;
+  --color-destructive: #dd0303;
+  --color-ring: #3a3a3a;
+  --color-accent-yellow: #fbff1a;
+  --color-accent-blue: #1472ff;
+  --color-accent-warm: #dd0303;
+
+  --font-sans: "Sansation", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Goldman", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Share Tech Mono", ui-monospace, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: thin;
+    scrollbar-color: #2e2e2e #141414;
+  }
+
+  body {
+    background-color: #141414;
+    color: #f5f5f5;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background-color: rgba(221, 3, 3, 0.3);
+    color: #f5f5f5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
