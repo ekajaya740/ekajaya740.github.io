@@ -26,6 +26,7 @@ export function WoeHeatmap() {
 
   // Tailwind breakpoints for additional fine-tuning if needed elsewhere
   const isMobilePortrait = useMediaQuery('(max-width: 767px) and (orientation: portrait)');
+  const isTabletPortrait = useMediaQuery('(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)');
   const isShortScreen = useMediaQuery('(max-height: 600px)');
 
   const preset = getPreset(aspect);
@@ -33,9 +34,8 @@ export function WoeHeatmap() {
   // additional fine-tune: zoom out a bit when screen is very short
   const scale = isShortScreen ? Math.max(0.6, preset.scale - 0.15) : preset.scale;
 
-  // on narrow portrait, shift logo slightly down for better vertical balance
   const offsetX = preset.offsetX;
-  const offsetY = isMobilePortrait ? 0.1 : isShortScreen ? 0.05 : preset.offsetY;
+  const offsetY = isMobilePortrait ? -0.45 : isTabletPortrait ? 0.35 : isShortScreen ? -0.4 : preset.offsetY;
 
   return (
     <div ref={ref} style={{ width: '100%', height: '100%' }}>

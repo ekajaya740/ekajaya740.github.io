@@ -23,7 +23,7 @@ const projects = [
   <div class="max-w-3xl mx-auto px-6 py-24 md:py-32">
     <header class="mb-16">
       <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">PROJECTS</p>
-      <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground">
+        <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground text-balance">
         Selected projects.
       </h2>
     </header>
@@ -41,7 +41,7 @@ const projects = [
             <time class="font-mono text-xs text-muted-foreground">{p.period}</time>
           </div>
 
-          <p class="text-sm text-muted-foreground leading-relaxed mb-4">{p.description}</p>
+          <p class="text-sm text-muted-foreground leading-relaxed mb-4 text-pretty">{p.description}</p>
 
           <div class="flex flex-wrap gap-2">
             {p.stack.map((tech) => (
