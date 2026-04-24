@@ -1,4 +1,6 @@
 ---
+import { TracingBeam } from '@/components/react/TracingBeam';
+
 const experiences = [
   {
     role: 'Fullstack Web Developer',
@@ -39,33 +41,33 @@ const experiences = [
   <div class="max-w-3xl mx-auto px-6 py-24 md:py-32">
     <header class="mb-16">
       <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">EXPERIENCE</p>
-        <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground text-balance">
+      <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground text-balance">
         Where I've worked.
       </h2>
     </header>
 
-    <div class="space-y-12">
-      {experiences.map((exp, i) => (
-        <article class="group relative pl-6 md:pl-8 border-l border-border hover:border-accent transition-colors">
-          <div class="absolute -left-[5px] top-1 w-[9px] h-[9px] rounded-full bg-border group-hover:bg-accent transition-colors" />
+    <TracingBeam client:only="react">
+      <div class="space-y-12 pl-6 md:pl-8">
+        {experiences.map((exp) => (
+          <article class="group">
+            <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-3">
+              <h3 class="text-lg font-bold text-foreground">{exp.role}</h3>
+              <time class="font-mono text-xs text-muted-foreground">{exp.period}</time>
+            </div>
 
-          <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-3">
-            <h3 class="text-lg font-bold text-foreground">{exp.role}</h3>
-            <time class="font-mono text-xs text-muted-foreground">{exp.period}</time>
-          </div>
+            <p class="font-mono text-sm text-accent mb-3">{exp.org}</p>
 
-          <p class="font-mono text-sm text-accent mb-3">{exp.org}</p>
-
-          <ul class="space-y-2">
-            {exp.highlights.map((h) => (
-              <li class="text-sm text-muted-foreground leading-relaxed flex items-start gap-2">
-                <span class="mt-1.5 w-1 h-1 rounded-full bg-muted-foreground flex-shrink-0" />
-                <span>{h}</span>
-              </li>
-            ))}
-          </ul>
-        </article>
-      ))}
-    </div>
+            <ul class="space-y-2">
+              {exp.highlights.map((h) => (
+                <li class="text-sm text-muted-foreground leading-relaxed flex items-start gap-2">
+                  <span class="mt-1.5 w-1 h-1 rounded-full bg-muted-foreground flex-shrink-0" />
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </TracingBeam>
   </div>
 </section>
