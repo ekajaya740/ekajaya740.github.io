@@ -1,0 +1,64 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout
+  title={`${entry.data.title} — Blog`}
+  description={entry.data.description}
+  image={entry.data.coverImage}
+  type="article"
+  publishedTime={entry.data.pubDate.toISOString()}
+  modifiedTime={entry.data.updatedDate?.toISOString()}
+>
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-12">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">BLOG</p>
+
+      <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
+        {entry.data.title}
+      </h1>
+
+      <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <span>By {entry.data.author}</span>
+        <time datetime={entry.data.pubDate.toISOString()}>
+          {entry.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+        {entry.data.updatedDate && (
+          <span>
+            (Updated {entry.data.updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })})
+          </span>
+        )}
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2">
+        {entry.data.tags.map((tag) => (
+          <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag}</span>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-accent hover:prose-a:text-accent/80 prose-strong:text-foreground prose-code:text-accent-yellow prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-lg">
+      <Content />
+    </div>
+
+    <nav class="mt-16 pt-8 border-t border-border">
+      <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">← Back to all posts</a>
+    </nav>
+  </article>
+</Layout>

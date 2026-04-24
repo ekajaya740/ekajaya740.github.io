@@ -1,0 +1,80 @@
+---
+const skills = [
+  {
+    category: 'Languages',
+    items: ['Java', 'TypeScript', 'JavaScript', 'Golang', 'Ruby', 'SQL'],
+  },
+  {
+    category: 'Frontend',
+    items: ['Next.js', 'React', 'Vue', 'Nuxt', 'Astro', 'Tailwind CSS'],
+  },
+  {
+    category: 'Backend',
+    items: ['Spring Boot', 'Node.js', 'Hono', 'Fiber (Golang)', 'Ruby on Rails'],
+  },
+  {
+    category: 'Database',
+    items: ['PostgreSQL', 'TimescaleDB', 'MySQL', 'Redis', 'IndexedDB'],
+  },
+  {
+    category: 'DevOps & Tools',
+    items: ['Docker', 'Git', 'GitHub Actions', 'CI/CD', 'Linux', 'Keycloak'],
+  },
+  {
+    category: 'Cloud & Infra',
+    items: ['Cloudflare Workers', 'Vercel', 'Google Cloud', 'Railway', 'Neon'],
+  },
+];
+---
+
+<section id="skills" class="relative z-20 bg-background border-t border-border">
+  <div class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-16">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">SKILLS</p>
+      <h2 class="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold text-foreground">
+        What I know.
+      </h2>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      {skills.map((group) => (
+        <div>
+          <h3 class="text-sm font-bold text-foreground mb-3 font-mono tracking-wide">
+            {group.category}
+          </h3>
+          <ul class="flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <li class="text-xs font-mono px-2 py-1 bg-secondary border border-border rounded-full text-muted-foreground">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-20 pt-12 border-t border-border">
+      <header class="mb-8">
+        <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">EDUCATION & CERTIFICATIONS</p>
+      </header>
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-base font-bold text-foreground">Bachelor of Information Systems</h3>
+          <p class="text-sm text-muted-foreground">Stikom Bali Institute of Technology and Business · 2020 — 2024 · GPA 3.79/4.0</p>
+          <p class="text-sm text-muted-foreground mt-1">Thesis: "Website-based Confection Information System for CV. Khris Production"</p>
+        </div>
+
+        <div class="pt-4 space-y-2">
+          <h3 class="text-base font-bold text-foreground mb-2">Certifications & Awards</h3>
+          <ul class="space-y-1 text-sm text-muted-foreground">
+            <li>Certified Programmer (CPro)</li>
+            <li>IELTS Academic — 7.0 overall (Reading 8.5, Listening 6.5, Writing 6.0, Speaking 6.0)</li>
+            <li>3rd Place — App Development Competition (2022)</li>
+            <li>3rd Place — Capture The Flag (2020)</li>
+            <li>3rd Place — Programming Competition Udayana (2019)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
