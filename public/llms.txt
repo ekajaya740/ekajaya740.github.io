@@ -9,7 +9,7 @@ This is the portfolio website of I Putu Ekajaya Awidya Putra, a full-stack engin
 - RSS Feed: https://workofekajaya.com/rss.xml
 
 ## Contact
-- Email: ekajaya740@gmail.com
+- Email: contact@workofekajaya.com
 - GitHub: https://github.com/ekajaya740
 - LinkedIn: https://linkedin.com/in/ekajaya740
 - Digital Profile: https://profill.link/ekajaya740
