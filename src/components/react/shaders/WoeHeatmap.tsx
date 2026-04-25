@@ -1,60 +1,85 @@
 import { Heatmap } from '@paper-design/shaders-react';
-import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useContainerSize } from '../../../hooks/useContainerSize';
 
-interface ShaderPreset {
-  scale: number;
-  offsetX: number;
-  offsetY: number;
+export interface WoeHeatmapProps {
+  /** Source image for the heatmap shape */
+  image?: string;
+  /** Heatmap gradient colors (max 10) */
+  colors?: string[];
+  /** Background color behind the heatmap */
+  colorBack?: string;
+  /** Heat intensity near shape edges (0–1) */
+  contour?: number;
+  /** Direction of heatwaves in degrees (0–360) */
+  angle?: number;
+  /** Grain noise across the graphic (0–1) */
+  noise?: number;
+  /** Heated area inside the shape (0–1) */
+  innerGlow?: number;
+  /** Heated area outside the shape (0–1) */
+  outerGlow?: number;
+  /** Animation speed (0 = static, 1 = normal, negative = reverse) */
+  speed?: number;
+  /** Overall zoom level (0.01–4) */
+  scale?: number;
+  /** Horizontal offset of center (−1 to 1) */
+  offsetX?: number;
+  /** Vertical offset of center (−1 to 1) */
+  offsetY?: number;
+  /** How the shader fits the canvas */
+  fit?: 'none' | 'contain' | 'cover';
+  /** Overall rotation in degrees (0–360) */
+  rotation?: number;
+  /** Horizontal origin for positioning (0–1) */
+  originX?: number;
+  /** Vertical origin for positioning (0–1) */
+  originY?: number;
 }
 
-function getPreset(aspect: number): ShaderPreset {
-  // portrait mobile & square-ish narrow screens
-  if (aspect < 0.75) return { scale: 1.0, offsetX: 0, offsetY: 0 };
-  // mobile landscape / tablet portrait
-  if (aspect < 1.0) return { scale: 0.75, offsetX: 0.05, offsetY: 0 };
-  // tablet landscape / standard laptop
-  if (aspect < 1.6) return { scale: 0.8, offsetX: 0.15, offsetY: 0 };
-  // standard desktop widescreen
-  if (aspect < 2.2) return { scale: 0.95, offsetX: 0.3, offsetY: 0 };
-  // ultra-wide
-  return { scale: 1.1, offsetX: 0.25, offsetY: 0 };
-}
+const defaults: Required<WoeHeatmapProps> = {
+  image: '/logo.webp',
+  colors: ['#dd0303', '#fbff1a', '#1472ff'],
+  colorBack: '#1c1c1c',
+  contour: 0.23,
+  angle: 180,
+  noise: 0.27,
+  innerGlow: 0.68,
+  outerGlow: 0.3,
+  speed: 0.96,
+  scale: 1,
+  offsetX: 0,
+  offsetY: 0,
+  fit: 'contain',
+  rotation: 0,
+  originX: 0.5,
+  originY: 0.5,
+};
 
-export function WoeHeatmap() {
-  const { ref, width, height, aspect } = useContainerSize();
-
-  // Tailwind breakpoints for additional fine-tuning if needed elsewhere
-  const isMobilePortrait = useMediaQuery('(max-width: 767px) and (orientation: portrait)');
-  const isTabletPortrait = useMediaQuery('(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)');
-  const isShortScreen = useMediaQuery('(max-height: 600px)');
-
-  const preset = getPreset(aspect);
-
-  // additional fine-tune: zoom out a bit when screen is very short
-  const scale = isShortScreen ? Math.max(0.6, preset.scale - 0.15) : preset.scale;
-
-  const offsetX = preset.offsetX;
-  const offsetY = isMobilePortrait ? -0.45 : isTabletPortrait ? 0.35 : isShortScreen ? -0.4 : preset.offsetY;
+export function WoeHeatmap(props: WoeHeatmapProps) {
+  const { ref, width, height } = useContainerSize();
+  const merged = { ...defaults, ...props };
 
   return (
     <div ref={ref} style={{ width: '100%', height: '100%' }}>
       <Heatmap
         width={width}
         height={height}
-        image="/logo.webp"
-        colors={['#dd0303', '#fbff1a', '#1472ff']}
-        colorBack="#1c1c1c"
-        contour={0.23}
-        angle={180}
-        noise={0.27}
-        innerGlow={0.68}
-        outerGlow={0.3}
-        speed={0.96}
-        scale={scale}
-        offsetX={offsetX}
-        offsetY={offsetY}
-        fit="contain"
+        image={merged.image}
+        colors={merged.colors}
+        colorBack={merged.colorBack}
+        contour={merged.contour}
+        angle={merged.angle}
+        noise={merged.noise}
+        innerGlow={merged.innerGlow}
+        outerGlow={merged.outerGlow}
+        speed={merged.speed}
+        scale={merged.scale}
+        offsetX={merged.offsetX}
+        offsetY={merged.offsetY}
+        fit={merged.fit}
+        rotation={merged.rotation}
+        originX={merged.originX}
+        originY={merged.originY}
       />
     </div>
   );

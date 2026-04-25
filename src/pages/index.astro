@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/BaseLayout.astro';
-import HeroSection from '@/components/sections/HeroSection.astro';
+import HeroSection from '@/components/react/section/HeroSection.tsx';
 import AboutSection from '@/components/sections/AboutSection.astro';
 import ExperienceSection from '@/components/sections/ExperienceSection.astro';
 import ProjectsSection from '@/components/sections/ProjectsSection.astro';
@@ -12,7 +12,7 @@ import ContactSection from '@/components/sections/ContactSection.astro';
   title="Work of Ekajaya — Full-Stack Engineer"
   description="I Putu Ekajaya Awidya Putra. Full-stack engineer building scalable, production-ready web applications with Spring Boot, Node.js, Next.js, Astro, and cloud-native infrastructure."
 >
-  <HeroSection />
+  <HeroSection client:only="react" />
   <AboutSection />
   <ExperienceSection />
   <ProjectsSection />
