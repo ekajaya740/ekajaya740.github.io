@@ -12,7 +12,7 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap({ changefreq: 'weekly', priority: 0.7, lastmod: new Date() }),
+    sitemap({ changefreq: 'weekly', priority: 0.7, lastmod: new Date(), filter: (page) => !page.includes('/blog') }),
     icon({
       include: {
         lucide: ['file-text', 'mail', 'github', 'link', 'linkedin', 'external-link'],
