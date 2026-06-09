@@ -12,13 +12,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.3",
+    "@astrojs/react": "5.0.7",
     "@fontsource/goldman": "^5.2.8",
     "@fontsource/sansation": "^5.2.2",
     "@fontsource/share-tech-mono": "^5.2.7",
     "@paper-design/shaders-react": "^0.0.76",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.1.8",
+    "astro": "6.4.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "motion": "^12.38.0",
@@ -29,9 +29,9 @@
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/mdx": "6.0.2",
     "@astrojs/rss": "^4.0.18",
-    "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/sitemap": "3.7.3",
     "@iconify-json/lucide": "^1.2.103",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
