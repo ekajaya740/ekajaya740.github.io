@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import JsonLd from './JsonLd.astro';
+
+export interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const siteUrl = Astro.site?.toString() || 'https://workofekajaya.com';
+const postUrl = new URL(`/blog/${post.id}/`, siteUrl).toString();
+const imageUrl = post.data.coverImage
+  ? new URL(post.data.coverImage, siteUrl).toString()
+  : new URL('/og-default.png', siteUrl).toString();
+
+const blogPostingData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  url: postUrl,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
+  author: {
+    '@type': 'Person',
+    name: post.data.author,
+    url: siteUrl,
+    sameAs: [
+      'https://github.com/ekajaya740',
+      'https://linkedin.com/in/ekajaya740',
+    ],
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'I Putu Ekajaya Awidya Putra',
+  },
+  image: imageUrl,
+  ...(post.data.tags.length > 0 && { keywords: post.data.tags.join(', ') }),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': postUrl,
+  },
+  isPartOf: {
+    '@type': 'Blog',
+    name: 'Work of Ekajaya Blog',
+    url: new URL('/blog/', siteUrl).toString(),
+  },
+};
+---
+
+<JsonLd data={blogPostingData} />

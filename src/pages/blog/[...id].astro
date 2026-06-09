@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import BlogPostingSchema from '@/components/seo/BlogPostingSchema.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -21,7 +22,9 @@ const { Content } = await render(entry);
   type="article"
   publishedTime={entry.data.pubDate.toISOString()}
   modifiedTime={entry.data.updatedDate?.toISOString()}
+  tags={entry.data.tags}
 >
+  <BlogPostingSchema post={entry} />
   <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
     <header class="mb-12">
       <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">BLOG</p>
