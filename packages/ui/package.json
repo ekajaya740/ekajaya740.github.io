@@ -7,9 +7,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./utils": "./src/lib/utils.ts",
-    "./*": "./src/components/ui/*"
+    "./*": "./src/components/react/*"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.5.0"

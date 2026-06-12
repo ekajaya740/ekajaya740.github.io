@@ -11,7 +11,7 @@
   },
   "iconLibrary": "radix",
   "aliases": {
-    "components": "@ekajaya/ui/components",
+    "components": "@ekajaya/ui",
     "utils": "@ekajaya/ui/utils",
     "ui": "@ekajaya/ui",
     "lib": "@ekajaya/ui",

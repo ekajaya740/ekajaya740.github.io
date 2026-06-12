@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, beta]
   workflow_dispatch:
 
 permissions:
@@ -11,39 +11,54 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  # ---- Web: GitHub Pages (main only) ----
+  web:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun install
+      - run: bun install
 
-      - name: Build
-        run: bun run build --filter=@ekajaya/web
+      - run: bun run build --filter=@ekajaya/web
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/dist
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: pages
         uses: actions/deploy-pages@v4
+
+  # ---- Admin: Cloudflare Workers (beta → staging, main → production) ----
+  admin:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta'
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'admin-production' || 'admin-staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install
+
+      - run: bun run build --filter=@ekajaya/admin
+
+      - name: Deploy to Cloudflare Workers
+        run: bun wrangler deploy --env ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+        working-directory: apps/admin
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
