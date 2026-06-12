@@ -1,0 +1,11 @@
+{
+  "name": "Work of Ekajaya",
+  "short_name": "WoE",
+  "icons": [
+    { "src": "/favicon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#dd0303",
+  "background_color": "#141414",
+  "display": "standalone"
+}

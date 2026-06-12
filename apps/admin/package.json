@@ -1,0 +1,35 @@
+{
+  "name": "@ekajaya/admin",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && tsc --noEmit",
+    "preview": "vite preview",
+    "deploy": "bun run build && wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "wrangler types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply portfolio-db",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-start": "^1.132.0",
+    "drizzle-orm": "^1.0.0-rc.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.0.0",
+    "@cloudflare/workers-types": "^4.20250605.0",
+    "drizzle-kit": "^1.0.0-rc.3",
+    "@vitejs/plugin-react": "^4.6.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "vite": "^6.3.0",
+    "vite-tsconfig-paths": "^5.1.0",
+    "wrangler": "^4.34.0"
+  }
+}

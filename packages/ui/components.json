@@ -5,17 +5,17 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/styles/global.css",
+    "css": "../../apps/web/src/styles/global.css",
     "baseColor": "neutral",
     "cssVariables": true
   },
   "iconLibrary": "radix",
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "components": "@ekajaya/ui/components",
+    "utils": "@ekajaya/ui/utils",
+    "ui": "@ekajaya/ui",
+    "lib": "@ekajaya/ui",
+    "hooks": "@ekajaya/hooks"
   },
   "registries": {
     "@aceternity": "https://ui.aceternity.com/registry/{name}.json"

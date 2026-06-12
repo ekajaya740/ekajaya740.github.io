@@ -1,0 +1,3 @@
+# admin.workofekajaya.com and beta-admin.workofekajaya.com — internal admin panel. Disallow all.
+User-agent: *
+Disallow: /

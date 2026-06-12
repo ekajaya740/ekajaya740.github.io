@@ -1,5 +1,6 @@
 # build output
 dist/
+.turbo/
 
 # generated types
 .astro/
@@ -53,6 +54,9 @@ bun-debug.log*
 
 # testing
 coverage/
+
+# cloudflare
+.wrangler/
 
 # misc
 *.log

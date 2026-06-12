@@ -1,21 +1,31 @@
 # AGENTS.md — Work of Ekajaya Portfolio
 
+## Branches
+
+- **Default work branch**: `beta` — all feature work, refactors, and non-critical changes go here.
+- **`main`**: Production. Only merge from `beta` when ready to deploy. Direct commits to `main` only for hotfixes or deploy-critical config.
+- **Deploy**: `main` → GitHub Pages (`@ekajaya/web`) + Cloudflare Workers production (`@ekajaya/admin`).
+
 ## Stack
 
 - **Runtime**: Bun (do not use npm/yarn/pnpm)
-- **Framework**: Astro 6 (`astro.config.mjs`), static output mode (SSG)
+- **Monorepo**: Turborepo with Bun workspaces (`apps/*`, `packages/*`)
+- **Web**: Astro 6 SSG → GitHub Pages
+- **Admin**: TanStack Start (React SSR) → Cloudflare Workers (D1 + R2)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (NOT `@astrojs/tailwind`)
-- **React Islands**: Only `WoeHeatmap.tsx` uses `client:only="react"` — all other sections are `.astro` components
-- **Icons**: `astro-icon` with `@iconify-json/lucide` — icons are inlined as SVG at build time. Use `<Icon name="lucide:icon-name" size={16} />` from `astro-icon/components`. New icons must be added to the `include` list in `astro.config.mjs`.
-- **Fonts**: Fontsource CSS imports in `src/styles/global.css` (Goldman, Sansation, Share Tech Mono)
-- **Blog**: Astro Content Collections v2 (loader: `glob`) with MDX support. Schema defined in `src/content.config.ts`
+- **Icons**: `astro-icon` with `@iconify-json/lucide` — icons inlined as SVG at build time. Use `<Icon name="lucide:icon-name" size={16} />` from `astro-icon/components`. New icons must be added to the `include` list in `astro.config.mjs`.
+- **Fonts**: Fontsource CSS imports in `@ekajaya/config/tailwind.css` (Goldman, Sansation, Share Tech Mono)
+- **Blog**: Astro Content Collections v2 (loader: `glob`) with MDX support. Schema in `apps/web/src/content.config.ts`
+- **shadcn/ui**: Configured in `packages/ui/components.json` (new-york style, CSS variables). Components go to `packages/ui/src/components/ui/`
 
 ## Commands
 
 ```bash
-bun dev          # Dev server (localhost:4321)
-bun run build    # SSG build → dist/
-bun run preview  # Preview production build
+bun install                   # Install all workspace deps
+bun dev                       # Run all dev servers (turbo dev)
+bun run build                 # Build all apps (turbo build)
+bun run build --filter=@ekajaya/web    # Build web only
+bun run build --filter=@ekajaya/admin  # Build admin only
 ```
 
 No test runner configured. No linter configured.
@@ -23,50 +33,73 @@ No test runner configured. No linter configured.
 ## Architecture
 
 ```
-src/
-  components/
-    sections/    # All portfolio sections (Astro components, NOT React)
-      AboutSection.astro
-      ContactSection.astro
-      ExperienceSection.astro
-      HeroSection.astro
-      ProjectsSection.astro
-      SkillsSection.astro
-    react/
-      shaders/WoeHeatmap.tsx  # ONLY React island — client:only="react"
-    seo/
-      Head.astro, JsonLd.astro, PersonSchema.astro
-  layouts/
-    BaseLayout.astro  # Global layout: section-dot nav, scroll progress, global.css import
-  pages/
-    index.astro       # Homepage (assembles all sections)
-    blog/index.astro  # Blog list
-    blog/[...id].astro # Individual post (MDX rendering)
-    rss.xml.ts        # RSS feed
-  styles/
-    global.css   # Tailwind v4 @theme tokens + @layer base + font imports. MUST be imported in layouts.
-  content/
-    blog/        # MDX/MD blog posts
-  hooks/         # React hooks (useMediaQuery, useContainerSize)
-  lib/
-    utils.ts     # cn() helper (clsx + tailwind-merge)
+ekajaya740.github.io/
+├── apps/
+│   ├── web/                  # @ekajaya/web — Astro 6 SSG → GitHub Pages
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── sections/     # All portfolio sections (.astro, NOT React)
+│   │   │   │   ├── react/
+│   │   │   │   │   ├── section/HeroSection.tsx
+│   │   │   │   │   └── shaders/WoeHeatmap.tsx  # ONLY React island — client:only="react"
+│   │   │   │   └── seo/          # Head.astro, JsonLd.astro, PersonSchema.astro
+│   │   │   ├── layouts/BaseLayout.astro
+│   │   │   ├── pages/
+│   │   │   ├── styles/global.css # Imports @ekajaya/config/tailwind.css
+│   │   │   └── content/blog/     # MDX blog posts
+│   │   ├── public/
+│   │   └── astro.config.mjs
+│   └── admin/                # @ekajaya/admin — TanStack Start → Cloudflare Workers
+│       ├── src/
+│       │   ├── routes/           # File-based: __root.tsx, index.tsx, api/health.ts, api/v1/info.ts
+│       │   ├── router.tsx        # getRouter() + type registration
+│       │   ├── ssr.tsx           # createStartHandler
+│       │   ├── client.tsx        # hydrateRoot
+│       │   └── server.ts         # Cloudflare createServerEntry
+│       ├── vite.config.ts        # cloudflare() + tanstackStart() + react()
+│       └── wrangler.jsonc        # D1 + R2 bindings (dev/staging/production)
+├── packages/
+│   ├── config/               # @ekajaya/config — shared Tailwind theme + tsconfig base
+│   ├── hooks/                # @ekajaya/hooks — useMediaQuery, useContainerSize
+│   └── ui/                   # @ekajaya/ui — cn() helper, shadcn config, UI components
+├── turbo.json
+├── tsconfig.json             # Root base TS config
+└── package.json              # Workspace root
 ```
+
+## Internal Package Imports
+
+| Old (`@/` alias) | New (workspace package) |
+|---|---|
+| `@/lib/utils` (cn helper) | `@ekajaya/ui/utils` |
+| `../../hooks/useMediaQuery` | `@ekajaya/hooks` |
+| `../../hooks/useContainerSize` | `@ekajaya/hooks` |
+| `@/styles/global.css` | Import `@ekajaya/config/tailwind.css` |
+
+App-local imports (`@/components/sections/*`, `@/layouts/*`, `@/pages/*`) stay unchanged — `@/*` still maps to `apps/web/src/*`.
 
 ## Critical Patterns
 
-- **Tailwind v4**: Uses `@theme` block in `global.css` for design tokens (not `tailwind.config.js`). Color tokens: `--color-accent: #dd0303`, `--color-accent-yellow: #fbff1a`, `--color-accent-blue: #1472ff`, `--color-background: #141414`
-- **Path alias**: `@/*` maps to `./src/*` (configured in tsconfig.json)
-- **Navigation**: Section-dot nav on right side (all viewports). IntersectionObserver tracks active section. No page-based nav.
+- **Tailwind v4**: `@theme` tokens live in `packages/config/src/tailwind.css`. Web app imports it via `@import "@ekajaya/config/tailwind.css"`. Color tokens: `--color-accent: #dd0303`, `--color-accent-yellow: #fbff1a`, `--color-accent-blue: #1472ff`, `--color-background: #141414`
+- **Path alias**: `@/*` maps to `./src/*` in each app's tsconfig (NOT across packages)
+- **Navigation**: Section-dot nav on right side (all viewports). IntersectionObserver tracks active section in BaseLayout.astro
 - **Smooth scroll**: Set via `scroll-behavior: smooth` in `@layer base` in global.css
 - **Blog frontmatter**: Must include `title`, `description`, `pubDate`. Optional: `updatedDate`, `author` (defaults to "I Putu Ekajaya Awidya Putra"), `tags`, `draft`, `coverImage`
-- **shadcn/ui**: Configured via `components.json` (new-york style, CSS variables). Components go to `src/components/ui/`
+- **Font usage**: `--font-display` (Goldman) for headings, `--font-sans` (Sansation) for body, `--font-mono` (Share Tech Mono) for code/labels
 
 ## Conventions
 
 - **Commit messages**: Follow Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `style:`, `refactor:`, `ci:`, `build:`, `perf:`)
 - **Sections**: Portfolio section IDs must match nav dots (`hero`, `about`, `experience`, `projects`, `skills`, `contact`)
 - **Dark theme only**: Design is dark-first. Accent color `#dd0303` (red) from WoeHeatmap shader
-- **Font usage**: `--font-display` (Goldman) for headings, `--font-sans` (Sansation) for body, `--font-mono` (Share Tech Mono) for code/labels
+
+## Deploy Targets
+
+| App | Trigger | Target | Env |
+|---|---|---|---|
+| `@ekajaya/web` | Push to `main` | GitHub Pages | — |
+| `@ekajaya/admin` | Push to `main` | Cloudflare Workers | `production` |
+| `@ekajaya/admin` | Push to `beta` | Cloudflare Workers | `staging` |
 
 ## AI Optimization
 
@@ -80,6 +113,8 @@ src/
 - The `WoeHeatmap` React component uses `client:only="react"` (no SSR) — it renders client-side only
 - Content Collections v2 uses `src/content.config.ts` (NOT `src/content/config.ts` which is the v1 pattern)
 - Blog post filenames become URL slugs — use kebab-case (e.g., `hello-world.mdx`)
+- `tsconfig.json` extends use relative paths (`../../tsconfig.json`), NOT package names — Vite/esbuild can't resolve package-based extends
+- `packages/config/tsconfig.base.json` was removed; root `tsconfig.json` is the single base
 
 ## Skill Auto-Loading
 
@@ -88,7 +123,7 @@ Before starting related work, you MUST read the corresponding skill instructions
 | Skill | Trigger |
 |---|---|
 | `astro` | Any `.astro` file edit, Astro config, content collections, or SSG build |
-| `shadcn` | Any `src/components/ui/` work, `components.json` changes, or shadcn component usage |
+| `shadcn` | Any `packages/ui/src/components/ui/` work, `components.json` changes, or shadcn component usage |
 | `frontend-design` | New UI/page design, aesthetic direction, typography choices |
 | `design-taste-frontend` | Component architecture, CSS, visual polish review |
 | `ui-ux-pro-max` | UI/UX planning, component design, style selection |

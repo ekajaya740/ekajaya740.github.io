@@ -1,0 +1,57 @@
+{
+	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+	"name": "ekajaya-api",
+	"main": "@tanstack/react-start/server-entry",
+	"compatibility_date": "2025-06-12",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "dev-portfolio-db",
+			"database_id": ""
+		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "dev-portfolio-assets",
+			"binding": "dev_portfolio_assets"
+		}
+	],
+	"env": {
+		"staging": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "beta-portfolio-db",
+					"database_id": "5ddc8080-3ea9-45cc-8fd5-3e59370fce37"
+				}
+			],
+			"r2_buckets": [
+				{
+					"bucket_name": "BUCKET",
+					"binding": "beta_portfolio_assets"
+				}
+			]
+		},
+		"production": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "portfolio-db",
+					"database_id": "3087a0db-726d-4684-ac70-fa814c488941"
+				}
+			],
+			"r2_buckets": [
+				{
+					"bucket_name": "BUCKET",
+					"binding": "portfolio_assets"
+				}
+			]
+		}
+	},
+	"observability": {
+		"enabled": true
+	}
+}

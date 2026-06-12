@@ -1,0 +1,37 @@
+@import "@ekajaya/config/tailwind.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: thin;
+    scrollbar-color: #2e2e2e #141414;
+  }
+
+  body {
+    background-color: #141414;
+    color: #f5f5f5;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background-color: rgba(221, 3, 3, 0.3);
+    color: #f5f5f5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
