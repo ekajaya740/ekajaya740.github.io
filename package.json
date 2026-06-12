@@ -5,7 +5,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --ui tui",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean"
