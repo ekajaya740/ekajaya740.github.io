@@ -11,8 +11,11 @@
     "typecheck": "tsc --noEmit",
     "cf-typegen": "wrangler types",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply portfolio-db",
-    "db:push": "drizzle-kit push"
+    "db:migrate:staging": "wrangler d1 migrations apply beta-portfolio-db --env staging",
+    "db:migrate:production": "wrangler d1 migrations apply portfolio-db --env production",
+    "db:push:staging": "drizzle-kit push",
+    "db:push:production": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.132.0",
