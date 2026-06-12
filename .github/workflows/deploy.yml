@@ -53,6 +53,8 @@ jobs:
         with:
           bun-version: latest
 
+      - run: bun install
+
       - run: bun run build --filter=@ekajaya/admin
 
       - name: Deploy to Cloudflare Workers
