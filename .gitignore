@@ -52,11 +52,17 @@ bun-debug.log*
 .stylelintcache
 .tsbuildinfo
 
+# TanStack
+.tanstack/
+
 # testing
 coverage/
 
 # cloudflare
 .wrangler/
+
+# agent tooling artifacts
+skills-lock.json
 
 # misc
 *.log
