@@ -35,3 +35,16 @@
     text-wrap: pretty;
   }
 }
+
+/*
+ * Loading overlay: hide page body until loader finishes.
+ * The loader script sets this class on <html>; the React
+ * DotMatrixLoader removes it after the fade-out completes.
+ */
+html.loading body > main {
+  visibility: hidden;
+}
+
+html.loading {
+  overflow: hidden;
+}

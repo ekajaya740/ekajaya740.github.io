@@ -6,7 +6,21 @@ import ExperienceSection from '@/components/sections/ExperienceSection.astro';
 import ProjectsSection from '@/components/sections/ProjectsSection.astro';
 import SkillsSection from '@/components/sections/SkillsSection.astro';
 import ContactSection from '@/components/sections/ContactSection.astro';
+import { DotMatrixLoader } from '@/components/react/DotMatrixLoader';
 ---
+
+<!-- Hide page content until loader finishes; runs before any rendering -->
+<script is:inline>
+  document.documentElement.classList.add('loading');
+</script>
+
+<noscript>
+  <style>
+    html.loading body > main { visibility: visible; }
+  </style>
+</noscript>
+
+<DotMatrixLoader client:load />
 
 <Layout title="I Putu Ekajaya — Full-Stack Engineer" description="Fullstack Web Developer at PT SUM Digital Konsultan. Building scalable web apps with Spring Boot, Node.js, Next.js, and Astro. Creator of Profill.link. Stikom Bali, GPA 3.79.">
   <HeroSection client:only="react" />
