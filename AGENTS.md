@@ -80,3 +80,28 @@ src/
 - The `WoeHeatmap` React component uses `client:only="react"` (no SSR) — it renders client-side only
 - Content Collections v2 uses `src/content.config.ts` (NOT `src/content/config.ts` which is the v1 pattern)
 - Blog post filenames become URL slugs — use kebab-case (e.g., `hello-world.mdx`)
+
+## Skill Auto-Loading
+
+Before starting related work, you MUST read the corresponding skill instructions:
+
+| Skill | Trigger |
+|---|---|
+| `astro` | Any `.astro` file edit, Astro config, content collections, or SSG build |
+| `shadcn` | Any `src/components/ui/` work, `components.json` changes, or shadcn component usage |
+| `frontend-design` | New UI/page design, aesthetic direction, typography choices |
+| `design-taste-frontend` | Component architecture, CSS, visual polish review |
+| `ui-ux-pro-max` | UI/UX planning, component design, style selection |
+| `web-design-guidelines` | Design review, accessibility audit, UX critique |
+| `web-perf` | Performance audit, Core Web Vitals, load time optimization |
+| `seo` | Meta tags, structured data, sitemaps, search visibility |
+| `ai-seo` | AI search visibility, LLM citations, AEO/GEO optimization |
+| `seo-aeo-best-practices` | JSON-LD, Open Graph, robots.txt, hreflang |
+| `no-use-effect` | Writing or reviewing any React component with `useEffect` |
+| `humanizer` | Editing or reviewing blog post content, marketing copy |
+| `pdf` | Working with PDF files (generate, read, merge, split) |
+| `agent-browser` | Browser automation, screenshots, form testing |
+| `find-keywords` | Keyword research for blog posts or SEO |
+| `github-actions` | CI/CD workflows, `.github/workflows/` changes, deployment automation |
+
+Read via `read("skill://<name>")` before the first related edit.
