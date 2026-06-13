@@ -48,8 +48,7 @@ interface PostForm {
 function NewBlogPostComponent(): ReactNode {
   const navigate = useNavigate();
   const createPost = useCreatePost();
-  const slugRef = useRef("");
-  const langRef = useRef("en");
+  const toolsRef = useRef<Record<string, unknown>>({});
 
   const onSubmit = async (values: Record<string, unknown>): Promise<void> => {
     const v = values as unknown as PostForm;
@@ -66,10 +65,7 @@ function NewBlogPostComponent(): ReactNode {
     if (v.tags.length > 0) body.tagNames = v.tags;
 
     const validation = createPostSchema.safeParse(body);
-    if (!validation.success) {
-      alert(validation.error.issues.map((i) => i.message).join("\n"));
-      return;
-    }
+    if (!validation.success) return;
 
     try {
       await createPost.mutateAsync(validation.data);
@@ -109,8 +105,7 @@ function NewBlogPostComponent(): ReactNode {
           };
           const values = f.state.values as unknown as PostForm;
 
-          slugRef.current = values.slug;
-          langRef.current = values.language;
+          toolsRef.current = buildTools(values.slug, values.language);
 
           return (
             <div className="space-y-4">
@@ -203,11 +198,11 @@ function NewBlogPostComponent(): ReactNode {
                 <label className="mb-1 block text-sm font-medium">Content</label>
                 <div className="min-h-[300px] rounded-lg border border-gray-300 p-4">
                   <CEditor
-                    tools={editorTools(slugRef, langRef)}
                     data={values.content ?? undefined}
                     onChange={(data: OutputData) =>
                       f.setFieldValue("content", data)
                     }
+                    tools={toolsRef.current}
                     placeholder="Start writing..."
                   />
                 </div>
@@ -234,10 +229,7 @@ function NewBlogPostComponent(): ReactNode {
   );
 }
 
-function editorTools(
-  slugRef: { current: string },
-  langRef: { current: string },
-) {
+function buildTools(slug: string, language: string) {
   return {
     header: { class: Header, inlineToolbar: true },
     list: { class: List, inlineToolbar: true },
@@ -248,8 +240,8 @@ function editorTools(
           uploadByFile(file: File) {
             const form = new FormData();
             form.append("file", file);
-            form.append("slug", slugRef.current || "temp");
-            form.append("lang", langRef.current);
+            form.append("slug", slug || "temp");
+            form.append("lang", language);
             return fetch("/api/blog/upload", { method: "POST", body: form })
               .then(
                 (r) => r.json() as Promise<{ url: string; key: string }>,
