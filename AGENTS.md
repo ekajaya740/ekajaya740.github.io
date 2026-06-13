@@ -49,6 +49,22 @@ No test runner configured. No linter configured.
 4. **Destructive changes**: Drop column, drop table, or change column type → the generated SQL may lose data. Review the SQL before committing. Add a comment in the migration if manual intervention is needed.
 5. **Snapshot drift**: If `drizzle-kit generate` produces unexpected changes, check that `CLOUDFLARE_DATABASE_ID` in `.env` points to the correct environment (staging for dev, production for release prep).
 
+### Auth (Better Auth)
+
+- **Config**: `apps/admin/src/auth/index.ts` — dual-mode: CLI schema gen (no env) + runtime (with Cloudflare bindings).
+- **Schema**: `apps/admin/src/db/auth-schema.ts` — `users`, `sessions`, `accounts`, `verifications` tables.
+- **Route**: `apps/admin/src/routes/api/auth/$.ts` — catch-all forwards all methods to Better Auth handler.
+- **Env access**: `server.ts` uses `AsyncLocalStorage` to pass Cloudflare bindings per-request. Call `getPlatformEnv()` in route handlers.
+- **Email/password only**: No social providers. Email verification disabled (MVP).
+
+#### User Roles
+
+| Role | Access |
+|---|---|
+| `SUPERADMIN` | First signup only — full admin access. Cannot be self-assigned. |
+| `editor` | Default role for all subsequent signups. |
+
+The first user to sign up gets `SUPERADMIN` automatically (checked via `databaseHooks.user.create.before`). All later users get `editor`.
 ## Architecture
 
 ```

@@ -10,7 +10,8 @@
 		{
 			"binding": "DB",
 			"database_name": "beta-portfolio-db",
-			"database_id": "5ddc8080-3ea9-45cc-8fd5-3e59370fce37"
+			"database_id": "5ddc8080-3ea9-45cc-8fd5-3e59370fce37",
+			"migrations_dir": "src/db/migrations"
 		}
 	],
 	"r2_buckets": [
