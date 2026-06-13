@@ -19,7 +19,9 @@ import type {
   ListPostsParams,
   CreatePostInput,
   UpdatePostInput,
+  Post,
 } from "@ekajaya/http/blog";
+import { toast } from "sonner";
 
 // ---- API Client Context ----
 
@@ -44,6 +46,13 @@ export const ApiClientProvider: FC<{
     children,
   );
 };
+
+// ---- Callbacks type ----
+
+interface MutationCallbacks<T = unknown> {
+  onSuccess?: (data: T) => void;
+  onError?: (error: Error) => void;
+}
 
 // ---- Query Keys ----
 
@@ -75,40 +84,58 @@ export function usePost(slug: string, language = "en") {
 
 // ---- Mutations ----
 
-export function useCreatePost() {
+export function useCreatePost(callbacks?: MutationCallbacks<Post>) {
   const client = useApiClient();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: CreatePostInput) => createPost(client, input),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success("Post created");
       queryClient.invalidateQueries({ queryKey: postKeys.all });
+      callbacks?.onSuccess?.(data);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to create post");
+      callbacks?.onError?.(error);
     },
   });
 }
 
-export function useUpdatePost(slug: string) {
+export function useUpdatePost(slug: string, callbacks?: MutationCallbacks<Post>) {
   const client = useApiClient();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdatePostInput) => updatePost(client, slug, input),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success("Post updated");
       queryClient.invalidateQueries({ queryKey: postKeys.all });
+      callbacks?.onSuccess?.(data);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update post");
+      callbacks?.onError?.(error);
     },
   });
 }
 
-export function useDeletePost() {
+export function useDeletePost(callbacks?: MutationCallbacks<void>) {
   const client = useApiClient();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (slug: string) => deletePost(client, slug),
-    onSuccess: () => {
+    onSuccess: (_data, slug) => {
+      toast.success("Post deleted");
       queryClient.invalidateQueries({ queryKey: postKeys.all });
+      callbacks?.onSuccess?.(undefined);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete post");
+      callbacks?.onError?.(error);
     },
   });
 }
 
-export function useUploadThumbnail() {
+export function useUploadThumbnail(callbacks?: MutationCallbacks<{ key: string; url: string }>) {
   const client = useApiClient();
   return useMutation({
     mutationFn: ({
@@ -120,5 +147,13 @@ export function useUploadThumbnail() {
       slug: string;
       language: string;
     }) => uploadThumbnail(client, file, slug, language),
+    onSuccess: (data) => {
+      toast.success("Thumbnail uploaded");
+      callbacks?.onSuccess?.(data);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to upload thumbnail");
+      callbacks?.onError?.(error);
+    },
   });
 }

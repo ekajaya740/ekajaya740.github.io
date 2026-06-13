@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@ekajaya/http": "workspace:*",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.0.0",
+    "sonner": "^2.0.7"
   },
   "peerDependencies": {
     "react": "^19.0.0"
