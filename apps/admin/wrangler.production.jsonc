@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
-	"name": "ekajaya-api",
+	"name": "portfolio-api",
 	"main": "dist/server/index.js",
 	"compatibility_date": "2025-06-12",
 	"compatibility_flags": [
