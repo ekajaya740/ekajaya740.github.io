@@ -5,7 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".astro/**"],
-      "env": ["SITE_URL", "OLLAMA_API_KEY"]
+      "env": ["SITE_URL", "OLLAMA_API_KEY", "PUBLIC_API_URL"]
     },
     "dev": {
       "cache": false,

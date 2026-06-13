@@ -43,7 +43,7 @@ No test runner configured. No linter configured.
 
 #### Migration Rules
 
-1. **Schema change → new migration**: After modifying `schema.ts`, run `db:generate` to create a timestamped SQL migration file. Commit it alongside the schema change.
+1. **Schema change → new migration**: After modifying `schema.ts`, run `db:generate` to create a SQL migration file. Rename it to a descriptive name: `NNNN_what_this_does.sql` (e.g., `0000_auth_tables.sql`, `0001_blog_posts_i18n.sql`). NEVER keep auto-generated names like `0000_wooden_war_machine.sql`. Commit it alongside the schema change.
 2. **WIP on same feature**: While iterating on a branch, you MAY amend the latest (unapplied) migration SQL instead of stacking multiple migrations. `drizzle-kit generate` will overwrite the pending file.
 3. **Migration applied to staging/production**: Once a migration has been applied to a shared environment, NEVER modify it. Create a new migration for further changes.
 4. **Destructive changes**: Drop column, drop table, or change column type → the generated SQL may lose data. Review the SQL before committing. Add a comment in the migration if manual intervention is needed.

@@ -18,7 +18,7 @@ interface Post {
 
 let posts: Post[] = [];
 try {
-  const response = await fetch(`${API_URL}/api/blog/posts?status=published&language=en&limit=100`);
+  const response = await fetch(`${API_URL}/api/blog/posts?status=published&language=id&limit=100`);
   if (response.ok) {
     posts = await response.json();
     posts.sort((a, b) => (b.publishedAt || 0) - (a.publishedAt || 0));
@@ -30,7 +30,7 @@ try {
 
 <Layout
   title="Blog — Ekajaya"
-  description="Thoughts on engineering, systems, and building things that matter."
+  description="Tulisan tentang engineering, sistem, dan membangun hal yang berarti."
 >
   <Fragment slot="head">
     <link rel="alternate" hreflang="en" href="/blog" />
@@ -41,7 +41,7 @@ try {
     <header class="mb-16">
       <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">BLOG</p>
       <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-6xl font-bold text-foreground">
-        Writings.
+        Tulisan.
       </h1>
     </header>
 
@@ -56,7 +56,7 @@ try {
             ? `${API_URL}/assets/${post.thumbnailKey}`
             : null;
           return (
-            <a href={`/blog/${post.slug}/`} class="group block">
+            <a href={`/id/blog/${post.slug}/`} class="group block">
               <article class="h-full border border-border rounded-lg overflow-hidden hover:border-accent transition-colors flex flex-col">
                 {thumbnailUrl && (
                   <div class="aspect-video overflow-hidden">
@@ -78,9 +78,9 @@ try {
                   <div class="flex items-center justify-between gap-4 mt-auto">
                     {pubDate && (
                       <time class="font-mono text-xs text-muted-foreground">
-                        {pubDate.toLocaleDateString('en-US', {
+                        {pubDate.toLocaleDateString('id-ID', {
                           year: 'numeric',
-                          month: 'short',
+                          month: 'long',
                           day: 'numeric',
                         })}
                       </time>
@@ -107,11 +107,11 @@ try {
     </div>
 
     {posts.length === 0 && (
-      <p class="text-muted-foreground text-center py-16">No posts yet. Check back soon.</p>
+      <p class="text-muted-foreground text-center py-16">Belum ada tulisan. Nantikan segera.</p>
     )}
 
     <nav class="mt-16 pt-8 border-t border-border text-center">
-      <a href="/id/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Pos Bahasa Indonesia →</a>
+      <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">English posts →</a>
     </nav>
   </div>
 </Layout>

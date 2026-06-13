@@ -1,0 +1,205 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+
+const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:5173';
+
+interface Post {
+  id: string;
+  slug: string;
+  language: string;
+  title: string;
+  description: string;
+  content: string;
+  thumbnailKey: string | null;
+  author: string;
+  tags: string;
+  publishedAt: number | null;
+}
+
+interface EditorBlock {
+  type: string;
+  data: Record<string, unknown>;
+}
+
+function renderBlock(block: EditorBlock): string {
+  const { type, data } = block;
+  switch (type) {
+    case 'header': {
+      const level = (data.level as number) || 2;
+      return `<h${level} class="font-[family-name:var(--font-display)] text-foreground mt-10 mb-4 font-bold text-balance${
+        level === 1 ? ' text-3xl md:text-4xl' :
+        level === 2 ? ' text-2xl md:text-3xl' :
+        level === 3 ? ' text-xl md:text-2xl' :
+        ' text-lg md:text-xl'
+      }">${data.text as string}</h${level}>`;
+    }
+    case 'paragraph':
+      return `<p class="text-muted-foreground leading-relaxed mb-4">${data.text as string}</p>`;
+    case 'list': {
+      const items = (data.items as string[]) || [];
+      const tag = data.style === 'ordered' ? 'ol' : 'ul';
+      const cls = data.style === 'ordered'
+        ? 'list-decimal pl-6 text-muted-foreground mb-4 space-y-1'
+        : 'list-disc pl-6 text-muted-foreground mb-4 space-y-1';
+      return `<${tag} class="${cls}">${items.map((item: string) => `<li>${item}</li>`).join('')}</${tag}>`;
+    }
+    case 'image': {
+      const src = data.file?.url as string || data.url as string || '';
+      const caption = data.caption as string || '';
+      const alt = (data as Record<string, unknown>).alt as string || caption;
+      return src
+        ? `<figure class="mb-6"><img src="${src}" alt="${alt}" class="w-full rounded-lg" />${
+            caption ? `<figcaption class="text-xs text-muted-foreground text-center mt-2">${caption}</figcaption>` : ''
+          }</figure>`
+        : '';
+    }
+    case 'code':
+      return `<pre class="bg-card border border-border rounded-lg p-4 mb-4 overflow-x-auto"><code class="text-sm text-accent-green">${(data.code as string) || ''}</code></pre>`;
+    case 'quote':
+      return `<blockquote class="border-l-2 border-accent pl-4 italic text-muted-foreground mb-4">${data.text as string}${
+        data.caption ? `<footer class="text-xs not-italic mt-1 text-muted-foreground/70">— ${data.caption as string}</footer>` : ''
+      }</blockquote>`;
+    case 'delimiter':
+      return `<hr class="my-8 border-border" />`;
+    case 'checklist': {
+      const checkItems = data.items as Array<{ text: string; checked: boolean }> || [];
+      return `<ul class="list-none pl-0 text-muted-foreground mb-4 space-y-1">${checkItems.map(
+        (item: { text: string; checked: boolean }) =>
+          `<li class="flex items-start gap-2"><span class="inline-block w-4 h-4 mt-0.5 border border-border rounded ${
+            item.checked ? 'bg-accent' : ''
+          }"></span>${item.text}</li>`
+      ).join('')}</ul>`;
+    }
+    case 'table': {
+      const rows = (data.content as string[][]) || [];
+      if (!rows.length) return '';
+      return `<div class="overflow-x-auto mb-4"><table class="w-full border-collapse">${rows.map((row, ri) =>
+        `<tr>${row.map((cell) =>
+          ri === 0
+            ? `<th class="border border-border px-3 py-2 text-left text-sm font-bold text-foreground">${cell}</th>`
+            : `<td class="border border-border px-3 py-2 text-sm text-muted-foreground">${cell}</td>`
+        ).join('')}</tr>`
+      ).join('')}</table></div>`;
+    }
+    default:
+      return '';
+  }
+}
+
+function renderContent(contentJson: string): string {
+  try {
+    const parsed = JSON.parse(contentJson);
+    const blocks: EditorBlock[] = parsed.blocks || [];
+    return blocks.map(renderBlock).join('\n');
+  } catch {
+    return '<p class="text-muted-foreground">Konten tidak dapat dimuat.</p>';
+  }
+}
+
+function parseTags(tagsJson: string): string[] {
+  try {
+    return JSON.parse(tagsJson);
+  } catch {
+    return [];
+  }
+}
+
+export async function getStaticPaths() {
+  const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:5173';
+  const allPosts: Post[] = [];
+  try {
+    const response = await fetch(`${API_URL}/api/blog/posts?status=published&language=id&limit=100`);
+    if (response.ok) {
+      const posts: Post[] = await response.json();
+      allPosts.push(...posts);
+    }
+  } catch {
+    // API unavailable — no static paths
+  }
+  return allPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: Post };
+const htmlContent = renderContent(post.content);
+const tags = parseTags(post.tags);
+const pubDate = post.publishedAt ? new Date(post.publishedAt) : new Date();
+const siteUrl = Astro.site?.toString() || 'https://workofekajaya.com';
+const canonicalURL = new URL(`/id/blog/${post.slug}/`, siteUrl).toString();
+const englishURL = new URL(`/blog/${post.slug}/`, siteUrl).toString();
+const thumbnailURL = post.thumbnailKey
+  ? `${API_URL}/assets/${post.thumbnailKey}`
+  : undefined;
+---
+
+<Layout
+  title={`${post.title} — Blog`}
+  description={post.description}
+  image={thumbnailURL}
+  type="article"
+  publishedTime={pubDate.toISOString()}
+>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="en" href={englishURL} />
+    <link rel="alternate" hreflang="id" href={canonicalURL} />
+  </Fragment>
+
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-12">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">BLOG</p>
+
+      <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
+        {post.title}
+      </h1>
+
+      <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <span>Oleh {post.author}</span>
+        <time datetime={pubDate.toISOString()}>
+          {pubDate.toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2">
+        {tags.map((tag: string) => (
+          <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag}</span>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-accent hover:prose-a:text-accent/80 prose-strong:text-foreground prose-code:text-accent-yellow prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-lg"
+      set:html={htmlContent}
+    />
+
+    <nav class="mt-16 pt-8 border-t border-border flex justify-between">
+      <a href="/id/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">← Semua tulisan</a>
+      <a href={`/blog/${post.slug}/`} class="text-sm text-muted-foreground hover:text-foreground transition-colors">Read in English →</a>
+    </nav>
+
+    <JsonLd data={{
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      image: thumbnailURL || undefined,
+      author: {
+        "@type": "Person",
+        name: post.author,
+      },
+      datePublished: pubDate.toISOString(),
+      inLanguage: "id",
+      url: canonicalURL,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": canonicalURL,
+      },
+    }} />
+  </article>
+</Layout>

@@ -1,0 +1,231 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+
+export interface Props {
+  post: {
+    id: string;
+    slug: string;
+    language: string;
+    title: string;
+    description: string;
+    content: string;
+    thumbnailKey: string | null;
+    author: string;
+    tags: string;
+    publishedAt: number | null;
+  };
+}
+
+
+export async function getStaticPaths() {
+  const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:5173';
+  try {
+    const res = await fetch(`${API_URL}/api/blog/posts?status=published&language=en&limit=100`);
+    if (!res.ok) {
+      console.error(`[blog post] Failed to fetch posts: ${res.status}`);
+      return [];
+    }
+    const posts: Props['post'][] = await res.json();
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch {
+    return [];
+  }
+}
+
+const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:5173';
+
+const { post } = Astro.props;
+
+// --- Editor.js renderer ---
+
+interface EditorBlock {
+  type: string;
+  data: Record<string, unknown>;
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderBlock(block: EditorBlock): string {
+  const { type, data } = block;
+  switch (type) {
+    case 'header': {
+      const level = (data.level as number) || 2;
+      return `<h${level}>${escapeHtml(String(data.text ?? ''))}</h${level}>`;
+    }
+    case 'paragraph':
+      return `<p>${escapeHtml(String(data.text ?? ''))}</p>`;
+    case 'list': {
+      const tag = data.style === 'ordered' ? 'ol' : 'ul';
+      const items = ((data.items as string[]) || [])
+        .map((item: string) => `<li>${escapeHtml(item)}</li>`)
+        .join('');
+      return `<${tag}>${items}</${tag}>`;
+    }
+    case 'code':
+      return `<pre><code>${escapeHtml(String(data.code ?? ''))}</code></pre>`;
+    case 'quote': {
+      const quote = escapeHtml(String(data.text ?? ''));
+      const caption = data.caption
+        ? `<figcaption>— ${escapeHtml(String(data.caption))}</figcaption>`
+        : '';
+      return `<blockquote>${quote}${caption}</blockquote>`;
+    }
+    case 'delimiter':
+      return '<hr>';
+    case 'table': {
+      const rows = ((data.content as string[][]) || [])
+        .map(
+          (row: string[]) =>
+            `<tr>${row.map((cell: string) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`
+        )
+        .join('');
+      return `<table><tbody>${rows}</tbody></table>`;
+    }
+    case 'image': {
+      const fileUrl =
+        (data.file as { url?: string } | undefined)?.url || (data.url as string) || '';
+      const captionText = (data.caption as string) || (data.alt as string) || '';
+      const cap = data.caption
+        ? `<figcaption>${escapeHtml(String(data.caption))}</figcaption>`
+        : '';
+      return `<figure><img src="${escapeHtml(fileUrl)}" alt="${escapeHtml(captionText)}" />${cap}</figure>`;
+    }
+    default:
+      return '';
+  }
+}
+
+function renderEditorBlocks(blocks: EditorBlock[]): string {
+  return blocks.map(renderBlock).join('\n');
+}
+
+// --- Parse data ---
+
+let blocks: EditorBlock[] = [];
+try {
+  const parsed = JSON.parse(post.content);
+  blocks = parsed.blocks || [];
+} catch {
+  // content is empty or invalid JSON
+}
+
+const contentHtml = renderEditorBlocks(blocks);
+
+let tags: string[] = [];
+try {
+  tags = JSON.parse(post.tags || '[]');
+} catch {
+  tags = [];
+}
+
+const publishedDate = post.publishedAt ? new Date(post.publishedAt) : null;
+
+// --- SEO ---
+
+const siteUrl = (Astro.site?.toString() || 'https://workofekajaya.com').replace(/\/$/, '');
+const canonicalUrl = `${siteUrl}/blog/${post.slug}/`;
+const defaultImage = `${siteUrl}/og-default.png`;
+const thumbnailUrl = post.thumbnailKey
+  ? `${API_URL}/assets/${post.thumbnailKey}`
+  : null;
+
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.description,
+  author: {
+    '@type': 'Person',
+    name: post.author || 'I Putu Ekajaya Awidya Putra',
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'I Putu Ekajaya Awidya Putra',
+  },
+  datePublished: publishedDate?.toISOString(),
+  image: thumbnailUrl || defaultImage,
+  url: canonicalUrl,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalUrl,
+  },
+};
+---
+
+<Layout
+  title={`${post.title} — Blog`}
+  description={post.description}
+  image={thumbnailUrl || defaultImage}
+  type="article"
+  publishedTime={publishedDate?.toISOString()}
+>
+  <!-- Hreflang links -->
+  <link rel="alternate" hreflang="en" href={`${siteUrl}/blog/${post.slug}/`} />
+  <link rel="alternate" hreflang="id" href={`${siteUrl}/id/blog/${post.slug}/`} />
+  <link rel="alternate" hreflang="x-default" href={`${siteUrl}/blog/${post.slug}/`} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-12">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">BLOG</p>
+
+      <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
+        {post.title}
+      </h1>
+
+      <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <span>By {post.author}</span>
+        {publishedDate && (
+          <time datetime={publishedDate.toISOString()}>
+            {publishedDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </time>
+        )}
+      </div>
+
+      {tags.length > 0 && (
+        <div class="mt-4 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag}</span>
+          ))}
+        </div>
+      )}
+
+      {post.thumbnailKey && (
+        <div class="mt-8">
+          <img
+            src={thumbnailUrl!}
+            alt={post.title}
+            class="w-full rounded-lg object-cover max-h-96"
+            loading="eager"
+          />
+        </div>
+      )}
+    </header>
+
+    <div
+      class="prose prose-invert prose-sm md:prose-base max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-accent hover:prose-a:text-accent/80 prose-strong:text-foreground prose-code:text-accent-yellow prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-lg"
+      set:html={contentHtml}
+    />
+
+    <nav class="mt-16 pt-8 border-t border-border">
+      <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">&larr; Back to all posts</a>
+    </nav>
+  </article>
+
+  <JsonLd data={blogPostingSchema} />
+</Layout>

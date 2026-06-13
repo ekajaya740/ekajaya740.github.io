@@ -11,8 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as ApiV1InfoRouteImport } from './routes/api/v1/info'
+import { Route as ApiBlogUploadRouteImport } from './routes/api/blog/upload'
+import { Route as ApiBlogPostsRouteImport } from './routes/api/blog/posts'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
+import { Route as AdminBlogSlugRouteImport } from './routes/admin/blog/$slug'
+import { Route as ApiBlogPostsSlugRouteImport } from './routes/api/blog/posts/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,9 +30,24 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/admin/blog/',
+  path: '/admin/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1InfoRoute = ApiV1InfoRouteImport.update({
   id: '/api/v1/info',
   path: '/api/v1/info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBlogUploadRoute = ApiBlogUploadRouteImport.update({
+  id: '/api/blog/upload',
+  path: '/api/blog/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBlogPostsRoute = ApiBlogPostsRouteImport.update({
+  id: '/api/blog/posts',
+  path: '/api/blog/posts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -34,39 +55,108 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
+  id: '/admin/blog/new',
+  path: '/admin/blog/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogSlugRoute = AdminBlogSlugRouteImport.update({
+  id: '/admin/blog/$slug',
+  path: '/admin/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBlogPostsSlugRoute = ApiBlogPostsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ApiBlogPostsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/health': typeof ApiHealthRoute
+  '/admin/blog/$slug': typeof AdminBlogSlugRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
+  '/api/blog/upload': typeof ApiBlogUploadRoute
   '/api/v1/info': typeof ApiV1InfoRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/health': typeof ApiHealthRoute
+  '/admin/blog/$slug': typeof AdminBlogSlugRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
+  '/api/blog/upload': typeof ApiBlogUploadRoute
   '/api/v1/info': typeof ApiV1InfoRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
+  '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/health': typeof ApiHealthRoute
+  '/admin/blog/$slug': typeof AdminBlogSlugRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
+  '/api/blog/upload': typeof ApiBlogUploadRoute
   '/api/v1/info': typeof ApiV1InfoRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/health' | '/api/auth/$' | '/api/v1/info'
+  fullPaths:
+    | '/'
+    | '/api/health'
+    | '/admin/blog/$slug'
+    | '/admin/blog/new'
+    | '/api/auth/$'
+    | '/api/blog/posts'
+    | '/api/blog/upload'
+    | '/api/v1/info'
+    | '/admin/blog/'
+    | '/api/blog/posts/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/health' | '/api/auth/$' | '/api/v1/info'
-  id: '__root__' | '/' | '/api/health' | '/api/auth/$' | '/api/v1/info'
+  to:
+    | '/'
+    | '/api/health'
+    | '/admin/blog/$slug'
+    | '/admin/blog/new'
+    | '/api/auth/$'
+    | '/api/blog/posts'
+    | '/api/blog/upload'
+    | '/api/v1/info'
+    | '/admin/blog'
+    | '/api/blog/posts/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/health'
+    | '/admin/blog/$slug'
+    | '/admin/blog/new'
+    | '/api/auth/$'
+    | '/api/blog/posts'
+    | '/api/blog/upload'
+    | '/api/v1/info'
+    | '/admin/blog/'
+    | '/api/blog/posts/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  AdminBlogSlugRoute: typeof AdminBlogSlugRoute
+  AdminBlogNewRoute: typeof AdminBlogNewRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiBlogPostsRoute: typeof ApiBlogPostsRouteWithChildren
+  ApiBlogUploadRoute: typeof ApiBlogUploadRoute
   ApiV1InfoRoute: typeof ApiV1InfoRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,11 +175,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/admin/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/info': {
       id: '/api/v1/info'
       path: '/api/v1/info'
       fullPath: '/api/v1/info'
       preLoaderRoute: typeof ApiV1InfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/blog/upload': {
+      id: '/api/blog/upload'
+      path: '/api/blog/upload'
+      fullPath: '/api/blog/upload'
+      preLoaderRoute: typeof ApiBlogUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/blog/posts': {
+      id: '/api/blog/posts'
+      path: '/api/blog/posts'
+      fullPath: '/api/blog/posts'
+      preLoaderRoute: typeof ApiBlogPostsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -99,14 +210,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/blog/new': {
+      id: '/admin/blog/new'
+      path: '/admin/blog/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminBlogNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog/$slug': {
+      id: '/admin/blog/$slug'
+      path: '/admin/blog/$slug'
+      fullPath: '/admin/blog/$slug'
+      preLoaderRoute: typeof AdminBlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/blog/posts/$slug': {
+      id: '/api/blog/posts/$slug'
+      path: '/$slug'
+      fullPath: '/api/blog/posts/$slug'
+      preLoaderRoute: typeof ApiBlogPostsSlugRouteImport
+      parentRoute: typeof ApiBlogPostsRoute
+    }
   }
 }
+
+interface ApiBlogPostsRouteChildren {
+  ApiBlogPostsSlugRoute: typeof ApiBlogPostsSlugRoute
+}
+
+const ApiBlogPostsRouteChildren: ApiBlogPostsRouteChildren = {
+  ApiBlogPostsSlugRoute: ApiBlogPostsSlugRoute,
+}
+
+const ApiBlogPostsRouteWithChildren = ApiBlogPostsRoute._addFileChildren(
+  ApiBlogPostsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiHealthRoute: ApiHealthRoute,
+  AdminBlogSlugRoute: AdminBlogSlugRoute,
+  AdminBlogNewRoute: AdminBlogNewRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiBlogPostsRoute: ApiBlogPostsRouteWithChildren,
+  ApiBlogUploadRoute: ApiBlogUploadRoute,
   ApiV1InfoRoute: ApiV1InfoRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
