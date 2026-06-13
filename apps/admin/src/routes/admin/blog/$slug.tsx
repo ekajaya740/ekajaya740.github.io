@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useParams, useSearch, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
-import Editor from "editorjs-react";
+import { CEditor } from "@ekajaya/ui/composed/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
@@ -9,8 +9,8 @@ import CodeTool from "@editorjs/code";
 import Quote from "@editorjs/quote";
 import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
-import type { API } from "@editorjs/editorjs";
 import type { OutputData } from "@editorjs/editorjs";
+import { updatePostSchema } from "@ekajaya/schema/blog";
 
 interface Post {
   id: string;
@@ -36,10 +36,7 @@ export const Route = createFileRoute("/admin/blog/$slug")({
   validateSearch: (
     search: Record<string, string | undefined>,
   ): EditSearch => ({
-    language:
-      search.language === "en" || search.language === "id"
-        ? search.language
-        : "en",
+    language: (search.language as "en" | "id") || "en",
   }),
   component: BlogEditComponent,
 });
@@ -49,13 +46,12 @@ function BlogEditComponent(): ReactNode {
   const search = useSearch({ from: Route.id });
   const navigate = useNavigate();
 
-  const editorRef = useRef<unknown>(null);
   const [editorData, setEditorData] = useState<OutputData | null>(null);
-  const [editorReady, setEditorReady] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -92,6 +88,7 @@ function BlogEditComponent(): ReactNode {
       setPostSlug(post.slug);
       setTitle(post.title);
       setLanguage(post.language as "en" | "id");
+      setDescription(post.description);
       setTagNames(post.tags.map((t) => t.name));
       setStatus(post.status as "draft" | "published");
       setThumbnailKey(post.thumbnailKey);
@@ -117,38 +114,52 @@ function BlogEditComponent(): ReactNode {
     fetchPost();
   }, [fetchPost]);
 
-  const handleInitialize = useCallback((instance: unknown) => {
-    editorRef.current = instance;
-    setEditorReady(true);
-  }, []);
-
-  const handleChange = useCallback((_api: API, data: OutputData) => {
+  const handleChange = useCallback((data: OutputData) => {
     setEditorData(data);
   }, []);
 
   const handleSave = async (): Promise<void> => {
-    setSaving(true);
+    setValidationErrors([]);
     setError(null);
     setSaveSuccess(false);
 
-    try {
-      const body: Record<string, unknown> = {
-        title,
-        tagNames,
-        status,
-        content: JSON.stringify(editorData),
-      };
+    const content = JSON.stringify(editorData ?? { time: Date.now(), blocks: [] });
 
+    const payload: Record<string, unknown> = {
+      title,
+      content,
+      language,
+      tagNames,
+      status,
+      description: description || undefined,
+      thumbnailKey: thumbnailKey || undefined,
+    };
+
+    const parsed = updatePostSchema.safeParse(payload);
+    if (!parsed.success) {
+      setValidationErrors(
+        parsed.error.issues.map(
+          (issue) => `${issue.path.join(".")}: ${issue.message}`,
+        ),
+      );
+      return;
+    }
+
+    setSaving(true);
+    try {
       const res = await fetch(
         `/api/blog/posts/${slug}?language=${language}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify(payload),
         },
       );
 
-      if (!res.ok) throw new Error("Failed to save post");
+      if (!res.ok) {
+        const err = (await res.json()) as { error: string };
+        throw new Error(err.error ?? "Failed to save post");
+      }
 
       const updated = (await res.json()) as Post;
       setPostSlug(updated.slug);
@@ -203,7 +214,10 @@ function BlogEditComponent(): ReactNode {
   };
 
   const editorTools = useRef({
-    header: { class: Header as never, config: { levels: [2, 3, 4] } },
+    header: {
+      class: Header as never,
+      config: { levels: [2, 3, 4] },
+    },
     list: { class: List as never },
     image: {
       class: ImageTool as never,
@@ -222,7 +236,7 @@ function BlogEditComponent(): ReactNode {
       },
     },
     code: { class: CodeTool as never },
-    quote: { class: Quote as never },
+    quote: { class: Quote as never, inlineToolbar: true },
     delimiter: { class: Delimiter as never },
     table: { class: Table as never },
   }).current;
@@ -276,6 +290,17 @@ function BlogEditComponent(): ReactNode {
       {error && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
+        </div>
+      )}
+
+      {validationErrors.length > 0 && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
+          <p className="mb-1 font-medium">Validation errors:</p>
+          <ul className="list-inside list-disc space-y-0.5">
+            {validationErrors.map((msg, i) => (
+              <li key={i}>{msg}</li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -333,6 +358,7 @@ function BlogEditComponent(): ReactNode {
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
           />
         </div>
+
         {/* Tags */}
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -445,25 +471,20 @@ function BlogEditComponent(): ReactNode {
           </div>
         </div>
 
-        {/* Editor.js */}
+        {/* Content editor */}
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
             Content
           </label>
           <div className="min-h-[300px] rounded-lg border border-gray-300 bg-white p-4">
-            <Editor
+            <CEditor
               key={`${slug}-${search.language}`}
               data={editorData ?? undefined}
-              onInitialize={handleInitialize}
               onChange={handleChange}
               tools={editorTools}
+              placeholder="Start writing..."
             />
           </div>
-          {!editorReady && (
-            <p className="mt-1 text-xs text-gray-400">
-              Loading editor...
-            </p>
-          )}
         </div>
 
         {/* Actions */}

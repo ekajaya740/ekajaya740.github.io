@@ -32,8 +32,10 @@
         "better-auth-cloudflare": "^0.3.0",
         "drizzle-orm": "^1.0.0-rc.3",
         "editorjs-react": "^0.1.9",
+        "iso-639-1": "^3.1.5",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
+        "zod": "^4.4.3",
       },
       "devDependencies": {
         "@cloudflare/vite-plugin": "^1.0.0",
@@ -105,11 +107,19 @@
         "ky": "^1.2.0",
       },
     },
+    "packages/schema": {
+      "name": "@ekajaya/schema",
+      "version": "0.0.1",
+      "dependencies": {
+        "iso-639-1": "^3.0.0",
+        "zod": "^4.0.0",
+      },
+    },
     "packages/ui": {
       "name": "@ekajaya/ui",
       "version": "0.0.1",
       "dependencies": {
-        "@ekajaya/hooks": "workspace:*",
+        "@editorjs/editorjs": "^2.0.0",
         "@paper-design/shaders-react": "^0.0.76",
         "@radix-ui/react-slot": "^1.2.0",
         "@tanstack/react-form": "^1.0.0",
@@ -281,6 +291,8 @@
     "@ekajaya/hooks": ["@ekajaya/hooks@workspace:packages/hooks"],
 
     "@ekajaya/http": ["@ekajaya/http@workspace:packages/http"],
+
+    "@ekajaya/schema": ["@ekajaya/schema@workspace:packages/schema"],
 
     "@ekajaya/ui": ["@ekajaya/ui@workspace:packages/ui"],
 
@@ -941,6 +953,8 @@
     "is-wsl": ["is-wsl@3.1.1", "", { "dependencies": { "is-inside-container": "^1.0.0" } }, "sha512-e6rvdUCiQCAuumZslxRJWR/Doq4VpPR82kqclvcS0efgt430SlGIk05vdCN58+VrzgtIcfNODjozVielycD4Sw=="],
 
     "isbot": ["isbot@5.1.42", "", {}, "sha512-/SXsVh7KpPRISrD4ffrGSxnTLlUBzEQUfWIusaJPrpJ93FW1P0YEZri5vAUkFsA0m2HRUhQRQadk2wJ+EeKowQ=="],
+
+    "iso-639-1": ["iso-639-1@3.1.5", "", {}, "sha512-gXkz5+KN7HrG0Q5UGqSMO2qB9AsbEeyLP54kF1YrMsIxmu+g4BdB7rflReZTSTZGpfj8wywu6pfPBCylPIzGQA=="],
 
     "jiti": ["jiti@2.7.0", "", { "bin": { "jiti": "lib/jiti-cli.mjs" } }, "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ=="],
 

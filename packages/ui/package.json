@@ -7,12 +7,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./utils": "./src/lib/utils.ts",
-    "./composable": "./src/components/react/composable/controlled/index.ts",
-    "./composable/shaders": "./src/components/react/composable/shaders/index.ts",
+    "./composed": "./src/components/react/composed/controlled/index.ts",
+    "./composed/shaders": "./src/components/react/composed/shaders/index.ts",
+    "./composed/editorjs": "./src/components/react/composed/editorjs/index.ts",
     "./*": "./src/components/react/*"
   },
   "dependencies": {
-    "@ekajaya/hooks": "workspace:*",
+    "@editorjs/editorjs": "^2.0.0",
     "@paper-design/shaders-react": "^0.0.76",
     "@radix-ui/react-slot": "^1.2.0",
     "@tanstack/react-form": "^1.0.0",

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { ReactNode, FormEvent, ChangeEvent } from "react";
-import Editor from "editorjs-react";
+import { CEditor } from "@ekajaya/ui/composed/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
@@ -9,8 +9,9 @@ import CodeTool from "@editorjs/code";
 import Quote from "@editorjs/quote";
 import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
-
 import type { OutputData } from "@editorjs/editorjs";
+import { createPostSchema } from "@ekajaya/schema/blog";
+import type { CreatePostInput } from "@ekajaya/schema/blog";
 
 export const Route = createFileRoute("/admin/blog/new")({
   component: NewBlogPostComponent,
@@ -26,7 +27,6 @@ function slugify(text: string): string {
 function NewBlogPostComponent(): ReactNode {
   const navigate = useNavigate();
 
-  const editorRef = useRef<unknown>(null);
   const slugRef = useRef("");
   const langRef = useRef("en");
 
@@ -68,18 +68,6 @@ function NewBlogPostComponent(): ReactNode {
     },
     [],
   );
-
-  const handleInitialize = useCallback((instance: unknown) => {
-    editorRef.current = instance;
-  }, []);
-
-  const handleChange = useCallback(
-    (_api: unknown, data: OutputData) => {
-      setEditorData(data);
-    },
-    [],
-  );
-
   const handleLanguageChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const lang = e.target.value as "en" | "id";
@@ -123,7 +111,7 @@ function NewBlogPostComponent(): ReactNode {
       try {
         const content = JSON.stringify(editorData ?? { time: Date.now(), blocks: [] });
 
-        const body: Record<string, unknown> = {
+        const body: CreatePostInput = {
           slug,
           title,
           content,
@@ -136,10 +124,18 @@ function NewBlogPostComponent(): ReactNode {
           body.tagNames = tagNames;
         }
 
+        const validation = createPostSchema.safeParse(body);
+        if (!validation.success) {
+          const messages = validation.error.issues.map((i) => i.message).join("\n");
+          alert(`Validation error:\n${messages}`);
+          setSaving(false);
+          return;
+        }
+
         const res = await fetch("/api/blog/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify(validation.data),
         });
 
         if (!res.ok) {
@@ -365,10 +361,10 @@ function NewBlogPostComponent(): ReactNode {
         <div>
           <label className="mb-1 block text-sm font-medium">Content</label>
           <div className="min-h-[300px] rounded-lg border border-gray-300 p-4">
-            <Editor
-              onInitialize={handleInitialize}
-              onChange={handleChange}
+            <CEditor
               tools={editorTools}
+              onChange={(data) => setEditorData(data)}
+              placeholder="Start writing..."
             />
           </div>
         </div>
