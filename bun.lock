@@ -109,6 +109,8 @@
       "name": "@ekajaya/ui",
       "version": "0.0.1",
       "dependencies": {
+        "@ekajaya/hooks": "workspace:*",
+        "@paper-design/shaders-react": "^0.0.76",
         "@radix-ui/react-slot": "^1.2.0",
         "@tanstack/react-form": "^1.0.0",
         "class-variance-authority": "^0.7.1",

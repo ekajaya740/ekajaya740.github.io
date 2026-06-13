@@ -8,9 +8,12 @@
     ".": "./src/index.ts",
     "./utils": "./src/lib/utils.ts",
     "./composable": "./src/components/react/composable/controlled/index.ts",
+    "./composable/shaders": "./src/components/react/composable/shaders/index.ts",
     "./*": "./src/components/react/*"
   },
   "dependencies": {
+    "@ekajaya/hooks": "workspace:*",
+    "@paper-design/shaders-react": "^0.0.76",
     "@radix-ui/react-slot": "^1.2.0",
     "@tanstack/react-form": "^1.0.0",
     "class-variance-authority": "^0.7.1",
