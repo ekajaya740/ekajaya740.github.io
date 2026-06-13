@@ -26,6 +26,8 @@
     "@editorjs/list": "^2.0.9",
     "@editorjs/quote": "^2.7.6",
     "@editorjs/table": "^2.4.5",
+    "@fontsource/sansation": "^5.2.2",
+    "@fontsource/share-tech-mono": "^5.2.7",
     "@radix-ui/react-alert-dialog": "^1.1.16",
     "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-query": "^5.101.0",
@@ -45,11 +47,13 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.0.0",
     "@cloudflare/workers-types": "^4.20250605.0",
+    "@tailwindcss/vite": "^4.3.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.6.0",
     "drizzle-kit": "^1.0.0-rc.3",
+    "tailwindcss": "^4.3.1",
     "vite": "^6.3.0",
     "vite-tsconfig-paths": "^5.1.0",
     "wrangler": "^4.34.0"

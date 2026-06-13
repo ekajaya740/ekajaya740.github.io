@@ -1,5 +1,6 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import '../styles/index.css'
 
 export const Route = createRootRoute({
   component: RootComponent,
