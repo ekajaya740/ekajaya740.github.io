@@ -5,8 +5,8 @@ import {
   useParams,
   useSearch,
 } from "@tanstack/react-router";
-import { useState, useCallback, useRef, useEffect } from "react";
-import type { ReactNode, ChangeEvent } from "react";
+import { useRef } from "react";
+import type { ReactNode } from "react";
 import {
   CForm,
   CField,
@@ -15,6 +15,8 @@ import {
   CSelect,
   CSubmit,
   CEditor,
+  CTagInput,
+  CFileUpload,
 } from "@ekajaya/ui/composed";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
@@ -25,36 +27,14 @@ import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
 import type { OutputData } from "@editorjs/editorjs";
 import { updatePostSchema } from "@ekajaya/schema/blog";
-
-// ---- Types ----------------------------------------------------------------
-
-interface Post {
-  id: string;
-  slug: string;
-  language: string;
-  title: string;
-  description: string;
-  content: string;
-  thumbnailKey: string | null;
-  author: string;
-  tags: { id: string; name: string; showcase: boolean }[];
-  status: "draft" | "published";
-  publishedAt: number | null;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface BlogFormValues {
-  title: string;
-  language: string;
-  description: string;
-}
-
+import { useUpdatePost, usePost } from "@ekajaya/hooks/blog";
 export interface EditSearch {
   language?: "en" | "id";
 }
 
 // ---- Route ----------------------------------------------------------------
+
+
 
 export const Route = createFileRoute("/admin/blog/$slug")({
   validateSearch: (
@@ -70,223 +50,100 @@ export const Route = createFileRoute("/admin/blog/$slug")({
 
 // ---- Component ------------------------------------------------------------
 
+interface PostForm {
+  title: string;
+  language: string;
+  description: string;
+  content: OutputData | null;
+  tags: string[];
+  thumbnailKey: string | null;
+}
+
 function BlogEditComponent(): ReactNode {
   const { slug } = useParams({ from: Route.id });
   const search = useSearch({ from: Route.id });
   const navigate = useNavigate();
 
   const language = search.language ?? "en";
+  const {
+    data: post,
+    isLoading,
+    error: loadError,
+  } = usePost(slug, language);
+  const updatePost = useUpdatePost(slug);
 
-  // ---- State ---------------------------------------------------------------
-
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
-  const [editorData, setEditorData] = useState<OutputData | null>(null);
-  const [tagNames, setTagNames] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
-  const [thumbnailKey, setThumbnailKey] = useState<string | null>(null);
-  const [postSlug, setPostSlug] = useState(slug);
-  const [defaultValues, setDefaultValues] =
-    useState<BlogFormValues | null>(null);
-
-  // ---- Refs ---------------------------------------------------------------
-
-  const languageRef = useRef(language);
   const slugRef = useRef(slug);
+  const langRef = useRef(language);
 
-  useEffect(() => {
-    languageRef.current = (defaultValues?.language ?? language) as "id" | "en";
-  }, [defaultValues?.language, language]);
+  const saving = updatePost.isPending;
+  const error = loadError?.message ?? null;
 
-  useEffect(() => {
-    slugRef.current = postSlug;
-  }, [postSlug]);
+  // ---- Save ----------------------------------------------------------------
 
-  // ---- Fetch post ----------------------------------------------------------
+  const handleSubmit = async (
+    values: Record<string, unknown>,
+    status: "draft" | "published",
+  ): Promise<void> => {
+    const v = values as unknown as PostForm;
 
-  const fetchPost = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    const payload: Record<string, unknown> = {
+      title: v.title,
+      content: JSON.stringify(v.content ?? { time: Date.now(), blocks: [] }),
+      language: v.language,
+      description: v.description || undefined,
+      tagNames: v.tags.length > 0 ? v.tags : undefined,
+      thumbnailKey: v.thumbnailKey || undefined,
+      status,
+    };
+
+    const parsed = updatePostSchema.safeParse(payload);
+    if (!parsed.success) {
+      return;
+    }
+
     try {
-      const res = await fetch(
-        `/api/blog/posts/${encodeURIComponent(slug)}?language=${language}`,
-      );
-      if (!res.ok) throw new Error("Failed to load post");
-      const post = (await res.json()) as Post;
+      const updated = await updatePost.mutateAsync(parsed.data);
+      if ((updated as { language?: string }).language !== language) {
+        navigate({
+          to: "/admin/blog/$slug",
+          params: { slug },
+          search: {
+            language: (updated as { language?: string }).language as
+              | "en"
+              | "id",
+          },
+        });
+      }
+    } catch {
+      // mutation handles error
+    }
+  };
 
-      setPostSlug(post.slug);
-      setDefaultValues({
+  // ---- Default values from API ---------------------------------------------
+
+  const defaults: PostForm = post
+    ? {
         title: post.title,
         language: post.language,
         description: post.description,
-      });
-      setTagNames(post.tags.map((t) => t.name));
-      setThumbnailKey(post.thumbnailKey);
-
-      if (post.content) {
-        try {
-          const parsed = JSON.parse(post.content) as OutputData;
-          setEditorData(parsed);
-        } catch {
-          setEditorData(null);
-        }
+        content: post.content
+          ? (JSON.parse(post.content) as OutputData)
+          : null,
+        tags: post.tags?.map((t: { name: string }) => t.name) ?? [],
+        thumbnailKey: post.thumbnailKey,
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load post");
-    } finally {
-      setLoading(false);
-    }
-  }, [slug, language]);
-
-  useEffect(() => {
-    fetchPost();
-  }, [fetchPost]);
-
-  // ---- Save ---------------------------------------------------------------
-
-  const handleSave = useCallback(
-    async (
-      values: BlogFormValues,
-      status: "draft" | "published",
-    ): Promise<void> => {
-      setValidationErrors([]);
-      setError(null);
-      setSaveSuccess(false);
-
-      const payload: Record<string, unknown> = {
-        title: values.title,
-        content: JSON.stringify(
-          editorData ?? { time: Date.now(), blocks: [] },
-        ),
-        language: values.language,
-        description: values.description || undefined,
-        tagNames: tagNames.length > 0 ? tagNames : undefined,
-        thumbnailKey: thumbnailKey || undefined,
-        status,
+    : {
+        title: "",
+        language,
+        description: "",
+        content: null,
+        tags: [],
+        thumbnailKey: null,
       };
 
-      const parsed = updatePostSchema.safeParse(payload);
-      if (!parsed.success) {
-        setValidationErrors(
-          parsed.error.issues.map(
-            (issue) => `${issue.path.join(".")}: ${issue.message}`,
-          ),
-        );
-        return;
-      }
+  // ---- Early returns --------------------------------------------------------
 
-      setSaving(true);
-      try {
-        const res = await fetch(
-          `/api/blog/posts/${encodeURIComponent(postSlug)}?language=${values.language}`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(parsed.data),
-          },
-        );
-
-        if (!res.ok) {
-          const err = (await res.json()) as { error: string };
-          throw new Error(err.error ?? "Failed to save post");
-        }
-
-        const updated = (await res.json()) as Post;
-        setPostSlug(updated.slug);
-        setThumbnailKey(updated.thumbnailKey);
-        setSaveSuccess(true);
-
-        if (updated.language !== languageRef.current) {
-          navigate({
-            to: "/admin/blog/$slug",
-            params: { slug: updated.slug },
-            search: { language: updated.language as "en" | "id" },
-          });
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to save post");
-      } finally {
-        setSaving(false);
-      }
-    },
-    [editorData, tagNames, thumbnailKey, postSlug, navigate],
-  );
-
-  // ---- Thumbnail upload ---------------------------------------------------
-
-  const handleThumbnailUpload = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      setUploading(true);
-      setError(null);
-      try {
-        const form = new FormData();
-        form.append("file", file);
-        form.append("slug", slugRef.current);
-        form.append("lang", languageRef.current);
-
-        const res = await fetch("/api/blog/upload", {
-          method: "POST",
-          body: form,
-        });
-        if (!res.ok) throw new Error("Failed to upload thumbnail");
-
-        const data = (await res.json()) as { key: string; url: string };
-        setThumbnailKey(data.key);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to upload thumbnail",
-        );
-      } finally {
-        setUploading(false);
-      }
-    },
-    [],
-  );
-
-  // ---- Editor tools -------------------------------------------------------
-
-  const editorTools = useRef({
-    header: {
-      class: Header as never,
-      config: { levels: [2, 3, 4] },
-    },
-    list: {
-      class: List as never,
-      inlineToolbar: true,
-    },
-    image: {
-      class: ImageTool as never,
-      config: {
-        uploader: {
-          uploadByFile: (file: File) => {
-            const form = new FormData();
-            form.append("file", file);
-            form.append("slug", slugRef.current);
-            form.append("lang", languageRef.current);
-            return fetch("/api/blog/upload", { method: "POST", body: form })
-              .then((r) => r.json() as Promise<{ url: string }>)
-              .then((data) => ({ success: 1, file: { url: data.url } }));
-          },
-        },
-      },
-    },
-    code: { class: CodeTool as never },
-    quote: { class: Quote as never, inlineToolbar: true },
-    delimiter: { class: Delimiter as never },
-    table: { class: Table as never },
-  }).current;
-
-  // ---- Early returns ------------------------------------------------------
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="mx-auto max-w-4xl p-6">
         <div className="py-12 text-center text-gray-500">Loading post...</div>
@@ -294,7 +151,7 @@ function BlogEditComponent(): ReactNode {
     );
   }
 
-  if (error && !defaultValues) {
+  if (error && !post) {
     return (
       <div className="mx-auto max-w-4xl p-6">
         <div className="mb-4">
@@ -312,11 +169,10 @@ function BlogEditComponent(): ReactNode {
     );
   }
 
-  // ---- Render -------------------------------------------------------------
+  // ---- Render ---------------------------------------------------------------
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
@@ -327,41 +183,21 @@ function BlogEditComponent(): ReactNode {
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Edit Post</h1>
         </div>
-        {saveSuccess && (
-          <span className="text-sm font-medium text-green-600">
-            Saved successfully
-          </span>
-        )}
       </div>
 
-      {/* Inline error (when defaultValues already loaded) */}
-      {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-
-      {/* Validation errors */}
-      {validationErrors.length > 0 && (
-        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
-          <p className="mb-1 font-medium">Validation errors:</p>
-          <ul className="list-inside list-disc space-y-0.5">
-            {validationErrors.map((msg, i) => (
-              <li key={i}>{msg}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <CForm
-        defaultValues={(defaultValues ?? {}) as Record<string, unknown>}
-        onSubmit={(v) => handleSave(v as unknown as BlogFormValues, "published")}
+        defaultValues={defaults as unknown as Record<string, unknown>}
+        onSubmit={(v) => handleSubmit(v, "published")}
       >
         {(form) => {
-          const f = form as unknown as {
+          const f = form as {
             state: { values: Record<string, unknown> };
             setFieldValue: (name: string, value: unknown) => void;
           };
+          const values = f.state.values as unknown as PostForm;
+
+          slugRef.current = slug;
+          langRef.current = values.language as "id" | "en";
 
           return (
             <div className="space-y-6">
@@ -372,20 +208,18 @@ function BlogEditComponent(): ReactNode {
                 </label>
                 <input
                   type="text"
-                  value={postSlug}
+                  value={slug}
                   disabled
                   className="w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 font-mono text-sm text-gray-500"
                 />
               </div>
 
-              {/* Title */}
               <CField name="title" form={form} label="Title">
                 {(field) => (
                   <CInput field={field} placeholder="Post title" required />
                 )}
               </CField>
 
-              {/* Language */}
               <CField name="language" form={form} label="Language">
                 {(field) => (
                   <CSelect
@@ -398,7 +232,6 @@ function BlogEditComponent(): ReactNode {
                 )}
               </CField>
 
-              {/* Description */}
               <CField name="description" form={form} label="Description">
                 {(field) => (
                   <CTextarea
@@ -409,106 +242,29 @@ function BlogEditComponent(): ReactNode {
                 )}
               </CField>
 
-              {/* Tags */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Tags
                 </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        const trimmed = tagInput.trim();
-                        if (trimmed && !tagNames.includes(trimmed)) {
-                          setTagNames((prev) => [...prev, trimmed]);
-                        }
-                        setTagInput("");
-                      }
-                    }}
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
-                    placeholder="Add a tag and press Enter"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const trimmed = tagInput.trim();
-                      if (trimmed && !tagNames.includes(trimmed)) {
-                        setTagNames((prev) => [...prev, trimmed]);
-                      }
-                      setTagInput("");
-                    }}
-                    className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                  >
-                    Add
-                  </button>
-                </div>
-                {tagNames.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {tagNames.map((name, idx) => (
-                      <span
-                        key={`${name}-${idx}`}
-                        className="inline-flex items-center gap-1 rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700"
-                      >
-                        {name}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setTagNames((prev) =>
-                              prev.filter((_, i) => i !== idx),
-                            )
-                          }
-                          className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-700"
-                        >
-                          &times;
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <CTagInput
+                  tags={values.tags}
+                  onChange={(tags) => f.setFieldValue("tags", tags)}
+                />
               </div>
 
-              {/* Thumbnail */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Thumbnail
                 </label>
-                {thumbnailKey && (
-                  <div className="mb-2">
-                    <img
-                      src={`/assets/${thumbnailKey}`}
-                      alt="Thumbnail preview"
-                      className="h-32 w-56 rounded-lg border border-gray-200 object-cover"
-                    />
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  <label className="inline-flex cursor-pointer items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
-                    {uploading ? "Uploading..." : "Choose Image"}
-                    <input
-                      type="file"
-                      accept="image/webp,image/png,image/jpeg"
-                      onChange={handleThumbnailUpload}
-                      disabled={uploading}
-                      className="hidden"
-                    />
-                  </label>
-                  {thumbnailKey && (
-                    <button
-                      type="button"
-                      onClick={() => setThumbnailKey(null)}
-                      className="text-sm text-red-600 hover:text-red-800"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+                <CFileUpload
+                  endpoint="/api/blog/upload"
+                  value={values.thumbnailKey}
+                  onChange={(key) =>
+                    f.setFieldValue("thumbnailKey", key)
+                  }
+                />
               </div>
 
-              {/* Content editor */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Content
@@ -516,15 +272,16 @@ function BlogEditComponent(): ReactNode {
                 <div className="min-h-[300px] rounded-lg border border-gray-300 bg-white p-4">
                   <CEditor
                     key={`${slug}-${language}`}
-                    data={editorData ?? undefined}
-                    onChange={(data) => setEditorData(data)}
-                    tools={editorTools}
+                    data={values.content ?? undefined}
+                    onChange={(data: OutputData) =>
+                      f.setFieldValue("content", data)
+                    }
+                    tools={editorTools(slugRef, langRef)}
                     placeholder="Start writing..."
                   />
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center gap-3 border-t border-gray-200 pt-6">
                 <CSubmit disabled={saving}>
                   {saving ? "Saving..." : "Publish"}
@@ -532,12 +289,7 @@ function BlogEditComponent(): ReactNode {
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={() =>
-                    handleSave(
-                      f.state.values as unknown as BlogFormValues,
-                      "draft",
-                    )
-                  }
+                  onClick={() => handleSubmit(f.state.values, "draft")}
                   className="rounded-lg border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {saving ? "Saving..." : "Save Draft"}
@@ -555,4 +307,36 @@ function BlogEditComponent(): ReactNode {
       </CForm>
     </div>
   );
+}
+
+// ---- Editor tools ----------------------------------------------------------
+
+function editorTools(
+  slugRef: { current: string },
+  langRef: { current: string },
+) {
+  return {
+    header: { class: Header, config: { levels: [2, 3, 4] } },
+    list: { class: List, inlineToolbar: true },
+    image: {
+      class: ImageTool,
+      config: {
+        uploader: {
+          uploadByFile(file: File) {
+            const form = new FormData();
+            form.append("file", file);
+            form.append("slug", slugRef.current);
+            form.append("lang", langRef.current);
+            return fetch("/api/blog/upload", { method: "POST", body: form })
+              .then((r) => r.json() as Promise<{ url: string }>)
+              .then((data) => ({ success: 1, file: { url: data.url } }));
+          },
+        },
+      },
+    },
+    code: { class: CodeTool },
+    quote: { class: Quote, inlineToolbar: true },
+    delimiter: { class: Delimiter },
+    table: { class: Table },
+  };
 }

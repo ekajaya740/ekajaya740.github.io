@@ -10,6 +10,7 @@
       "@ekajaya/ui/composed/*": ["../../packages/ui/src/components/react/composed/*"],
       "@ekajaya/ui/utils": ["../../packages/ui/src/lib/utils.ts"],
       "@ekajaya/schema/*": ["../../packages/schema/src/*"],
+      "@ekajaya/hooks/blog": ["../../packages/hooks/src/blog.ts"],
       "@ekajaya/hooks/*": ["../../packages/hooks/src/*"],
       "@ekajaya/http/*": ["../../packages/http/src/*"]
     }
