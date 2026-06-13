@@ -15,11 +15,12 @@ export const Route = createFileRoute("/api/auth/$")({
 async function handleAuth(request: Request) {
   const platformEnv = getPlatformEnv();
   const url = new URL(request.url);
+  const host = request.headers.get("host") || url.host;
 
   const auth = createAuth(
     platformEnv?.DB ? { DB: platformEnv.DB as D1Database } : undefined,
     undefined,
-    `${url.protocol}//${url.host}`,
+    `${url.protocol}//${host}`,
   );
 
   return auth.handler(request);

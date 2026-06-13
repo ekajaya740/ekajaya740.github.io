@@ -1,12 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: () => {
-    const navigate = useNavigate();
-    useEffect(() => {
-      navigate({ to: "/dashboard", replace: true });
-    }, [navigate]);
-    return null;
+  beforeLoad: () => {
+    throw redirect({ to: "/dashboard" });
   },
 });
