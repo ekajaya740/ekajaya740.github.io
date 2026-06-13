@@ -4,9 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run dev:app & bun run dev:studio & wait",
-    "dev:app": "vite dev",
-    "dev:studio": "drizzle-kit studio --config drizzle.local.config.ts",
+    "dev": "vite dev",
+    "studio": "drizzle-kit studio --config drizzle.local.config.ts",
     "build": "vite build && tsc --noEmit",
     "preview": "vite preview",
     "deploy": "bun run build && wrangler deploy",

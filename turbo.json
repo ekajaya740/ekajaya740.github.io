@@ -20,8 +20,11 @@
     "deploy": {
       "dependsOn": ["build"]
     },
+    "studio": {
+      "cache": false,
+      "persistent": true
+    },
     "clean": {
-      "cache": false
     }
   }
 }
