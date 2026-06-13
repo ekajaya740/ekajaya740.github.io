@@ -7,7 +7,12 @@
   "exports": {
     ".": "./src/index.ts",
     "./use-media-query": "./src/useMediaQuery.ts",
-    "./use-container-size": "./src/useContainerSize.ts"
+    "./use-container-size": "./src/useContainerSize.ts",
+    "./blog": "./src/blog.ts"
+  },
+  "dependencies": {
+    "@ekajaya/http": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0"

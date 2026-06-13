@@ -1,9 +1,9 @@
 export { cn } from './lib/utils'
-export { Button, buttonVariants } from './components/react/buttons/button'
-export type { ButtonProps } from './components/react/buttons/button'
-export { DotmSquare11 } from './components/react/dotm-square-11'
-export type { DotmSquare11Props } from './components/react/dotm-square-11'
-export { DotMatrixBase } from './components/react/loading/dotmatrix-core'
+export { Button, buttonVariants } from './components/react/base/buttons/button'
+export type { ButtonProps } from './components/react/base/buttons/button'
+export { DotmSquare11 } from './components/react/base/dotmatrix/dotm-square-11'
+export type { DotmSquare11Props } from './components/react/base/dotmatrix/dotm-square-11'
+export { DotMatrixBase } from './components/react/base/dotmatrix/loading/dotmatrix-core'
 export type {
   DotMatrixCommonProps,
   DotMatrixPhase,
@@ -12,8 +12,8 @@ export type {
   DotMatrixColorPreset,
   DotAnimationResolver,
   DotAnimationContext,
-} from './components/react/loading/dotmatrix-core'
+} from './components/react/base/dotmatrix/loading/dotmatrix-core'
 export {
   usePrefersReducedMotion,
   useDotMatrixPhases,
-} from './components/react/dotmatrix-hooks'
+} from './components/react/base/dotmatrix/dotmatrix-hooks'

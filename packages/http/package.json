@@ -1,0 +1,15 @@
+{
+  "name": "@ekajaya/http",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./blog": "./src/blog.ts"
+  },
+  "dependencies": {
+    "ky": "^1.2.0"
+  }
+}
