@@ -23,6 +23,10 @@ bun-debug.log*
 .dev.vars
 .dev.vars.*
 
+# local databases
+*.db
+*.db-journal
+
 # macOS-specific files
 .DS_Store
 .AppleDouble
