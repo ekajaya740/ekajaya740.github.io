@@ -11,7 +11,7 @@ interface Post {
   content: string;
   thumbnailKey: string | null;
   author: string;
-  tags: string;
+  tags: { id: string; name: string; showcase: boolean }[];
   status: "draft" | "published";
   publishedAt: number | null;
   createdAt: number;
@@ -163,6 +163,9 @@ function BlogDashboardComponent(): ReactNode {
                   Status
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-gray-600">
+                  Tags
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600">
                   Created
                 </th>
                 <th className="px-4 py-3 text-right font-medium text-gray-600">
@@ -201,6 +204,18 @@ function BlogDashboardComponent(): ReactNode {
                     >
                       {post.status === "published" ? "Published" : "Draft"}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {post.tags.map((t) => (
+                        <span
+                          key={t.id}
+                          className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700"
+                        >
+                          {t.name}
+                        </span>
+                      ))}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-500">
                     {new Date(post.createdAt).toLocaleDateString()}

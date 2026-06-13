@@ -13,7 +13,7 @@ interface Post {
   content: string;
   thumbnailKey: string | null;
   author: string;
-  tags: string;
+  tags: { id: string; name: string; showcase: boolean }[];
   publishedAt: number | null;
 }
 
@@ -97,13 +97,6 @@ function renderContent(contentJson: string): string {
   }
 }
 
-function parseTags(tagsJson: string): string[] {
-  try {
-    return JSON.parse(tagsJson);
-  } catch {
-    return [];
-  }
-}
 
 export async function getStaticPaths() {
   const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:5173';
@@ -125,7 +118,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props as { post: Post };
 const htmlContent = renderContent(post.content);
-const tags = parseTags(post.tags);
+const tags = post.tags;
 const pubDate = post.publishedAt ? new Date(post.publishedAt) : new Date();
 const siteUrl = Astro.site?.toString() || 'https://workofekajaya.com';
 const canonicalURL = new URL(`/id/blog/${post.slug}/`, siteUrl).toString();
@@ -168,8 +161,8 @@ const thumbnailURL = post.thumbnailKey
       </div>
 
       <div class="mt-4 flex flex-wrap gap-2">
-        {tags.map((tag: string) => (
-          <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag}</span>
+        {tags.map((tag) => (
+          <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag.name}</span>
         ))}
       </div>
     </header>

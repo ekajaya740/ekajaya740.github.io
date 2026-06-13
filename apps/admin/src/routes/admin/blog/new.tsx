@@ -35,7 +35,8 @@ function NewBlogPostComponent(): ReactNode {
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState<"en" | "id">("en");
   const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
+  const [tagNames, setTagNames] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [thumbnailKey, setThumbnailKey] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -131,13 +132,8 @@ function NewBlogPostComponent(): ReactNode {
           thumbnailKey: thumbnailKey || undefined,
         };
 
-        if (tags) {
-          body.tags = JSON.stringify(
-            tags
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean),
-          );
+        if (tagNames.length > 0) {
+          body.tagNames = tagNames;
         }
 
         const res = await fetch("/api/blog/posts", {
@@ -174,7 +170,7 @@ function NewBlogPostComponent(): ReactNode {
         setSaving(false);
       }
     },
-    [slug, title, editorData, language, description, thumbnailKey, tags, navigate],
+    [slug, title, editorData, language, description, thumbnailKey, tagNames, navigate],
   );
 
   const editorTools = {
@@ -260,36 +256,76 @@ function NewBlogPostComponent(): ReactNode {
           />
         </div>
 
-        {/* Language & Tags row */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="language" className="mb-1 block text-sm font-medium">
-              Language
-            </label>
-            <select
-              id="language"
-              value={language}
-              onChange={handleLanguageChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
-            >
-              <option value="en">English</option>
-              <option value="id">Bahasa Indonesia</option>
-            </select>
-          </div>
+        {/* Language */}
+        <div>
+          <label htmlFor="language" className="mb-1 block text-sm font-medium">
+            Language
+          </label>
+          <select
+            id="language"
+            value={language}
+            onChange={handleLanguageChange}
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+          >
+            <option value="en">English</option>
+            <option value="id">Bahasa Indonesia</option>
+          </select>
+        </div>
 
-          <div>
-            <label htmlFor="tags" className="mb-1 block text-sm font-medium">
-              Tags
-            </label>
+        {/* Tags */}
+        <div>
+          <label className="mb-1 block text-sm font-medium">Tags</label>
+          <div className="flex gap-2">
             <input
-              id="tags"
               type="text"
-              value={tags}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setTags(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
-              placeholder="tag1, tag2, tag3"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const trimmed = tagInput.trim();
+                  if (trimmed && !tagNames.includes(trimmed)) {
+                    setTagNames((prev) => [...prev, trimmed]);
+                  }
+                  setTagInput("");
+                }
+              }}
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              placeholder="Add a tag"
             />
+            <button
+              type="button"
+              onClick={() => {
+                const trimmed = tagInput.trim();
+                if (trimmed && !tagNames.includes(trimmed)) {
+                  setTagNames((prev) => [...prev, trimmed]);
+                }
+                setTagInput("");
+              }}
+              className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+            >
+              Add
+            </button>
           </div>
+          {tagNames.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {tagNames.map((name, idx) => (
+                <span
+                  key={`${name}-${idx}`}
+                  className="inline-flex items-center gap-1 rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700"
+                >
+                  {name}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTagNames((prev) => prev.filter((_, i) => i !== idx))
+                    }
+                    className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-700"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Description */}

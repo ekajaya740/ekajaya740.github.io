@@ -21,7 +21,7 @@ interface Post {
   content: string;
   thumbnailKey: string | null;
   author: string;
-  tags: string;
+  tags: { id: string; name: string; showcase: boolean }[];
   status: "draft" | "published";
   publishedAt: number | null;
   createdAt: number;
@@ -62,7 +62,8 @@ function BlogEditComponent(): ReactNode {
   const [postSlug, setPostSlug] = useState(slug);
   const [language, setLanguage] = useState<"en" | "id">(search.language);
   const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
+  const [tagNames, setTagNames] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [thumbnailKey, setThumbnailKey] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -91,8 +92,7 @@ function BlogEditComponent(): ReactNode {
       setPostSlug(post.slug);
       setTitle(post.title);
       setLanguage(post.language as "en" | "id");
-      setDescription(post.description);
-      setTags(parseTags(post.tags));
+      setTagNames(post.tags.map((t) => t.name));
       setStatus(post.status as "draft" | "published");
       setThumbnailKey(post.thumbnailKey);
 
@@ -126,24 +126,6 @@ function BlogEditComponent(): ReactNode {
     setEditorData(data);
   }, []);
 
-  const parseTags = (raw: string): string => {
-    try {
-      const arr = JSON.parse(raw) as string[];
-      return Array.isArray(arr) ? arr.join(", ") : "";
-    } catch {
-      return "";
-    }
-  };
-
-  const serializeTags = (val: string): string => {
-    return JSON.stringify(
-      val
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-    );
-  };
-
   const handleSave = async (): Promise<void> => {
     setSaving(true);
     setError(null);
@@ -152,8 +134,7 @@ function BlogEditComponent(): ReactNode {
     try {
       const body: Record<string, unknown> = {
         title,
-        description,
-        tags: serializeTags(tags),
+        tagNames,
         status,
         content: JSON.stringify(editorData),
       };
@@ -352,19 +333,64 @@ function BlogEditComponent(): ReactNode {
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
           />
         </div>
-
         {/* Tags */}
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Tags (comma-separated)
+            Tags
           </label>
-          <input
-            type="text"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="react, typescript, tutorial"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const trimmed = tagInput.trim();
+                  if (trimmed && !tagNames.includes(trimmed)) {
+                    setTagNames((prev) => [...prev, trimmed]);
+                  }
+                  setTagInput("");
+                }
+              }}
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
+              placeholder="Add a tag"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const trimmed = tagInput.trim();
+                if (trimmed && !tagNames.includes(trimmed)) {
+                  setTagNames((prev) => [...prev, trimmed]);
+                }
+                setTagInput("");
+              }}
+              className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+            >
+              Add
+            </button>
+          </div>
+          {tagNames.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {tagNames.map((name, idx) => (
+                <span
+                  key={`${name}-${idx}`}
+                  className="inline-flex items-center gap-1 rounded bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700"
+                >
+                  {name}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTagNames((prev) => prev.filter((_, i) => i !== idx))
+                    }
+                    className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-700"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Status */}

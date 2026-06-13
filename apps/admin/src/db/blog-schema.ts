@@ -1,5 +1,12 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  index,
+  uniqueIndex,
+  primaryKey,
+} from "drizzle-orm/sqlite-core";
 
 /** Supported languages — ISO 639-1 codes. Add new languages here. */
 export const BLOG_LANGUAGES = ["en", "id"] as const;
@@ -15,7 +22,6 @@ export const posts = sqliteTable(
     content: text("content").notNull(), // Editor.js JSON output
     thumbnailKey: text("thumbnail_key"), // R2 object key
     author: text("author").notNull().default("I Putu Ekajaya Awidya Putra"),
-    tags: text("tags").default("[]"), // JSON array of strings
     status: text("status").notNull().default("draft"), // 'draft' | 'published'
     publishedAt: integer("published_at", { mode: "timestamp_ms" }),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
@@ -30,5 +36,31 @@ export const posts = sqliteTable(
     uniqueIndex("posts_slug_lang_unique").on(table.slug, table.language),
     index("posts_status_idx").on(table.status),
     index("posts_published_at_idx").on(table.publishedAt),
+  ],
+);
+
+export const tags = sqliteTable(
+  "tags",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull().unique(),
+    showcase: integer("showcase", { mode: "boolean" })
+      .default(false)
+      .notNull(),
+  },
+);
+
+export const postTags = sqliteTable(
+  "post_tags",
+  {
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    tagId: text("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.postId, table.tagId] }),
   ],
 );

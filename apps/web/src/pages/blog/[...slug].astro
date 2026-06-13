@@ -12,7 +12,7 @@ export interface Props {
     content: string;
     thumbnailKey: string | null;
     author: string;
-    tags: string;
+  tags: { id: string; name: string; showcase: boolean }[];
     publishedAt: number | null;
   };
 }
@@ -122,12 +122,6 @@ try {
 
 const contentHtml = renderEditorBlocks(blocks);
 
-let tags: string[] = [];
-try {
-  tags = JSON.parse(post.tags || '[]');
-} catch {
-  tags = [];
-}
 
 const publishedDate = post.publishedAt ? new Date(post.publishedAt) : null;
 
@@ -197,10 +191,10 @@ const blogPostingSchema = {
         )}
       </div>
 
-      {tags.length > 0 && (
+      {post.tags.length > 0 && (
         <div class="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag}</span>
+          {post.tags.map((tag) => (
+            <span class="text-[10px] font-mono px-2 py-1 border border-border rounded-full text-muted-foreground">{tag.name}</span>
           ))}
         </div>
       )}

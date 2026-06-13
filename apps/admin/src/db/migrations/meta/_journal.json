@@ -14,6 +14,13 @@
       "when": 1750000000000,
       "tag": "0001_blog_posts_i18n",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1750100000000,
+      "tag": "0002_tags_table",
+      "breakpoints": true
     }
   ]
 }

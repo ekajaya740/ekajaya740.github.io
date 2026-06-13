@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createAuth } from "@/auth";
 import { getPlatformEnv } from "@/server";
 import { createDb } from "@/db";
-import { posts } from "@/db/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { posts, tags, postTags } from "@/db/schema";
+import { eq, desc, and, inArray } from "drizzle-orm";
 import type { D1Database } from "@cloudflare/workers-types";
 
 export const Route = createFileRoute("/api/blog/posts")({
@@ -45,7 +45,28 @@ export const Route = createFileRoute("/api/blog/posts")({
           .limit(limit)
           .offset((page - 1) * limit);
 
-        return Response.json(result);
+        // Fetch tags for all returned posts
+        const postIds = result.map((p) => p.id);
+        const tagsByPostId: Record<string, { id: string; name: string; showcase: boolean }[]> = {};
+        if (postIds.length > 0) {
+          const postTagRows = await db
+            .select({
+              postId: postTags.postId,
+              id: tags.id,
+              name: tags.name,
+              showcase: tags.showcase,
+            })
+            .from(postTags)
+            .innerJoin(tags, eq(postTags.tagId, tags.id))
+            .where(inArray(postTags.postId, postIds));
+
+          for (const row of postTagRows) {
+            if (!tagsByPostId[row.postId]) tagsByPostId[row.postId] = [];
+            tagsByPostId[row.postId].push({ id: row.id, name: row.name, showcase: row.showcase });
+          }
+        }
+
+        return Response.json(result.map((p) => ({ ...p, tags: tagsByPostId[p.id] ?? [] })));
       },
 
       POST: async ({ request }) => {
@@ -65,7 +86,7 @@ export const Route = createFileRoute("/api/blog/posts")({
         }
 
         const body: Record<string, unknown> = await request.json();
-        const { slug, title, content, language, description, tags, thumbnailKey } = body;
+        const { slug, title, content, language, description, thumbnailKey, tagNames } = body;
 
         if (!slug || !title || !content) {
           return Response.json(
@@ -76,15 +97,15 @@ export const Route = createFileRoute("/api/blog/posts")({
 
         const db = createDb(platformEnv?.DB as D1Database);
         const now = new Date();
+        const postId = crypto.randomUUID();
 
         const post = {
-          id: crypto.randomUUID(),
+          id: postId,
           slug: slug as string,
           language: (language as string) ?? "en",
           title: title as string,
           content: content as string,
           description: (description as string) ?? "",
-          tags: (tags as string) ?? "[]",
           thumbnailKey: thumbnailKey ? (thumbnailKey as string) : null,
           status: "draft",
           createdAt: now,
@@ -93,7 +114,28 @@ export const Route = createFileRoute("/api/blog/posts")({
 
         await db.insert(posts).values(post);
 
-        return Response.json(post, { status: 201 });
+        // Upsert tags and link via post_tags
+        const names = tagNames as string[] | undefined;
+        const postTagsResult: { id: string; name: string; showcase: boolean }[] = [];
+        if (names && names.length > 0) {
+          for (const name of names) {
+            const [existing] = await db
+              .select()
+              .from(tags)
+              .where(eq(tags.name, name))
+              .limit(1);
+
+            const tagId = existing ? existing.id : crypto.randomUUID();
+            if (!existing) {
+              await db.insert(tags).values({ id: tagId, name });
+            }
+
+            await db.insert(postTags).values({ postId, tagId });
+            postTagsResult.push({ id: tagId, name, showcase: existing?.showcase ?? false });
+          }
+        }
+
+        return Response.json({ ...post, tags: postTagsResult }, { status: 201 });
       },
     },
   },

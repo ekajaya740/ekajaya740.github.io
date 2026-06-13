@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createAuth } from "@/auth";
 import { getPlatformEnv } from "@/server";
 import { createDb } from "@/db";
-import { posts } from "@/db/schema";
+import { posts, tags, postTags } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import type { D1Database } from "@cloudflare/workers-types";
 
@@ -24,7 +24,14 @@ export const Route = createFileRoute("/api/blog/posts/$slug")({
 
         if (!post) return new Response("Not Found", { status: 404 });
 
-        return Response.json(post);
+        // Fetch tags for this post
+        const postTagRows = await db
+          .select({ id: tags.id, name: tags.name, showcase: tags.showcase })
+          .from(postTags)
+          .innerJoin(tags, eq(postTags.tagId, tags.id))
+          .where(eq(postTags.postId, post.id));
+
+        return Response.json({ ...post, tags: postTagRows });
       },
 
       PATCH: async ({ request, params }) => {
@@ -51,7 +58,6 @@ export const Route = createFileRoute("/api/blog/posts/$slug")({
           "title",
           "content",
           "description",
-          "tags",
           "status",
           "thumbnailKey",
           "language",
@@ -83,6 +89,7 @@ export const Route = createFileRoute("/api/blog/posts/$slug")({
         }
 
         const db = createDb(platformEnv?.DB as D1Database);
+
         await db
           .update(posts)
           .set(updates)
@@ -94,7 +101,39 @@ export const Route = createFileRoute("/api/blog/posts/$slug")({
           .where(and(eq(posts.slug, params.slug), eq(posts.language, language)))
           .limit(1);
 
-        return Response.json(updated);
+        // Handle tagNames if provided — replace all tags
+        const tagNames = body.tagNames as string[] | undefined;
+        if (tagNames !== undefined) {
+          // Delete existing post_tags for this post
+          await db
+            .delete(postTags)
+            .where(eq(postTags.postId, updated.id));
+
+          // Upsert tags and re-link
+          for (const name of tagNames) {
+            const [existing] = await db
+              .select()
+              .from(tags)
+              .where(eq(tags.name, name))
+              .limit(1);
+
+            const tagId = existing ? existing.id : crypto.randomUUID();
+            if (!existing) {
+              await db.insert(tags).values({ id: tagId, name });
+            }
+
+            await db.insert(postTags).values({ postId: updated.id, tagId });
+          }
+        }
+
+        // Fetch tags for response
+        const postTagRows = await db
+          .select({ id: tags.id, name: tags.name, showcase: tags.showcase })
+          .from(postTags)
+          .innerJoin(tags, eq(postTags.tagId, tags.id))
+          .where(eq(postTags.postId, updated.id));
+
+        return Response.json({ ...updated, tags: postTagRows });
       },
 
       DELETE: async ({ request, params }) => {
