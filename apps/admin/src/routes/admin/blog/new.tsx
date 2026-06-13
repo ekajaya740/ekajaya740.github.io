@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import {
   CForm,
@@ -22,6 +22,7 @@ import Table from "@editorjs/table";
 import type { OutputData } from "@editorjs/editorjs";
 import { createPostSchema } from "@ekajaya/schema/blog";
 import { useCreatePost } from "@ekajaya/hooks/blog";
+import type { SessionResponse } from "../../../lib/auth";
 
 export const Route = createFileRoute("/admin/blog/new")({
   component: NewBlogPostComponent,
@@ -46,7 +47,30 @@ interface PostForm {
 }
 
 function NewBlogPostComponent(): ReactNode {
+  const [session, setSession] = useState<{ user: NonNullable<SessionResponse["user"]> } | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
+  const pathname = window.location.pathname + window.location.search;
+
+  useEffect(() => {
+    fetch("/api/auth/session", { credentials: "include" })
+      .then(r => r.json() as Promise<SessionResponse>)
+      .then((data: SessionResponse) => {
+        if (!data.user) {
+          navigate({ to: "/login", search: { redirect: pathname } });
+        } else {
+          setSession({ user: data.user });
+        }
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        navigate({ to: "/login", search: { redirect: pathname } });
+        setAuthChecked(true);
+      });
+  }, []);
+
+  if (!authChecked || !session) return <div className="p-8 text-center">Loading...</div>;
+
   const createPost = useCreatePost();
   const toolsRef = useRef<Record<string, unknown>>({});
 

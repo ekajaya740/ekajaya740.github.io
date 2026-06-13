@@ -1,17 +1,35 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import type { ReactNode, FormEvent } from "react";
 import { CForm, CField, CInput, CSubmit } from "@ekajaya/ui/composed";
 import { signInSchema } from "@ekajaya/schema/auth";
 
+import type { SessionResponse } from "@/lib/auth";
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, string | undefined>): { redirect?: string } => ({
+    redirect: search.redirect || undefined,
+  }),
   component: LoginComponent,
 });
 
 function LoginComponent(): ReactNode {
   const navigate = useNavigate();
+  const redirect = useSearch({ strict: false })?.redirect ?? "/dashboard";
+  const [authChecked, setAuthChecked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/session", { credentials: "include" })
+      .then(r => r.json() as Promise<SessionResponse>)
+      .then((data: SessionResponse) => {
+        if (data.user) navigate({ to: redirect });
+        setAuthChecked(true);
+      })
+      .catch(() => setAuthChecked(true));
+  }, []);
+
+  if (!authChecked) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   const handleSubmit = async (values: Record<string, unknown>): Promise<void> => {
     setError(null);
@@ -33,7 +51,7 @@ function LoginComponent(): ReactNode {
         const err = (await res.json()) as { message?: string };
         throw new Error(err.message ?? "Invalid credentials");
       }
-      navigate({ to: "/dashboard" });
+      navigate({ to: redirect });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

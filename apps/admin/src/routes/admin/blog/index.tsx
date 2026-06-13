@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
+import type { SessionResponse } from "../../../lib/auth";
 
 interface Post {
   id: string;
@@ -40,8 +41,31 @@ export const Route = createFileRoute("/admin/blog/")({
 });
 
 function BlogDashboardComponent(): ReactNode {
-  const search = useSearch({ from: Route.id });
+  const [session, setSession] = useState<{ user: NonNullable<SessionResponse["user"]> } | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
+  const pathname = window.location.pathname + window.location.search;
+
+  useEffect(() => {
+    fetch("/api/auth/session", { credentials: "include" })
+      .then(r => r.json() as Promise<SessionResponse>)
+      .then((data: SessionResponse) => {
+        if (!data.user) {
+          navigate({ to: "/login", search: { redirect: pathname } });
+        } else {
+          setSession({ user: data.user });
+        }
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        navigate({ to: "/login", search: { redirect: pathname } });
+        setAuthChecked(true);
+      });
+  }, []);
+
+  if (!authChecked || !session) return <div className="p-8 text-center">Loading...</div>;
+
+  const search = useSearch({ from: Route.id });
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
