@@ -1,8 +1,29 @@
 import { createElement } from "react";
 import { useForm } from "@tanstack/react-form";
-import type { ReactNode, FormEvent } from "react";
+import type { ReactNode, FormEvent, FC } from "react";
 
-type FormInstance = ReturnType<typeof useForm<Record<string, unknown>>>;
+interface FieldHandle {
+  name: string;
+  state: { value: unknown };
+  handleChange: (value: unknown) => void;
+  handleBlur: () => void;
+}
+
+interface FormInstance {
+  Field: FC<{
+    name: string;
+    children: (field: FieldHandle) => ReactNode;
+  }>;
+  Subscribe: FC<{
+    selector: (state: unknown) => unknown;
+    children: (value: unknown) => ReactNode;
+  }>;
+  handleSubmit: () => Promise<void>;
+  state: {
+    isSubmitting: boolean;
+    isTouched: boolean;
+  };
+}
 
 interface CFormProps {
   defaultValues: Record<string, unknown>;
@@ -27,6 +48,8 @@ export function CForm({ defaultValues, onSubmit, children }: CFormProps) {
   return createElement(
     "form",
     { onSubmit: handleSubmit, className: "space-y-4" },
-    typeof children === "function" ? children(form) : children,
+    typeof children === "function"
+      ? children(form as unknown as FormInstance)
+      : children,
   );
 }
