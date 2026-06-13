@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import type { ReactNode } from "react";
 import {
   CForm,
@@ -21,7 +21,7 @@ import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
 import type { OutputData } from "@editorjs/editorjs";
 import { createPostSchema } from "@ekajaya/schema/blog";
-import { useCreatePost, useUploadThumbnail } from "@ekajaya/hooks/blog";
+import { useCreatePost } from "@ekajaya/hooks/blog";
 
 export const Route = createFileRoute("/admin/blog/new")({
   component: NewBlogPostComponent,
@@ -34,44 +34,40 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
+interface PostForm {
+  slug: string;
+  title: string;
+  language: string;
+  description: string;
+  content: OutputData | null;
+  tags: string[];
+  thumbnailKey: string | null;
+  slugManual: boolean;
+}
+
 function NewBlogPostComponent(): ReactNode {
   const navigate = useNavigate();
   const createPost = useCreatePost();
-  const uploadThumbnail = useUploadThumbnail();
-
   const slugRef = useRef("");
   const langRef = useRef("en");
-  const [editorData, setEditorData] = useState<OutputData | null>(null);
-  const [tagNames, setTagNames] = useState<string[]>([]);
-  const [thumbnailKey, setThumbnailKey] = useState<string | null>(null);
-  const [slugManual, setSlugManual] = useState(false);
 
-  const savePost = async (
-    formValues: Record<string, unknown>,
-    status?: "draft" | "published",
-  ): Promise<void> => {
-    const slug = String(formValues.slug ?? "");
-    const title = String(formValues.title ?? "");
-    const language = String(formValues.language ?? "en");
-    const description = String(formValues.description ?? "");
-
-    if (!slug || !title) return;
+  const onSubmit = async (values: Record<string, unknown>): Promise<void> => {
+    const v = values as unknown as PostForm;
+    if (!v.slug || !v.title) return;
 
     const body: Record<string, unknown> = {
-      slug,
-      title,
-      content: JSON.stringify(editorData ?? { time: Date.now(), blocks: [] }),
-      language,
+      slug: v.slug,
+      title: v.title,
+      content: JSON.stringify(v.content ?? { time: Date.now(), blocks: [] }),
+      language: v.language || "en",
     };
-    if (description) body.description = description;
-    if (thumbnailKey) body.thumbnailKey = thumbnailKey;
-    if (tagNames.length > 0) body.tagNames = tagNames;
+    if (v.description) body.description = v.description;
+    if (v.thumbnailKey) body.thumbnailKey = v.thumbnailKey;
+    if (v.tags.length > 0) body.tagNames = v.tags;
 
     const validation = createPostSchema.safeParse(body);
     if (!validation.success) {
-      alert(
-        validation.error.issues.map((i) => i.message).join("\n"),
-      );
+      alert(validation.error.issues.map((i) => i.message).join("\n"));
       return;
     }
 
@@ -79,15 +75,14 @@ function NewBlogPostComponent(): ReactNode {
       await createPost.mutateAsync(validation.data);
       navigate({
         to: "/admin/blog/$slug",
-        params: { slug },
-        search: { language: language as "id" | "en" },
+        params: { slug: v.slug },
+        search: { language: v.language as "id" | "en" },
       });
     } catch {
-      // mutation handles error via hook
+      // mutation handles error
     }
   };
 
-  const uploading = uploadThumbnail.isPending;
   const saving = createPost.isPending;
 
   return (
@@ -95,37 +90,44 @@ function NewBlogPostComponent(): ReactNode {
       <h1 className="mb-8 text-2xl font-bold">New Blog Post</h1>
 
       <CForm
-        defaultValues={{ slug: "", title: "", language: "en", description: "" }}
-        onSubmit={(values) => savePost(values, "published")}
+        defaultValues={{
+          slug: "",
+          title: "",
+          language: "en",
+          description: "",
+          content: null as OutputData | null,
+          tags: [] as string[],
+          thumbnailKey: null as string | null,
+          slugManual: false,
+        }}
+        onSubmit={onSubmit}
       >
         {(form) => {
           const f = form as {
             state: { values: Record<string, unknown> };
             setFieldValue: (name: string, value: unknown) => void;
           };
+          const values = f.state.values as unknown as PostForm;
 
-          // Keep refs in sync for editor image uploader
-          slugRef.current = String(f.state.values.slug ?? "");
-          langRef.current = String(f.state.values.language ?? "en");
-
-          const currentTitle = String(f.state.values.title ?? "");
-          const currentSlug = String(f.state.values.slug ?? "");
+          slugRef.current = values.slug;
+          langRef.current = values.language;
 
           return (
             <div className="space-y-4">
               <CField name="title" form={form} label="Title">
                 {(field) => {
-                  // Auto-slug: update slug field when title changes
-                  const origHandleChange = field.handleChange;
+                  const origChange = field.handleChange;
                   return (
                     <CInput
                       field={{
                         ...field,
                         handleChange: (val: unknown) => {
-                          origHandleChange(val);
-                          const titleVal = String(val ?? "");
-                          if (!slugManual) {
-                            f.setFieldValue("slug", slugify(titleVal));
+                          origChange(val);
+                          if (!values.slugManual) {
+                            f.setFieldValue(
+                              "slug",
+                              slugify(String(val ?? "")),
+                            );
                           }
                         },
                       }}
@@ -138,14 +140,14 @@ function NewBlogPostComponent(): ReactNode {
 
               <CField name="slug" form={form} label="Slug">
                 {(field) => {
-                  const origHandleChange = field.handleChange;
+                  const origChange = field.handleChange;
                   return (
                     <CInput
                       field={{
                         ...field,
                         handleChange: (val: unknown) => {
-                          setSlugManual(true);
-                          origHandleChange(val);
+                          f.setFieldValue("slugManual", true);
+                          origChange(val);
                         },
                       }}
                       placeholder="post-slug"
@@ -170,7 +172,10 @@ function NewBlogPostComponent(): ReactNode {
 
               <div>
                 <label className="mb-1 block text-sm font-medium">Tags</label>
-                <CTagInput tags={tagNames} onChange={setTagNames} />
+                <CTagInput
+                  tags={values.tags}
+                  onChange={(tags) => f.setFieldValue("tags", tags)}
+                />
               </div>
 
               <CField name="description" form={form} label="Description">
@@ -184,11 +189,13 @@ function NewBlogPostComponent(): ReactNode {
               </CField>
 
               <div>
-                <label className="mb-1 block text-sm font-medium">Thumbnail</label>
+                <label className="mb-1 block text-sm font-medium">
+                  Thumbnail
+                </label>
                 <CFileUpload
                   endpoint="/api/blog/upload"
-                  value={thumbnailKey}
-                  onChange={setThumbnailKey}
+                  value={values.thumbnailKey}
+                  onChange={(key) => f.setFieldValue("thumbnailKey", key)}
                 />
               </div>
 
@@ -197,7 +204,10 @@ function NewBlogPostComponent(): ReactNode {
                 <div className="min-h-[300px] rounded-lg border border-gray-300 p-4">
                   <CEditor
                     tools={editorTools(slugRef, langRef)}
-                    onChange={(data) => setEditorData(data)}
+                    data={values.content ?? undefined}
+                    onChange={(data: OutputData) =>
+                      f.setFieldValue("content", data)
+                    }
                     placeholder="Start writing..."
                   />
                 </div>
@@ -207,11 +217,10 @@ function NewBlogPostComponent(): ReactNode {
                 <CSubmit disabled={saving}>
                   {saving ? "Saving..." : "Publish"}
                 </CSubmit>
-
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={() => savePost(f.state.values, "draft")}
+                  onClick={() => onSubmit(f.state.values)}
                   className="rounded-lg border border-gray-300 px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {saving ? "Saving..." : "Save Draft"}
@@ -242,7 +251,9 @@ function editorTools(
             form.append("slug", slugRef.current || "temp");
             form.append("lang", langRef.current);
             return fetch("/api/blog/upload", { method: "POST", body: form })
-              .then((r) => r.json() as Promise<{ url: string; key: string }>)
+              .then(
+                (r) => r.json() as Promise<{ url: string; key: string }>,
+              )
               .then((data) => ({ success: 1, file: { url: data.url } }));
           },
         },
