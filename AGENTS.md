@@ -65,6 +65,55 @@ No test runner configured. No linter configured.
 | `editor` | Default role for all subsequent signups. |
 
 The first user to sign up gets `SUPERADMIN` automatically (checked via `databaseHooks.user.create.before`). All later users get `editor`.
+
+### Form Implementation (TanStack + Composed)
+
+All forms use the `C*` composable components from `@ekajaya/ui/composed`. NEVER use raw `<input>`, `<textarea>`, `<select>` inside a form that has `CForm`.
+
+```tsx
+import { CForm, CField, CInput, CTextarea, CSelect, CSubmit } from "@ekajaya/ui/composed";
+```
+
+#### Pattern
+
+```
+<CForm defaultValues=... onSubmit=...>
+  {(form) => (
+    <>
+      <CField name="title" form={form} label="Title">
+        {(field) => <CInput field={field} placeholder="..." required />}
+      </CField>
+      <CField name="status" form={form} label="Status">
+        {(field) => <CSelect field={field} options={[...]} />}
+      </CField>
+      <CSubmit>Save</CSubmit>
+    </>
+  )}
+</CForm>
+```
+
+#### Rules
+
+1. **State outside form only for non-`CInput` compat**: Editor.js content, tags (custom UI), file uploads, loading status. All text/select inputs go through `CForm`.
+2. **Validate with Zod before API call**: `schema.safeParse(values)` → collect errors into string array, display above form.
+3. **`CField` renders errors automatically** from TanStack Form's validation state.
+4. **One `CForm` per page**: nest everything inside the render-props children.
+5. **`CSubmit` is the submit button**: disable while saving via `disabled={saving}`.
+6. **Custom onChange**: wrap `CField` children and call `field.handleChange(value)` manually. For auto-slug, read `field.state.value` in a sibling field.
+
+#### Components Reference
+
+| Component | Props | Notes |
+|---|---|---|
+| `CForm` | `defaultValues`, `onSubmit`, `children` | Children is `(form) => JSX`. Form instance has `.state.values`. |
+| `CField` | `name`, `form`, `label`, `children` | Wraps TanStack `form.Field`. Renders validation errors. |
+| `CInput` | `field`, `type?`, `placeholder?`, `required?`, `className?` | Text input. Field value via `String(field.state.value)`. |
+| `CTextarea` | `field`, `rows?`, `placeholder?`, `className?` | Multi-line input. |
+| `CSelect` | `field`, `options: {value, label}[]`, `className?` | Dropdown. |
+| `CCheckbox` | `field`, `label?`, `className?` | Boolean checkbox. |
+| `CSubmit` | `children`, `disabled?`, `className?` | Submit button. Blue by default. |
+| `CEditor` | `data?`, `tools`, `onChange`, `placeholder?`, `readOnly?`, `autofocus?` | Editor.js controlled wrapper. Tools is `Record<string, unknown>`. |
+
 ## Architecture
 
 ```
