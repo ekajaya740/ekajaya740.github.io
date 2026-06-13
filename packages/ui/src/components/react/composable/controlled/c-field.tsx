@@ -1,50 +1,58 @@
 import { createElement } from "react";
-import type { ReactNode } from "react";
-import type { FieldApi, Validator } from "@tanstack/react-form";
+import type { ReactNode, FC } from "react";
 
-interface CFieldProps<T, N extends keyof T & string> {
-  name: N;
-  form: { Field: FC<{
-    name: N;
-    validators?: { onChange?: Validator<T[N]> };
-    children: (field: FieldApi<T, N>) => ReactNode;
-  }> };
-  label?: string;
-  validators?: { onChange?: Validator<T[N]> };
-  children: (field: FieldApi<T, N>) => ReactNode;
+interface FieldState {
+  value: unknown;
+  meta: {
+    errors?: Array<{ message?: string } | string>;
+  };
 }
 
-export function CField<T, N extends keyof T & string>({
-  name,
-  form,
-  label,
-  validators,
-  children,
-}: CFieldProps<T, N>) {
+interface FieldHandle {
+  name: string;
+  state: FieldState;
+  handleChange: (value: unknown) => void;
+  handleBlur: () => void;
+}
+
+interface CFieldProps {
+  name: string;
+  form: {
+    Field: FC<{
+      name: string;
+      children: (field: FieldHandle) => ReactNode;
+    }>;
+  };
+  label?: string;
+  children: (field: FieldHandle) => ReactNode;
+}
+
+export function CField({ name, form, label, children }: CFieldProps) {
   return createElement(form.Field, {
     name,
-    validators,
-    children: (field: FieldApi<T, N>) =>
-      createElement(
+    children: (field: FieldHandle) => {
+      const errors = field.state.meta.errors
+        ?.map((e) => (typeof e === "string" ? e : e.message))
+        .filter(Boolean) as string[] | undefined;
+
+      return createElement(
         "div",
         { className: "space-y-1" },
         label &&
           createElement(
             "label",
-            {
-              htmlFor: name,
-              className: "block text-sm font-medium",
-            },
+            { htmlFor: name, className: "block text-sm font-medium" },
             label,
           ),
         children(field),
-        field.state.meta.errors?.length
+        errors?.length
           ? createElement(
               "p",
               { className: "text-xs text-red-500" },
-              field.state.meta.errors.join(", "),
+              errors.join(", "),
             )
           : null,
-      ),
+      );
+    },
   });
 }

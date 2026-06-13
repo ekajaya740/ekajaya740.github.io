@@ -1,32 +1,27 @@
 import { createElement } from "react";
 import { useForm } from "@tanstack/react-form";
-import type { FC, ReactNode, FormEvent } from "react";
-import type { FormOptions, ReactFormExtendedApi } from "@tanstack/react-form";
+import type { ReactNode, FormEvent } from "react";
 
-interface CFormProps<T extends Record<string, unknown>> {
-  defaultValues: T;
-  onSubmit: (values: T) => void | Promise<void>;
-  children:
-    | ReactNode
-    | ((form: ReactFormExtendedApi<T>) => ReactNode);
+type FormInstance = ReturnType<typeof useForm<Record<string, unknown>>>;
+
+interface CFormProps {
+  defaultValues: Record<string, unknown>;
+  onSubmit: (values: Record<string, unknown>) => void | Promise<void>;
+  children: ReactNode | ((form: FormInstance) => ReactNode);
 }
 
-export function CForm<T extends Record<string, unknown>>({
-  defaultValues,
-  onSubmit,
-  children,
-}: CFormProps<T>) {
-  const form = useForm<T>({
+export function CForm({ defaultValues, onSubmit, children }: CFormProps) {
+  const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
-      await onSubmit(value as T);
+      await onSubmit(value as Record<string, unknown>);
     },
-  } as FormOptions<T, undefined>);
+  });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    form.handleSubmit();
+    void form.handleSubmit();
   };
 
   return createElement(

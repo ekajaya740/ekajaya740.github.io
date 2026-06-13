@@ -1,25 +1,34 @@
 import { createElement } from "react";
 import type { InputHTMLAttributes } from "react";
-import type { FieldApi } from "@tanstack/react-form";
 
-interface CInputProps<T, N extends keyof T & string>
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "onBlur"> {
-  field: FieldApi<T, N>;
+interface FieldHandle {
+  name: string;
+  state: { value: unknown };
+  handleChange: (value: unknown) => void;
+  handleBlur: () => void;
 }
 
-export function CInput<T, N extends keyof T & string>({
+interface CInputProps
+  extends Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    "value" | "onChange" | "onBlur"
+  > {
+  field: FieldHandle;
+}
+
+export function CInput({
   field,
   className = "",
   type = "text",
   ...rest
-}: CInputProps<T, N>) {
+}: CInputProps) {
   return createElement("input", {
     id: field.name,
     name: field.name,
     type,
-    value: (field.state.value as string) ?? "",
+    value: String(field.state.value ?? ""),
     onChange: (e: { target: { value: string } }) =>
-      field.handleChange(e.target.value as T[N]),
+      field.handleChange(e.target.value),
     onBlur: () => field.handleBlur(),
     className: `w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none ${className}`,
     ...rest,

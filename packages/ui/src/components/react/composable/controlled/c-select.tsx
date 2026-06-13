@@ -1,30 +1,36 @@
 import { createElement } from "react";
 import type { SelectHTMLAttributes } from "react";
-import type { FieldApi } from "@tanstack/react-form";
 
-interface CSelectProps<T, N extends keyof T & string>
+interface FieldHandle {
+  name: string;
+  state: { value: unknown };
+  handleChange: (value: unknown) => void;
+  handleBlur: () => void;
+}
+
+interface CSelectProps
   extends Omit<
     SelectHTMLAttributes<HTMLSelectElement>,
     "value" | "onChange" | "onBlur"
   > {
-  field: FieldApi<T, N>;
+  field: FieldHandle;
   options: { value: string; label: string }[];
 }
 
-export function CSelect<T, N extends keyof T & string>({
+export function CSelect({
   field,
   options,
   className = "",
   ...rest
-}: CSelectProps<T, N>) {
+}: CSelectProps) {
   return createElement(
     "select",
     {
       id: field.name,
       name: field.name,
-      value: (field.state.value as string) ?? "",
+      value: String(field.state.value ?? ""),
       onChange: (e: { target: { value: string } }) =>
-        field.handleChange(e.target.value as T[N]),
+        field.handleChange(e.target.value),
       onBlur: () => field.handleBlur(),
       className: `w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none ${className}`,
       ...rest,
