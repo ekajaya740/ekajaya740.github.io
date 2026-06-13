@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev & drizzle-kit studio & wait",
+    "dev": "bun run dev:app & bun run dev:studio & wait",
     "dev:app": "vite dev",
     "dev:studio": "drizzle-kit studio",
     "build": "vite build && tsc --noEmit",
