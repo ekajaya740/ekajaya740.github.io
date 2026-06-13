@@ -8,8 +8,8 @@
     ".": "./src/index.ts",
     "./utils": "./src/lib/utils.ts",
     "./composed": "./src/components/react/composed/controlled/index.ts",
+    "./composed/extra": "./src/components/react/composed/controlled/extra.ts",
     "./composed/shaders": "./src/components/react/composed/shaders/index.ts",
-    "./composed/editorjs": "./src/components/react/composed/editorjs/index.ts",
     "./*": "./src/components/react/*"
   },
   "dependencies": {

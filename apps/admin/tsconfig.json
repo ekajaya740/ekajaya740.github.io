@@ -6,7 +6,9 @@
     "types": ["@cloudflare/workers-types"],
     "paths": {
       "@/*": ["./src/*"],
+      "@/lib/auth": ["./src/lib/auth.ts"],
       "@ekajaya/ui/composed": ["../../packages/ui/src/components/react/composed/controlled/index.ts"],
+      "@ekajaya/ui/composed/extra": ["../../packages/ui/src/components/react/composed/controlled/extra.ts"],
       "@ekajaya/ui/composed/*": ["../../packages/ui/src/components/react/composed/*"],
       "@ekajaya/ui/utils": ["../../packages/ui/src/lib/utils.ts"],
       "@ekajaya/schema/*": ["../../packages/schema/src/*"],

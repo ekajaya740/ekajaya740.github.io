@@ -14,10 +14,8 @@ import {
   CTextarea,
   CSelect,
   CSubmit,
-  CEditor,
-  CTagInput,
-  CFileUpload,
 } from "@ekajaya/ui/composed";
+import { CTagInput, CFileUpload, CEditor } from "@ekajaya/ui/composed/extra";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";

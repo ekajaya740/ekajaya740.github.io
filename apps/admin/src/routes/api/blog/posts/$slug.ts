@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createAuth } from "@/auth";
-import { getPlatformEnv } from "@/server";
-import { createDb } from "@/db";
-import { posts, tags, postTags } from "@/db/schema";
+import { createAuth } from "../../../../auth";
+import { getPlatformEnv } from "../../../../server";
+import { createDb } from "../../../../db";
+import { posts, tags, postTags } from "../../../../db/schema";
 import { eq, and } from "drizzle-orm";
 import type { D1Database } from "@cloudflare/workers-types";
 

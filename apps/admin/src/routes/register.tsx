@@ -1,39 +1,31 @@
-import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { CForm, CField, CInput, CSubmit } from "@ekajaya/ui/composed";
 import { signUpSchema } from "@ekajaya/schema/auth";
-import type { SessionResponse } from "@/lib/auth";
 
 export const Route = createFileRoute("/register")({
-  validateSearch: (search: Record<string, string | undefined>): { redirect?: string } => ({
-    redirect: search.redirect || undefined,
-  }),
+  beforeLoad: async () => {
+    try {
+      const res = await fetch("/api/auth/session");
+      if (res.ok) {
+        const data = (await res.json()) as { user?: { id: string } };
+        if (data.user) throw redirect({ to: "/dashboard" });
+      }
+    } catch (e) {
+      if (e instanceof Response) throw e;
+    }
+  },
   component: RegisterComponent,
 });
 
 function RegisterComponent(): ReactNode {
   const navigate = useNavigate();
-  const redirect = useSearch({ strict: false })?.redirect ?? "/dashboard";
-  const [authChecked, setAuthChecked] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/auth/session", { credentials: "include" })
-      .then(r => r.json() as Promise<SessionResponse>)
-      .then((data: SessionResponse) => {
-        if (data.user) navigate({ to: redirect });
-        setAuthChecked(true);
-      })
-      .catch(() => setAuthChecked(true));
-  }, []);
-
-  if (!authChecked) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (values: Record<string, unknown>): Promise<void> => {
     setError(null);
-
     const parsed = signUpSchema.safeParse(values);
     if (!parsed.success) {
       setError(parsed.error.issues.map((i) => i.message).join(", "));
@@ -51,7 +43,7 @@ function RegisterComponent(): ReactNode {
         const err = (await res.json()) as { message?: string };
         throw new Error(err.message ?? "Registration failed");
       }
-      navigate({ to: redirect });
+      navigate({ to: "/dashboard" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -60,11 +52,11 @@ function RegisterComponent(): ReactNode {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md space-y-6 rounded-xl bg-white p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-8 shadow-lg">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Create Account</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             First sign-up gets SUPERADMIN role
           </p>
         </div>
@@ -83,11 +75,7 @@ function RegisterComponent(): ReactNode {
             <div className="space-y-4">
               <CField name="name" form={form} label="Name">
                 {(field) => (
-                  <CInput
-                    field={field}
-                    placeholder="Your name"
-                    required
-                  />
+                  <CInput field={field} placeholder="Your name" required />
                 )}
               </CField>
 
@@ -120,9 +108,9 @@ function RegisterComponent(): ReactNode {
           )}
         </CForm>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-accent hover:underline">
             Sign in
           </a>
         </p>

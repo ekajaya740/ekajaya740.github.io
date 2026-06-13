@@ -8,10 +8,8 @@ import {
   CTextarea,
   CSelect,
   CSubmit,
-  CEditor,
-  CTagInput,
-  CFileUpload,
 } from "@ekajaya/ui/composed";
+import { CTagInput, CFileUpload, CEditor } from "@ekajaya/ui/composed/extra";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import ImageTool from "@editorjs/image";
@@ -47,19 +45,23 @@ interface PostForm {
 }
 
 function NewBlogPostComponent(): ReactNode {
-  const [session, setSession] = useState<{ user: NonNullable<SessionResponse["user"]> } | null>(null);
-  const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
-  const pathname = window.location.pathname + window.location.search;
+  const createPost = useCreatePost();
+  const toolsRef = useRef<Record<string, unknown>>({});
+
+  // Session guard
+  const [session, setSession] = useState<SessionResponse | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/session", { credentials: "include" })
-      .then(r => r.json() as Promise<SessionResponse>)
+    const pathname = window.location.pathname + window.location.search;
+    fetch("/api/auth/session", { credentials: "include" } as RequestInit)
+      .then((r) => r.json() as Promise<SessionResponse>)
       .then((data: SessionResponse) => {
         if (!data.user) {
           navigate({ to: "/login", search: { redirect: pathname } });
         } else {
-          setSession({ user: data.user });
+          setSession(data);
         }
         setAuthChecked(true);
       })
@@ -67,12 +69,15 @@ function NewBlogPostComponent(): ReactNode {
         navigate({ to: "/login", search: { redirect: pathname } });
         setAuthChecked(true);
       });
-  }, []);
+  }, [navigate]);
 
-  if (!authChecked || !session) return <div className="p-8 text-center">Loading...</div>;
-
-  const createPost = useCreatePost();
-  const toolsRef = useRef<Record<string, unknown>>({});
+  if (!authChecked || !session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   const onSubmit = async (values: Record<string, unknown>): Promise<void> => {
     const v = values as unknown as PostForm;

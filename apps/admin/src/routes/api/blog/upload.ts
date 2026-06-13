@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createAuth } from "@/auth";
-import { getPlatformEnv } from "@/server";
+import { createAuth } from "../../../auth";
+import { getPlatformEnv } from "../../../server";
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
 
 const ALLOWED_MIME_TYPES = ["image/webp", "image/png", "image/jpeg"] as const;

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createAuth } from "@/auth";
-import { getPlatformEnv } from "@/server";
-import type { D1Database } from "@cloudflare/workers-types";
+import { createAuth } from "../../../auth";
+import { getPlatformEnv } from "../../../server";
 
 export const Route = createFileRoute("/api/auth/$")({
   server: {
