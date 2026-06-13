@@ -58,13 +58,15 @@ jobs:
       - run: bun run build --filter=@ekajaya/admin
 
       - name: Deploy to Cloudflare Workers
-        run: bun wrangler deploy --env ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+        run: bun wrangler deploy --config wrangler.${{ github.ref_name == 'main' && 'production' || 'staging' }}.jsonc
         working-directory: apps/admin
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Apply D1 migrations
-        run: bun wrangler d1 migrations apply ${{ github.ref_name == 'main' && 'portfolio-db' || 'beta-portfolio-db' }} --env ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+        run: bun wrangler d1 migrations apply ${{ github.ref_name == 'main' && 'portfolio-db' || 'beta-portfolio-db' }} --config wrangler.${{ github.ref_name == 'main' && 'production' || 'staging' }}.jsonc
         working-directory: apps/admin
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+

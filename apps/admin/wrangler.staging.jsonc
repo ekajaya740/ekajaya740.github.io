@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
-	"name": "ekajaya-api-dev",
+	"name": "ekajaya-api-staging",
 	"main": "@tanstack/react-start/server-entry",
 	"compatibility_date": "2025-06-12",
 	"compatibility_flags": [
@@ -9,14 +9,14 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "dev-portfolio-db",
-			"database_id": "local-dev"
+			"database_name": "beta-portfolio-db",
+			"database_id": "5ddc8080-3ea9-45cc-8fd5-3e59370fce37"
 		}
 	],
 	"r2_buckets": [
 		{
-			"bucket_name": "dev-portfolio-assets",
-			"binding": "dev_portfolio_assets"
+			"bucket_name": "beta-portfolio-assets",
+			"binding": "beta_portfolio_assets"
 		}
 	],
 	"observability": {
