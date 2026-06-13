@@ -1,14 +1,14 @@
 import { createElement } from "react";
 import type { ReactNode, FC } from "react";
 
-interface FieldState {
+export interface FieldState {
   value: unknown;
   meta: {
-    errors?: Array<{ message?: string } | string>;
+    errors?: unknown[];
   };
 }
 
-interface FieldHandle {
+export interface FieldHandle {
   name: string;
   state: FieldState;
   handleChange: (value: unknown) => void;
@@ -17,12 +17,8 @@ interface FieldHandle {
 
 interface CFieldProps {
   name: string;
-  form: {
-    Field: FC<{
-      name: string;
-      children: (field: FieldHandle) => ReactNode;
-    }>;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: any;
   label?: string;
   children: (field: FieldHandle) => ReactNode;
 }
@@ -31,9 +27,11 @@ export function CField({ name, form, label, children }: CFieldProps) {
   return createElement(form.Field, {
     name,
     children: (field: FieldHandle) => {
-      const errors = field.state.meta.errors
-        ?.map((e) => (typeof e === "string" ? e : e.message))
-        .filter(Boolean) as string[] | undefined;
+      const errors = ((field.state.meta.errors ?? []) as Array<
+        string | { message?: string }
+      >)
+        .map((e) => (typeof e === "string" ? e : e.message ?? ""))
+        .filter(Boolean);
 
       return createElement(
         "div",
@@ -45,7 +43,7 @@ export function CField({ name, form, label, children }: CFieldProps) {
             label,
           ),
         children(field),
-        errors?.length
+        errors.length
           ? createElement(
               "p",
               { className: "text-xs text-red-500" },
