@@ -189,7 +189,6 @@ App-local imports (`@/components/sections/*`, `@/layouts/*`, `@/pages/*`) stay u
 |---|---|---|---|
 | `@ekajaya/web` | Push to `main` | GitHub Pages | — |
 | `@ekajaya/api` | Push to `main` | Cloudflare Workers | `production` |
-| `@ekajaya/api` | Push to `beta` | Build only | — |
 
 ## AI Optimization
 
