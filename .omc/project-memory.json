@@ -1,0 +1,9 @@
+{
+  "architecture": "Monorepo: Turborepo + Bun workspaces. Apps: @ekajaya/web (Astro SSG → GitHub Pages), @ekajaya/api (TanStack Start → Cloudflare Workers). Packages: @ekajaya/config (Tailwind theme), @ekajaya/ui (shadcn + composed components), @ekajaya/schema (Zod validation), @ekajaya/http (ky client), @ekajaya/hooks (React Query wrappers), @ekajaya/database (Drizzle ORM schema + client).",
+  "conventions": "Dark theme only. Accent #dd0303. Fonts: Goldman (display), Sansation (body), Share Tech Mono (mono). Forms use TanStack Form + C* composed components. No npm/yarn — Bun only.",
+  "deploy": "web → GitHub Pages (main branch). api → Cloudflare Workers (main → production, beta → build-only). D1 migrations auto-run post-deploy.",
+  "recent_work": "2026-06-19: Renamed @ekajaya/admin → @ekajaya/api across monorepo. Extracted @ekajaya/database package from apps/api/src/db/ — schema, client, auth-schema, blog-schema. Ran technical audit (13/20 score), created 9 GitHub issues triaged to Project #4.",
+  "version": "1.0.0",
+  "lastScanned": 1781928524345,
+  "projectRoot": "/Users/ekajaya740/Documents/01-Project/WOE/ekajaya740.github.io"
+}

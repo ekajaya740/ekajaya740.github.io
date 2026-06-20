@@ -30,7 +30,7 @@ export function CTextarea({
       field.handleChange(e.target.value),
     onBlur: () => field.handleBlur(),
     rows,
-    className: `w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none ${className}`,
+    className: `w-full rounded-lg border border-border px-4 py-2 text-sm focus:border-accent focus:outline-none ${className}`,
     ...rest,
   });
 }

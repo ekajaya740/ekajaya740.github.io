@@ -1,0 +1,53 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "@cloudflare/workers-types"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@/lib/auth": [
+        "./src/lib/auth.ts"
+      ],
+      "@ekajaya/ui/composed": [
+        "../../packages/ui/src/components/react/composed/controlled/index.ts"
+      ],
+      "@ekajaya/ui/composed/extra": [
+        "../../packages/ui/src/components/react/composed/controlled/extra.ts"
+      ],
+      "@ekajaya/ui/composed/*": [
+        "../../packages/ui/src/components/react/composed/*"
+      ],
+      "@ekajaya/ui/utils": [
+        "../../packages/ui/src/lib/utils.ts"
+      ],
+      "@ekajaya/schema/*": [
+        "../../packages/schema/src/*"
+      ],
+      "@ekajaya/hooks/blog": [
+        "../../packages/hooks/src/blog.ts"
+      ],
+      "@ekajaya/hooks/*": [
+        "../../packages/hooks/src/*"
+      ],
+      "@ekajaya/http/*": [
+        "../../packages/http/src/*"
+      ],
+      "@ekajaya/ui/base/*": [
+        "../../packages/ui/src/components/react/base/ui/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "vite.config.ts"
+  ]
+}

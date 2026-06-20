@@ -1,6 +1,6 @@
 import { createElement, useState } from "react";
 import { X } from "lucide-react";
-import { Badge } from "../../../ui/badge";
+import { Badge } from "@ekajaya/ui/base/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../../ui/alert-dialog";
+} from "@ekajaya/ui/base/alert-dialog";
 
 export interface CTagInputProps {
   tags: string[];

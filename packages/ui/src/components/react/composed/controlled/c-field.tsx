@@ -46,7 +46,7 @@ export function CField({ name, form, label, children }: CFieldProps) {
         errors.length
           ? createElement(
               "p",
-              { className: "text-xs text-red-500" },
+              { className: "text-xs text-accent" },
               errors.join(", "),
             )
           : null,

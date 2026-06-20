@@ -10,7 +10,12 @@
     "./composed": "./src/components/react/composed/controlled/index.ts",
     "./composed/extra": "./src/components/react/composed/controlled/extra.ts",
     "./composed/shaders": "./src/components/react/composed/shaders/index.ts",
-    "./*": "./src/components/react/*"
+    "./*": "./src/components/react/*",
+    "./base/*": "./src/components/react/base/*",
+    "./base/ui/*": "./src/components/react/base/ui/*",
+    "./base/alert-dialog": "./src/components/react/base/ui/alert-dialog.tsx",
+    "./base/badge": "./src/components/react/base/ui/badge.tsx",
+    "./base/sonner": "./src/components/react/base/ui/sonner.tsx"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.0.0",
@@ -26,7 +31,8 @@
     "tailwind-merge": "^3.5.0"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0"

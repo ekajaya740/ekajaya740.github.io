@@ -34,7 +34,7 @@ export function CCheckbox({
       onChange: (e: { target: { checked: boolean } }) =>
         field.handleChange(e.target.checked),
       onBlur: () => field.handleBlur(),
-      className: `rounded border-gray-300 ${className}`,
+      className: `rounded border-border ${className}`,
       ...rest,
     }),
     label && createElement("span", null, label),

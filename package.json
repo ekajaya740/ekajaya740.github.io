@@ -5,7 +5,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "turbo dev studio --filter=@ekajaya/web --filter=@ekajaya/admin --ui tui",
+    "dev": "turbo dev studio --filter=@ekajaya/web --filter=@ekajaya/api --ui tui",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean"

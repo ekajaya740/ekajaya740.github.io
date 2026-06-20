@@ -1,0 +1,3 @@
+# api.workofekajaya.com — internal API. Disallow all.
+User-agent: *
+Disallow: /

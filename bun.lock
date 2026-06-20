@@ -11,8 +11,8 @@
         "turbo": "^2.7.4",
       },
     },
-    "apps/admin": {
-      "name": "@ekajaya/admin",
+    "apps/api": {
+      "name": "@ekajaya/api",
       "version": "0.0.1",
       "dependencies": {
         "@better-auth/drizzle-adapter": "^1.6.18",
@@ -24,8 +24,9 @@
         "@editorjs/list": "^2.0.9",
         "@editorjs/quote": "^2.7.6",
         "@editorjs/table": "^2.4.5",
-        "@fontsource/sansation": "^5.2.2",
-        "@fontsource/share-tech-mono": "^5.2.7",
+        "@ekajaya/config": "workspace:*",
+        "@ekajaya/database": "workspace:*",
+        "@ekajaya/ui": "workspace:*",
         "@radix-ui/react-alert-dialog": "^1.1.16",
         "@tanstack/react-form": "^1.33.0",
         "@tanstack/react-query": "^5.101.0",
@@ -45,6 +46,9 @@
       "devDependencies": {
         "@cloudflare/vite-plugin": "^1.0.0",
         "@cloudflare/workers-types": "^4.20250605.0",
+        "@fontsource/goldman": "^5.0.0",
+        "@fontsource/sansation": "^5.2.2",
+        "@fontsource/share-tech-mono": "^5.2.7",
         "@tailwindcss/vite": "^4.3.1",
         "@types/better-sqlite3": "^7.6.13",
         "@types/react": "^19.0.0",
@@ -93,6 +97,18 @@
     "packages/config": {
       "name": "@ekajaya/config",
       "version": "0.0.1",
+    },
+    "packages/database": {
+      "name": "@ekajaya/database",
+      "version": "0.0.1",
+      "dependencies": {
+        "drizzle-kit": "^1.0.0-rc.3",
+        "drizzle-orm": "^1.0.0-rc.3",
+      },
+      "devDependencies": {
+        "@cloudflare/workers-types": "^4.20250605.0",
+        "better-sqlite3": "^12.10.0",
+      },
     },
     "packages/hooks": {
       "name": "@ekajaya/hooks",
@@ -145,6 +161,7 @@
       },
       "peerDependencies": {
         "react": "^19.0.0",
+        "tailwindcss": "^4.3.0",
       },
     },
   },
@@ -313,9 +330,11 @@
 
     "@editorjs/warning": ["@editorjs/warning@1.4.1", "", { "dependencies": { "@codexteam/icons": "^0.3.2", "@editorjs/editorjs": "^2.30.7" } }, "sha512-7A+irJ6gIh6li4DC7qw/NiWCThlBgtoPUeeIVdldVjoATAu+a1GjS+w/5L24ReacgQJNPVQPPCoMaS1nB83agw=="],
 
-    "@ekajaya/admin": ["@ekajaya/admin@workspace:apps/admin"],
+    "@ekajaya/api": ["@ekajaya/api@workspace:apps/api"],
 
     "@ekajaya/config": ["@ekajaya/config@workspace:packages/config"],
+
+    "@ekajaya/database": ["@ekajaya/database@workspace:packages/database"],
 
     "@ekajaya/hooks": ["@ekajaya/hooks@workspace:packages/hooks"],
 

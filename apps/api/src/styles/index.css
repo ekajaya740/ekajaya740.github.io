@@ -1,21 +1,12 @@
 @import "tailwindcss";
-@import "@fontsource/sansation/300.css";
-@import "@fontsource/sansation/400.css";
-@import "@fontsource/sansation/700.css";
-@import "@fontsource/goldman/400.css";
-@import "@fontsource/goldman/700.css";
-@import "@fontsource/share-tech-mono/400.css";
 
 @theme {
-  /* Surfaces — clear hierarchy: bg < card < elevated */
   --color-background: #0a0a0a;
   --color-foreground: #fafafa;
   --color-card: #161616;
   --color-card-foreground: #fafafa;
   --color-popover: #1a1a1a;
   --color-popover-foreground: #fafafa;
-
-  /* Interactive surfaces */
   --color-primary: #fafafa;
   --color-primary-foreground: #0a0a0a;
   --color-secondary: #242424;
@@ -26,29 +17,25 @@
   --color-accent-foreground: #fafafa;
   --color-destructive: #dc2626;
   --color-destructive-foreground: #fafafa;
-
-  /* Borders & inputs — visible against surfaces */
   --color-border: #3a3a3a;
   --color-input: #2a2a2a;
   --color-ring: #ef4444;
-
-  /* Accent colors */
   --color-accent-yellow: #facc15;
   --color-accent-blue: #3b82f6;
   --color-accent-warm: #f97316;
-
-  /* Dot matrix */
   --color-dot-on: #ef4444;
   --color-dot-off: rgba(255, 255, 255, 0.06);
-
-  /* Typography */
   --font-sans: "Sansation", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Goldman", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Share Tech Mono", ui-monospace, monospace;
-
-  /* Radii */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
 }
+
+@import "@fontsource/sansation/400.css";
+@import "@fontsource/sansation/700.css";
+@import "@fontsource/goldman/400.css";
+@import "@fontsource/goldman/700.css";
+@import "@fontsource/share-tech-mono/400.css";

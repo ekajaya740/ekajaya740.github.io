@@ -97,7 +97,7 @@ export const CFileUpload: FC<CFileUploadProps> = ({
           "div",
           {
             className: `relative rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
-              dragOver ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"
+              dragOver ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10" : "border-border hover:border-muted-foreground"
             }`,
             onDragOver: (e: DragEvent<HTMLDivElement>) => {
               e.preventDefault();
@@ -110,7 +110,7 @@ export const CFileUpload: FC<CFileUploadProps> = ({
             ? createElement(
                 "div",
                 { className: "space-y-2" },
-                createElement("p", { className: "text-sm text-gray-500" }, "Uploading..."),
+                createElement("p", { className: "text-sm text-muted-foreground" }, "Uploading..."),
                 createElement(
                   "div",
                   { className: "mx-auto h-1.5 w-32 overflow-hidden rounded-full bg-gray-200" },
@@ -123,7 +123,7 @@ export const CFileUpload: FC<CFileUploadProps> = ({
             : createElement(
                 "div",
                 { className: "space-y-2" },
-                createElement("p", { className: "text-sm text-gray-500" }, "Drag and drop or"),
+                createElement("p", { className: "text-sm text-muted-foreground" }, "Drag and drop or"),
                 createElement(
                   "button",
                   {
