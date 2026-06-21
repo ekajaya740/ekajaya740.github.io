@@ -11,6 +11,17 @@ export const Route = createFileRoute("/login")({
     redirect: search.redirect || undefined,
   }),
   beforeLoad: async () => {
+    // Redirect to register when no users exist (first-user flow)
+    try {
+      const res = await fetch("/api/v1/users");
+      if (res.ok) {
+        const data = (await res.json()) as { count: number };
+        if (data.count === 0) throw redirect({ to: "/register" });
+      }
+    } catch (e) {
+      if (e instanceof Response) throw e;
+    }
+
     // If already logged in, redirect to dashboard
     try {
       const res = await fetch("/api/auth/session");
@@ -22,6 +33,14 @@ export const Route = createFileRoute("/login")({
       if (e instanceof Response) throw e;
     }
   },
+  head: () => ({
+    meta: [
+      {
+        name: "robots",
+        content: "noindex, nofollow",
+      },
+    ],
+  }),
   component: LoginComponent,
 });
 
