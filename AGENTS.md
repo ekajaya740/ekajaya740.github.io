@@ -6,6 +6,9 @@
 - **`main`**: Production. Only merge from `beta` when ready to deploy. Direct commits to `main` only for hotfixes or deploy-critical config.
 - **Deploy**: `main` → GitHub Pages (`@ekajaya/web`) + Cloudflare Workers production (`@ekajaya/api`).
 
+## Deployment Rules
+
+- **All deployments MUST go through GitHub Actions CI/CD**. NEVER deploy directly via `wrangler deploy` or any other CLI command. Push to `beta`, open a PR to merge into `main`, and let GitHub Actions handle the deploy.
 ## Stack
 
 - **Runtime**: Bun (do not use npm/yarn/pnpm)

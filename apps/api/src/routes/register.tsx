@@ -6,14 +6,15 @@ import { signUpSchema } from "@ekajaya/schema/auth";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: async () => {
+    // If already logged in, go to dashboard
     try {
       const res = await fetch("/api/auth/session");
       if (res.ok) {
         const data = (await res.json()) as { user?: { id: string } };
         if (data.user) throw redirect({ to: "/dashboard" });
       }
-    } catch {
-      // session check failed — stay on page
+    } catch (e) {
+      if (e instanceof Response) throw e;
     }
   },
   component: RegisterComponent,
@@ -56,9 +57,7 @@ function RegisterComponent(): ReactNode {
       <div className="w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-8 shadow-lg">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            First sign-up gets SUPERADMIN role
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Register admin access</p>
         </div>
 
         {error && (
@@ -75,7 +74,11 @@ function RegisterComponent(): ReactNode {
             <div className="space-y-4">
               <CField name="name" form={form} label="Name">
                 {(field) => (
-                  <CInput field={field} placeholder="Your name" required />
+                  <CInput
+                    field={field}
+                    placeholder="Your name"
+                    required
+                  />
                 )}
               </CField>
 
@@ -95,7 +98,7 @@ function RegisterComponent(): ReactNode {
                   <CInput
                     field={field}
                     type="password"
-                    placeholder="Min 8 characters"
+                    placeholder="••••••••"
                     required
                   />
                 )}
@@ -107,13 +110,6 @@ function RegisterComponent(): ReactNode {
             </div>
           )}
         </CForm>
-
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <a href="/login" className="text-accent hover:underline">
-            Sign in
-          </a>
-        </p>
       </div>
     </div>
   );

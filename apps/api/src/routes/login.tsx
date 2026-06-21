@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { CForm, CField, CInput, CSubmit } from "@ekajaya/ui/composed";
@@ -11,21 +11,21 @@ export const Route = createFileRoute("/login")({
     redirect: search.redirect || undefined,
   }),
   beforeLoad: async () => {
+    // If already logged in, redirect to dashboard
     try {
       const res = await fetch("/api/auth/session");
       if (res.ok) {
         const data = (await res.json()) as { user?: { id: string } };
         if (data.user) throw redirect({ to: "/dashboard" });
       }
-    } catch {
-      // session check failed — stay on page
+    } catch (e) {
+      if (e instanceof Response) throw e;
     }
   },
   component: LoginComponent,
 });
 
 function LoginComponent(): ReactNode {
-  const navigate = useNavigate();
   const { redirect: returnTo } = Route.useSearch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,9 +47,9 @@ function LoginComponent(): ReactNode {
       });
       if (!res.ok) {
         const err = (await res.json()) as { message?: string };
-        throw new Error(err.message ?? "Invalid credentials");
+        throw new Error(err.message ?? "Login failed");
       }
-      navigate({ to: returnTo || "/dashboard" });
+      window.location.href = returnTo || "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -105,13 +105,6 @@ function LoginComponent(): ReactNode {
             </div>
           )}
         </CForm>
-
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <a href="/register" className="text-accent hover:underline">
-            Register
-          </a>
-        </p>
       </div>
     </div>
   );
