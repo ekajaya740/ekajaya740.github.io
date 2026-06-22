@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
 	"name": "ekajaya-api-dev",
-	"main": "@tanstack/react-start/server-entry",
+	"main": "src/worker.ts",
 	"compatibility_date": "2025-06-12",
 	"compatibility_flags": [
 		"nodejs_compat"
@@ -10,7 +10,8 @@
 		{
 			"binding": "DB",
 			"database_name": "dev-portfolio-db",
-			"database_id": "local-dev"
+			"database_id": "local-dev",
+			"migrations_dir": "packages/database/src/migrations"
 		}
 	],
 	"r2_buckets": [

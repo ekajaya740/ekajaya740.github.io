@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "studio": "drizzle-kit studio --config drizzle.local.config.ts",
-    "build": "vite build && tsc --noEmit",
+    "build": "vite build && bun run scripts/post-build.ts && tsc --noEmit",
     "preview": "vite preview",
     "deploy": "bun run build && wrangler deploy",
     "typecheck": "tsc --noEmit",
@@ -36,7 +36,8 @@
     "@ekajaya/config": "workspace:*",
     "@ekajaya/ui": "workspace:*",
     "@ekajaya/database": "workspace:*",
-    "better-sqlite3": "^12.10.0",
+    "@ekajaya/hooks": "workspace:*",
+    "@ekajaya/schema": "workspace:*",
     "better-upload": "^2.0.3",
     "drizzle-orm": "^1.0.0-rc.3",
     "editorjs-react": "^0.1.9",
@@ -59,7 +60,7 @@
     "vite-tsconfig-paths": "^5.1.0",
     "wrangler": "^4.34.0",
     "@fontsource/goldman": "^5.0.0",
-    "@fontsource/sansation": "^5.2.2",
+    "@fontsource/inter": "^5.2.2",
     "@fontsource/share-tech-mono": "^5.2.7"
   }
 }
