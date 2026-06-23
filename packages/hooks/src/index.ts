@@ -12,3 +12,4 @@ export {
   useDeletePost,
   useUploadThumbnail,
 } from "./blog";
+export { useUsersCount } from "./useUsersCount";

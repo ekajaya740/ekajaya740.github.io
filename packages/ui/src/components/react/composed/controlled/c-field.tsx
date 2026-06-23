@@ -39,7 +39,7 @@ export function CField({ name, form, label, children }: CFieldProps) {
         label &&
           createElement(
             "label",
-            { htmlFor: name, className: "block text-sm font-medium" },
+            { htmlFor: name, className: "block text-sm font-medium text-foreground" },
             label,
           ),
         children(field),

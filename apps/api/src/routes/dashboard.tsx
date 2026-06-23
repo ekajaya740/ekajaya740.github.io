@@ -1,36 +1,33 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import type { SessionResponse } from "@/lib/auth";
 
 export const Route = createFileRoute("/dashboard")({
+  beforeLoad: async () => {
+    try {
+      // If no users exist, redirect to register
+      const countRes = await fetch("/api/v1/users");
+      if (countRes.ok) {
+        const { count } = (await countRes.json()) as { count: number };
+        if (count === 0) throw redirect({ to: "/register" });
+      }
+
+      // If not logged in, redirect to login
+      const res = await fetch("/api/auth/session");
+      if (res.ok) {
+        const data = (await res.json()) as { user?: { id: string } };
+        if (!data.user) throw redirect({ to: "/login" });
+      } else {
+        throw redirect({ to: "/login" });
+      }
+    } catch {
+      // check failed — redirect to login
+      throw redirect({ to: "/login" });
+    }
+  },
   component: DashboardComponent,
 });
 
 function DashboardComponent(): ReactNode {
-  const [session, setSession] = useState<{ user: NonNullable<SessionResponse["user"]> } | null>(null);
-  const [authChecked, setAuthChecked] = useState(false);
-  const navigate = useNavigate();
-  const pathname = window.location.pathname + window.location.search;
-
-  useEffect(() => {
-    fetch("/api/auth/session", { credentials: "include" })
-      .then(r => r.json() as Promise<SessionResponse>)
-      .then((data: SessionResponse) => {
-        if (!data.user) {
-          navigate({ to: "/login", search: { redirect: pathname } });
-        } else {
-          setSession({ user: data.user });
-        }
-        setAuthChecked(true);
-      })
-      .catch(() => {
-        setAuthChecked(true);
-      });
-  }, []);
-
-  if (!authChecked || !session) return <div className="p-8 text-center">Loading...</div>;
-
   return (
     <main className="p-8">
       <h1 className="mb-4 text-2xl font-bold">Dashboard</h1>

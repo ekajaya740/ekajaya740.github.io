@@ -87,3 +87,7 @@ export function uploadThumbnail(
     .post("api/blog/upload", { body: form })
     .json<{ key: string; url: string }>();
 }
+
+export function usersCount(client: ApiClient) {
+  return client.get("api/v1/users").json<{ count: number }>();
+}

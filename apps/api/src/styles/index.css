@@ -25,7 +25,7 @@
   --color-accent-warm: #f97316;
   --color-dot-on: #ef4444;
   --color-dot-off: rgba(255, 255, 255, 0.06);
-  --font-sans: "Sansation", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Goldman", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Share Tech Mono", ui-monospace, monospace;
   --radius-sm: 4px;
@@ -34,8 +34,8 @@
   --radius-xl: 16px;
 }
 
-@import "@fontsource/sansation/400.css";
-@import "@fontsource/sansation/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/700.css";
 @import "@fontsource/goldman/400.css";
 @import "@fontsource/goldman/700.css";
 @import "@fontsource/share-tech-mono/400.css";

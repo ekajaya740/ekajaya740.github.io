@@ -136,7 +136,7 @@ function BlogDashboardComponent(): ReactNode {
         <select
           value={search.language ?? ""}
           onChange={(e) => setFilter("language", e.target.value || undefined)}
-          className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground"
         >
           <option value="">All Languages</option>
           <option value="en">English</option>
@@ -146,7 +146,7 @@ function BlogDashboardComponent(): ReactNode {
         <select
           value={search.status ?? ""}
           onChange={(e) => setFilter("status", e.target.value || undefined)}
-          className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground"
         >
           <option value="">All Statuses</option>
           <option value="draft">Draft</option>

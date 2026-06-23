@@ -15,6 +15,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiBlogIndexRouteImport } from './routes/api/blog/index'
+import { Route as ApiV1UsersRouteImport } from './routes/api/v1/users'
 import { Route as ApiBlogUploadRouteImport } from './routes/api/blog/upload'
 import { Route as ApiBlogPostsRouteImport } from './routes/api/blog/posts'
 import { Route as ApiBlogNewRouteImport } from './routes/api/blog/new'
@@ -50,6 +51,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
 const ApiBlogIndexRoute = ApiBlogIndexRouteImport.update({
   id: '/api/blog/',
   path: '/api/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1UsersRoute = ApiV1UsersRouteImport.update({
+  id: '/api/v1/users',
+  path: '/api/v1/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiBlogUploadRoute = ApiBlogUploadRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/api/blog/new': typeof ApiBlogNewRoute
   '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
   '/api/blog/upload': typeof ApiBlogUploadRoute
+  '/api/v1/users': typeof ApiV1UsersRoute
   '/api/blog/': typeof ApiBlogIndexRoute
   '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/api/blog/new': typeof ApiBlogNewRoute
   '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
   '/api/blog/upload': typeof ApiBlogUploadRoute
+  '/api/v1/users': typeof ApiV1UsersRoute
   '/api/blog': typeof ApiBlogIndexRoute
   '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/api/blog/new': typeof ApiBlogNewRoute
   '/api/blog/posts': typeof ApiBlogPostsRouteWithChildren
   '/api/blog/upload': typeof ApiBlogUploadRoute
+  '/api/v1/users': typeof ApiV1UsersRoute
   '/api/blog/': typeof ApiBlogIndexRoute
   '/api/blog/posts/$slug': typeof ApiBlogPostsSlugRoute
 }
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/api/blog/new'
     | '/api/blog/posts'
     | '/api/blog/upload'
+    | '/api/v1/users'
     | '/api/blog/'
     | '/api/blog/posts/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/api/blog/new'
     | '/api/blog/posts'
     | '/api/blog/upload'
+    | '/api/v1/users'
     | '/api/blog'
     | '/api/blog/posts/$slug'
   id:
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/api/blog/new'
     | '/api/blog/posts'
     | '/api/blog/upload'
+    | '/api/v1/users'
     | '/api/blog/'
     | '/api/blog/posts/$slug'
   fileRoutesById: FileRoutesById
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   ApiBlogNewRoute: typeof ApiBlogNewRoute
   ApiBlogPostsRoute: typeof ApiBlogPostsRouteWithChildren
   ApiBlogUploadRoute: typeof ApiBlogUploadRoute
+  ApiV1UsersRoute: typeof ApiV1UsersRoute
   ApiBlogIndexRoute: typeof ApiBlogIndexRoute
 }
 
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/api/blog'
       fullPath: '/api/blog/'
       preLoaderRoute: typeof ApiBlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/users': {
+      id: '/api/v1/users'
+      path: '/api/v1/users'
+      fullPath: '/api/v1/users'
+      preLoaderRoute: typeof ApiV1UsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/blog/upload': {
@@ -297,6 +317,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiBlogNewRoute: ApiBlogNewRoute,
   ApiBlogPostsRoute: ApiBlogPostsRouteWithChildren,
   ApiBlogUploadRoute: ApiBlogUploadRoute,
+  ApiV1UsersRoute: ApiV1UsersRoute,
   ApiBlogIndexRoute: ApiBlogIndexRoute,
 }
 export const routeTree = rootRouteImport

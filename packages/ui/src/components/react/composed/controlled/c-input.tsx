@@ -30,7 +30,7 @@ export function CInput({
     onChange: (e: { target: { value: string } }) =>
       field.handleChange(e.target.value),
     onBlur: () => field.handleBlur(),
-    className: `w-full rounded-lg border border-border px-4 py-2 text-sm focus:border-accent focus:outline-none ${className}`,
+    className: `w-full rounded-lg border border-border bg-input px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-ring ${className}`,
     ...rest,
   });
 }

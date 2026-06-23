@@ -183,7 +183,7 @@ function BlogEditComponent(): ReactNode {
             &larr; Back to Blog Posts
           </Link>
         </div>
-        <div className="rounded-lg border border-border p-4 text-sm text-accent" bg-secondary>
+        <div className="rounded-lg border border-border bg-secondary p-4 text-sm text-accent">
           {error}
         </div>
       </div>
@@ -223,17 +223,15 @@ function BlogEditComponent(): ReactNode {
           return (
             <div className="space-y-6">
               {/* Slug (read-only) */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
-                  Slug
-                </label>
-                <input
-                  type="text"
-                  value={slug}
-                  disabled
-                  className="w-full rounded-lg border border-border px-3 py-2 font-mono text-sm text-muted-foreground" bg-secondary
-                />
-              </div>
+              <CField name="slug" form={form} label="Slug">
+                {(field) => (
+                  <CInput
+                    field={field}
+                    disabled
+                    className="font-mono"
+                  />
+                )}
+              </CField>
 
               <CField name="title" form={form} label="Title">
                 {(field) => (
@@ -311,9 +309,7 @@ function BlogEditComponent(): ReactNode {
                   type="button"
                   disabled={saving}
                   onClick={() => handleSubmit(f.state.values, "draft")}
-                  className="rounded-lg border border-border px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50" bg-background
-                >
-                  {saving ? "Saving..." : "Save Draft"}
+                  className="rounded-lg border border-border bg-card px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50">
                 </button>
                 <Link
                   to="/api/blog"

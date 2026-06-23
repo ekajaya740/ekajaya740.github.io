@@ -26,6 +26,8 @@
         "@editorjs/table": "^2.4.5",
         "@ekajaya/config": "workspace:*",
         "@ekajaya/database": "workspace:*",
+        "@ekajaya/hooks": "workspace:*",
+        "@ekajaya/schema": "workspace:*",
         "@ekajaya/ui": "workspace:*",
         "@radix-ui/react-alert-dialog": "^1.1.16",
         "@tanstack/react-form": "^1.33.0",
@@ -34,7 +36,6 @@
         "@tanstack/react-start": "^1.132.0",
         "better-auth": "^1.6.18",
         "better-auth-cloudflare": "^0.3.0",
-        "better-sqlite3": "^12.10.0",
         "better-upload": "^2.0.3",
         "drizzle-orm": "^1.0.0-rc.3",
         "editorjs-react": "^0.1.9",
@@ -47,7 +48,7 @@
         "@cloudflare/vite-plugin": "^1.0.0",
         "@cloudflare/workers-types": "^4.20250605.0",
         "@fontsource/goldman": "^5.0.0",
-        "@fontsource/sansation": "^5.2.2",
+        "@fontsource/inter": "^5.2.2",
         "@fontsource/share-tech-mono": "^5.2.7",
         "@tailwindcss/vite": "^4.3.1",
         "@types/better-sqlite3": "^7.6.13",
@@ -401,6 +402,8 @@
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.12", "", { "os": "win32", "cpu": "x64" }, "sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA=="],
 
     "@fontsource/goldman": ["@fontsource/goldman@5.2.8", "", {}, "sha512-mhKP7C9ABdI3hkba3TqaAHjsvJD9mYp6V0pOVJAqUAeobj+Qf0f5BVlqrmujZJQBFYMuAZcWLm9S90AwqziYhw=="],
+
+    "@fontsource/inter": ["@fontsource/inter@5.2.8", "", {}, "sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg=="],
 
     "@fontsource/sansation": ["@fontsource/sansation@5.2.2", "", {}, "sha512-dyW39/+og/+Ui0rJm99kD+qjXrt28HBRdqP+MpvyDCml8+shV61Bq4GzHAq60dltOFakDWM1iitJNb15+HPafA=="],
 

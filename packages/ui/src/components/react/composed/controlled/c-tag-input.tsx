@@ -91,9 +91,8 @@ export function CTagInput({ tags, onChange, className = "" }: CTagInputProps) {
               onKeyDown: (e: { key: string }) => {
                 if (e.key === "Enter") addTag();
               },
-              placeholder: "e.g. typescript",
               className:
-                "w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring",
+                "w-full rounded-lg border border-border bg-input px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-ring",
               autoFocus: true,
             },
           ),

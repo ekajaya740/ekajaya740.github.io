@@ -134,7 +134,7 @@ function NewBlogPostComponent(): ReactNode {
           toolsRef.current = buildTools(values.slug, values.language);
 
           return (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <CField name="title" form={form} label="Title">
                 {(field) => {
                   const origChange = field.handleChange;
@@ -239,8 +239,7 @@ function NewBlogPostComponent(): ReactNode {
                   type="button"
                   disabled={saving}
                   onClick={() => onSubmit(f.state.values)}
-                  className="rounded-lg border border-border px-6 py-2 text-sm font-medium text-foreground hover:bg-card disabled:cursor-not-allowed disabled:opacity-50"
-                >
+                  className="rounded-lg border border-border bg-card px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50">
                   {saving ? "Saving..." : "Save Draft"}
                 </button>
               </div>

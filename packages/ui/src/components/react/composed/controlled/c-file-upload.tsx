@@ -113,9 +113,9 @@ export const CFileUpload: FC<CFileUploadProps> = ({
                 createElement("p", { className: "text-sm text-muted-foreground" }, "Uploading..."),
                 createElement(
                   "div",
-                  { className: "mx-auto h-1.5 w-32 overflow-hidden rounded-full bg-gray-200" },
+                  { className: "mx-auto h-1.5 w-32 overflow-hidden rounded-full bg-muted" },
                   createElement("div", {
-                    className: "h-full bg-blue-600 transition-all duration-300",
+                    className: "h-full bg-accent transition-all duration-300",
                     style: { width: `${Math.round(progress)}%` },
                   }),
                 ),
@@ -129,11 +129,11 @@ export const CFileUpload: FC<CFileUploadProps> = ({
                   {
                     type: "button" as const,
                     onClick: () => inputRef.current?.click(),
-                    className: "text-sm font-medium text-blue-600 hover:text-blue-800",
+                    className: "text-sm font-medium text-accent hover:opacity-80",
                   },
                   "browse files",
                 ),
-                createElement("p", { className: "text-xs text-gray-400" }, `Max ${Math.round(maxSize / 1024 / 1024)}MB`),
+                createElement("p", { className: "text-xs text-muted-foreground" }, `Max ${Math.round(maxSize / 1024 / 1024)}MB`),
               ),
           createElement("input", {
             ref: inputRef,

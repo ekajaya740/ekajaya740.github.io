@@ -13,7 +13,7 @@ export function CSubmit({
 }: CSubmitProps) {
   return createElement("button", {
     type: "submit",
-    className: `rounded-lg px-6 py-2 text-sm font-medium text-accent-foreground transition-colors hover:opacity-80" style={{backgroundColor: "var(--color-accent)"}} focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 ${className}`,
-    ...rest,
+    className: `rounded-lg px-6 py-2 text-sm font-medium text-accent-foreground transition-colors hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`,
+    style: { backgroundColor: "var(--color-accent)" },
   }, children);
 }
