@@ -81,7 +81,7 @@ import { CForm, CField, CInput, CTextarea, CSelect, CSubmit } from "@ekajaya/ui/
 #### Pattern
 
 ```
-<CForm defaultValues=... onSubmit=...>
+<CForm defaultValues=... onSubmit=... validators={{ onSubmit: zodSchema }}>
   {(form) => (
     <>
       <CField name="title" form={form} label="Title">
@@ -98,18 +98,19 @@ import { CForm, CField, CInput, CTextarea, CSelect, CSubmit } from "@ekajaya/ui/
 
 #### Rules
 
-1. **State outside form only for non-`CInput` compat**: Editor.js content, tags (custom UI), file uploads, loading status. All text/select inputs go through `CForm`.
-2. **Validate with Zod before API call**: `schema.safeParse(values)` → collect errors into string array, display above form.
-3. **`CField` renders errors automatically** from TanStack Form's validation state.
+1. **State outside form only for non-`CInput` compat**: Editor.js content, tags (custom UI), file uploads. All text/select inputs go through `CForm`.
+2. **Validate with Zod via `validators` prop**: Pass Zod schemas to `CForm` via `validators={{ onSubmit: schema }}` or `validators={{ onChange: schema }}`. TanStack Form handles validation automatically — do NOT manually call `schema.safeParse()` in `onSubmit`.
+3. **`CField` renders errors automatically** from TanStack Form's `field.state.meta.errors`.
 4. **One `CForm` per page**: nest everything inside the render-props children.
-5. **`CSubmit` is the submit button**: disable while saving via `disabled={saving}`.
+5. **`CSubmit` is the submit button**: disable while submitting via `disabled={form.state.isSubmitting}`.
 6. **Custom onChange**: wrap `CField` children and call `field.handleChange(value)` manually. For auto-slug, read `field.state.value` in a sibling field.
+7. **Form-level loading**: use `form.state.isSubmitting` instead of `useState` for loading state.
 
 #### Components Reference
 
 | Component | Props | Notes |
 |---|---|---|
-| `CForm` | `defaultValues`, `onSubmit`, `children` | Children is `(form) => JSX`. Form instance has `.state.values`. |
+| `CForm` | `defaultValues`, `onSubmit`, `validators?`, `children` | Children is `(form) => JSX`. Form instance has `.state.values`, `.state.isSubmitting`, `.state.isValid`. Pass Zod schemas via `validators={{ onSubmit: schema }}`. |
 | `CField` | `name`, `form`, `label`, `children` | Wraps TanStack `form.Field`. Renders validation errors. |
 | `CInput` | `field`, `type?`, `placeholder?`, `required?`, `className?` | Text input. Field value via `String(field.state.value)`. |
 | `CTextarea` | `field`, `rows?`, `placeholder?`, `className?` | Multi-line input. |

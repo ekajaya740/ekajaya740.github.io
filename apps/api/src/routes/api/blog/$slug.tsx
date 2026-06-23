@@ -95,9 +95,8 @@ function BlogEditComponent(): ReactNode {
 
   const slugRef = useRef(slug);
   const langRef = useRef(language);
-
-  const saving = updatePost.isPending;
   const error = loadError?.message ?? null;
+
 
   // ---- Save ----------------------------------------------------------------
 
@@ -302,14 +301,15 @@ function BlogEditComponent(): ReactNode {
               </div>
 
               <div className="flex items-center gap-3 border-t border-border pt-6">
-                <CSubmit disabled={saving}>
-                  {saving ? "Saving..." : "Publish"}
+                <CSubmit disabled={form.state.isSubmitting}>
+                  {form.state.isSubmitting ? "Saving..." : "Publish"}
                 </CSubmit>
                 <button
                   type="button"
-                  disabled={saving}
-                  onClick={() => handleSubmit(f.state.values, "draft")}
+                  disabled={form.state.isSubmitting}
+                  onClick={() => handleSubmit(form.state.values, "draft")}
                   className="rounded-lg border border-border bg-card px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50">
+                  {form.state.isSubmitting ? "Saving..." : "Save Draft"}
                 </button>
                 <Link
                   to="/api/blog"

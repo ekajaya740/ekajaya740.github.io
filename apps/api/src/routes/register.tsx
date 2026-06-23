@@ -1,5 +1,4 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import type { ReactNode } from "react";
 import { CForm, CField, CInput, CSubmit } from "@ekajaya/ui/composed";
 import { signUpSchema } from "@ekajaya/schema/auth";
@@ -22,34 +21,18 @@ export const Route = createFileRoute("/register")({
 
 function RegisterComponent(): ReactNode {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (values: Record<string, unknown>): Promise<void> => {
-    setError(null);
-    const parsed = signUpSchema.safeParse(values);
-    if (!parsed.success) {
-      setError(parsed.error.issues.map((i) => i.message).join(", "));
-      return;
+    const res = await fetch("/api/auth/sign-up/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+    if (!res.ok) {
+      const err = (await res.json()) as { message?: string };
+      throw new Error(err.message ?? "Registration failed");
     }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/sign-up/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) {
-        const err = (await res.json()) as { message?: string };
-        throw new Error(err.message ?? "Registration failed");
-      }
-      navigate({ to: "/dashboard" });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
-    } finally {
-      setLoading(false);
-    }
+    navigate({ to: "/dashboard" });
   };
 
   return (
@@ -60,15 +43,10 @@ function RegisterComponent(): ReactNode {
           <p className="mt-1 text-sm text-muted-foreground">Register admin access</p>
         </div>
 
-        {error && (
-          <div className="rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm text-accent">
-            {error}
-          </div>
-        )}
-
         <CForm
           defaultValues={{ name: "", email: "", password: "" }}
           onSubmit={handleSubmit}
+          validators={{ onSubmit: signUpSchema }}
         >
           {(form) => (
             <div className="space-y-4">
@@ -104,8 +82,8 @@ function RegisterComponent(): ReactNode {
                 )}
               </CField>
 
-              <CSubmit disabled={loading}>
-                {loading ? "Creating account..." : "Create Account"}
+              <CSubmit disabled={form.state.isSubmitting}>
+                {form.state.isSubmitting ? "Creating account..." : "Create Account"}
               </CSubmit>
             </div>
           )}

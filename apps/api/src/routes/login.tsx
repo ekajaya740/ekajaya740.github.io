@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useState } from "react";
 import type { ReactNode } from "react";
 import { CForm, CField, CInput, CSubmit } from "@ekajaya/ui/composed";
 import { signInSchema } from "@ekajaya/schema/auth";
@@ -35,34 +34,18 @@ export const Route = createFileRoute("/login")({
 
 function LoginComponent(): ReactNode {
   const { redirect: returnTo } = Route.useSearch();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (values: Record<string, unknown>): Promise<void> => {
-    setError(null);
-    const parsed = signInSchema.safeParse(values);
-    if (!parsed.success) {
-      setError(parsed.error.issues.map((i) => i.message).join(", "));
-      return;
+    const res = await fetch("/api/auth/sign-in/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+    if (!res.ok) {
+      const err = (await res.json()) as { message?: string };
+      throw new Error(err.message ?? "Login failed");
     }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/sign-in/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) {
-        const err = (await res.json()) as { message?: string };
-        throw new Error(err.message ?? "Login failed");
-      }
-      window.location.href = returnTo || "/dashboard";
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = returnTo || "/dashboard";
   };
 
   return (
@@ -73,15 +56,10 @@ function LoginComponent(): ReactNode {
           <p className="mt-1 text-sm text-muted-foreground">Admin dashboard access</p>
         </div>
 
-        {error && (
-          <div className="rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm text-accent">
-            {error}
-          </div>
-        )}
-
         <CForm
           defaultValues={{ email: "", password: "" }}
           onSubmit={handleSubmit}
+          validators={{ onSubmit: signInSchema }}
         >
           {(form) => (
             <div className="space-y-4">
@@ -107,8 +85,8 @@ function LoginComponent(): ReactNode {
                 )}
               </CField>
 
-              <CSubmit disabled={loading}>
-                {loading ? "Signing in..." : "Sign In"}
+              <CSubmit disabled={form.state.isSubmitting}>
+                {form.state.isSubmitting ? "Signing in..." : "Sign In"}
               </CSubmit>
             </div>
           )}

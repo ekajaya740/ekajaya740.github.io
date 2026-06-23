@@ -105,8 +105,6 @@ function NewBlogPostComponent(): ReactNode {
     }
   };
 
-  const saving = createPost.isPending;
-
   return (
     <div className="mx-auto max-w-4xl p-6">
       <h1 className="mb-8 text-2xl font-bold text-foreground">New Blog Post</h1>
@@ -232,15 +230,15 @@ function NewBlogPostComponent(): ReactNode {
               </div>
 
               <div className="flex items-center gap-4 pt-2">
-                <CSubmit disabled={saving}>
-                  {saving ? "Saving..." : "Publish"}
+                <CSubmit disabled={form.state.isSubmitting}>
+                  {form.state.isSubmitting ? "Saving..." : "Publish"}
                 </CSubmit>
                 <button
                   type="button"
-                  disabled={saving}
-                  onClick={() => onSubmit(f.state.values)}
+                  disabled={form.state.isSubmitting}
+                  onClick={() => onSubmit(form.state.values)}
                   className="rounded-lg border border-border bg-card px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50">
-                  {saving ? "Saving..." : "Save Draft"}
+                  {form.state.isSubmitting ? "Saving..." : "Save Draft"}
                 </button>
               </div>
             </div>
