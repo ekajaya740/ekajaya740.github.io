@@ -1,5 +1,5 @@
-import { WoeHeatmap, type WoeHeatmapProps } from '@ekajaya/ui/composed/shaders';
-import { useMediaQuery, useContainerSize } from '@ekajaya/hooks';
+import { WoeHeatmap, type WoeHeatmapProps } from '@woe/ui/composed/shaders';
+import { useMediaQuery, useContainerSize } from '@woe/hooks';
 
 interface ShaderPreset {
   scale: number;

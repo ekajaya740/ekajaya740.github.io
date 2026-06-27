@@ -31,7 +31,7 @@ jobs:
 
       - run: bun install
 
-      - run: bun run build --filter=@ekajaya/web
+      - run: bun run build --filter=@woe/web
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -55,7 +55,7 @@ jobs:
 
       - run: bun install
 
-      - run: bun run build --filter=@ekajaya/api
+      - run: bun run build --filter=@woe/api
 
       - name: Deploy to Cloudflare Workers
         run: bun wrangler deploy --config wrangler.production.jsonc

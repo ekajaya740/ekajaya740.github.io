@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
 import { count } from "drizzle-orm";
 import { eq, desc, and, inArray } from "drizzle-orm";
-import { createPostSchema } from "@ekajaya/schema/blog";
-import { createAuth } from "../auth";
-import { createDb, posts, tags, postTags, users } from "@ekajaya/database";
+import { createPostSchema } from "@woe/schema/blog";
+import { createAuth } from "@woe/auth";
+import { createDb, posts, tags, postTags, users } from "@woe/database";
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
 import type { AppEnv } from "../app";
 

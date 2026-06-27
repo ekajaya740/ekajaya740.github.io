@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApiClient } from "./blog";
-import { usersCount } from "@ekajaya/http";
+import { usersCount } from "@woe/http";
 
 export function useUsersCount() {
   const client = useApiClient();

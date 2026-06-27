@@ -1,7 +1,7 @@
 import { hydrateRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ApiClientProvider } from "@ekajaya/hooks";
+import { ApiClientProvider } from "@woe/hooks";
 
 const queryClient = new QueryClient({
   defaultOptions: {

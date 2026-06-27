@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DotmSquare11 } from "@ekajaya/ui";
+import { DotmSquare11 } from "@woe/ui";
 
 export function DotMatrixLoader() {
   const [visible, setVisible] = useState(true);

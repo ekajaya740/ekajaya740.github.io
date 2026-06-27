@@ -1,10 +1,16 @@
 {
-  "name": "@ekajaya/config",
+  "name": "@woe/config",
   "version": "0.0.1",
   "private": true,
   "type": "module",
   "exports": {
     "./tailwind.css": "./src/tailwind.css"
+  },
+  "dependencies": {
+    "@fontsource/goldman": "^5.0.0",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/sansation": "^5.2.2",
+    "@fontsource/share-tech-mono": "^5.2.7"
   },
   "files": ["src"]
 }

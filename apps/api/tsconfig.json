@@ -14,34 +14,34 @@
       "@/*": [
         "./src/*"
       ],
-      "@/lib/auth": [
-        "./src/lib/auth.ts"
+      "@woe/auth/*": [
+        "../../packages/auth/src/*"
       ],
-      "@ekajaya/ui/composed": [
+      "@woe/ui/composed": [
         "../../packages/ui/src/components/react/composed/controlled/index.ts"
       ],
-      "@ekajaya/ui/composed/extra": [
+      "@woe/ui/composed/extra": [
         "../../packages/ui/src/components/react/composed/controlled/extra.ts"
       ],
-      "@ekajaya/ui/composed/*": [
+      "@woe/ui/composed/*": [
         "../../packages/ui/src/components/react/composed/*"
       ],
-      "@ekajaya/ui/utils": [
+      "@woe/ui/utils": [
         "../../packages/ui/src/lib/utils.ts"
       ],
-      "@ekajaya/schema/*": [
+      "@woe/schema/*": [
         "../../packages/schema/src/*"
       ],
-      "@ekajaya/hooks/blog": [
+      "@woe/hooks/blog": [
         "../../packages/hooks/src/blog.ts"
       ],
-      "@ekajaya/hooks/*": [
+      "@woe/hooks/*": [
         "../../packages/hooks/src/*"
       ],
-      "@ekajaya/http/*": [
+      "@woe/http/*": [
         "../../packages/http/src/*"
       ],
-      "@ekajaya/ui/base/*": [
+      "@woe/ui/base/*": [
         "../../packages/ui/src/components/react/base/ui/*"
       ]
     }

@@ -1,5 +1,5 @@
 {
-  "name": "@ekajaya/web",
+  "name": "@woe/web",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@astrojs/react": "^6.0.0",
-    "@ekajaya/config": "workspace:*",
-    "@ekajaya/hooks": "workspace:*",
-    "@ekajaya/ui": "workspace:*",
+    "@woe/config": "workspace:*",
+    "@woe/hooks": "workspace:*",
+    "@woe/ui": "workspace:*",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/sansation": "^5.2.2",
     "@fontsource/share-tech-mono": "^5.2.7",

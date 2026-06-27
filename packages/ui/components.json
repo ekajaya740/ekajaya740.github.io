@@ -11,11 +11,11 @@
   },
   "iconLibrary": "radix",
   "aliases": {
-    "components": "@ekajaya/ui",
-    "utils": "@ekajaya/ui/utils",
-    "ui": "@ekajaya/ui",
-    "lib": "@ekajaya/ui",
-    "hooks": "@ekajaya/hooks"
+    "components": "@woe/ui",
+    "utils": "@woe/ui/utils",
+    "ui": "@woe/ui",
+    "lib": "@woe/ui",
+    "hooks": "@woe/hooks"
   },
   "registries": {
     "@aceternity": "https://ui.aceternity.com/registry/{name}.json",

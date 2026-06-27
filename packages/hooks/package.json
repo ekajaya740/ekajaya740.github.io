@@ -1,5 +1,5 @@
 {
-  "name": "@ekajaya/hooks",
+  "name": "@woe/hooks",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "./blog": "./src/blog.ts"
   },
   "dependencies": {
-    "@ekajaya/http": "workspace:*",
+    "@woe/http": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "sonner": "^2.0.7"
   },

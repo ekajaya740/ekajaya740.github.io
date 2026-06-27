@@ -6,7 +6,7 @@ import {
   useVelocity,
   useSpring,
 } from 'motion/react';
-import { cn } from '@ekajaya/ui/utils';
+import { cn } from '@woe/ui/utils';
 
 interface TracingBeamProps {
   children: React.ReactNode;

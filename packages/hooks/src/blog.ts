@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { createContext, useContext, createElement } from "react";
 import type { FC, ReactNode } from "react";
-import { createClient } from "@ekajaya/http/client";
-import type { ApiClient } from "@ekajaya/http/client";
+import { createClient } from "@woe/http/client";
+import type { ApiClient } from "@woe/http/client";
 import {
   listPosts,
   getPost,
@@ -14,13 +14,13 @@ import {
   updatePost,
   deletePost,
   uploadThumbnail,
-} from "@ekajaya/http/blog";
+} from "@woe/http/blog";
 import type {
   ListPostsParams,
   CreatePostInput,
   UpdatePostInput,
   Post,
-} from "@ekajaya/http/blog";
+} from "@woe/http/blog";
 import { toast } from "sonner";
 
 // ---- API Client Context ----

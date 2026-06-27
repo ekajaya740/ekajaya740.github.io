@@ -1,16 +1,19 @@
-import type { D1Database, IncomingRequestCfProperties } from "@cloudflare/workers-types";
+import type {
+  D1Database,
+  IncomingRequestCfProperties,
+} from "@cloudflare/workers-types";
 import { betterAuth } from "better-auth";
 import { withCloudflare } from "better-auth-cloudflare";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { drizzle } from "drizzle-orm/d1";
 import { count } from "drizzle-orm";
-import { schema, users } from "@ekajaya/database";
+import { schema, users } from "@woe/database";
 
 export interface AuthBindings {
   DB: D1Database;
 }
 
-function createAuth(
+export function createAuth(
   env?: AuthBindings,
   cf?: IncomingRequestCfProperties,
   baseURL?: string,
@@ -72,6 +75,3 @@ function createAuth(
 
 // CLI export (no env — used by @better-auth/cli generate)
 export const auth = createAuth();
-
-// Runtime export
-export { createAuth };

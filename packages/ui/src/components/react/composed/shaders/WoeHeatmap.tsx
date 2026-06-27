@@ -1,5 +1,5 @@
 import { Heatmap } from '@paper-design/shaders-react';
-import { useContainerSize } from '@ekajaya/hooks';
+import { useContainerSize } from '@woe/hooks';
 
 export interface WoeHeatmapProps {
   /** Source image for the heatmap shape */
