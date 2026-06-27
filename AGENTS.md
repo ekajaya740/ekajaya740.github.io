@@ -14,7 +14,7 @@
 - **Runtime**: Bun (do not use npm/yarn/pnpm)
 - **Monorepo**: Turborepo with Bun workspaces (`apps/*`, `packages/*`)
 - **Web**: Astro 6 SSG → GitHub Pages
-- **Admin**: TanStack Start (React SSR) → Cloudflare Workers (D1 + R2)
+- **Admin**: Hono + React SSR → Cloudflare Workers (D1 + R2)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (NOT `@astrojs/tailwind`)
 - **Icons**: `astro-icon` with `@iconify-json/lucide` — icons inlined as SVG at build time. Use `<Icon name="lucide:icon-name" size={16} />` from `astro-icon/components`. New icons must be added to the `include` list in `astro.config.mjs`.
 - **Fonts**: Fontsource CSS imports in `@ekajaya/config/tailwind.css` (Goldman, Sansation, Share Tech Mono)
@@ -57,8 +57,8 @@ No test runner configured. No linter configured.
 
 - **Config**: `apps/api/src/auth/index.ts` — dual-mode: CLI schema gen (no env) + runtime (with Cloudflare bindings).
 - **Schema**: `packages/database/src/auth-schema.ts` — `users`, `sessions`, `accounts`, `verifications` tables.
-- **Route**: `apps/api/src/routes/api/auth/$.ts` — catch-all forwards all methods to Better Auth handler.
-- **Env access**: `server.ts` uses `AsyncLocalStorage` to pass Cloudflare bindings per-request. Call `getPlatformEnv()` in route handlers.
+- **Route**: `apps/api/src/routes/api.ts` — `/auth/*` catch-all forwards all methods to Better Auth handler.
+- **Env access**: Hono context (`c.env`) provides Cloudflare bindings per-request.
 - **Email/password only**: No social providers. Email verification disabled (MVP).
 
 #### User Roles

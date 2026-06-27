@@ -2,7 +2,7 @@ export interface SessionUser {
   id: string;
   email: string;
   name: string;
-  role: "SUPERADMIN" | "editor";
+  role?: "SUPERADMIN" | "editor";
 }
 
 export interface SessionResponse {

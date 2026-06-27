@@ -1,5 +1,26 @@
-import './styles/index.css'
-import { hydrateRoot } from 'react-dom/client'
-import { StartClient } from '@tanstack/react-start/client'
+import { hydrateRoot } from "react-dom/client";
+import { StrictMode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ApiClientProvider } from "@ekajaya/hooks";
 
-hydrateRoot(document, <StartClient />)
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const baseUrl = window.location.origin;
+
+hydrateRoot(
+  document,
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ApiClientProvider baseUrl={baseUrl}>
+        <div />
+      </ApiClientProvider>
+    </QueryClientProvider>
+  </StrictMode>,
+);
