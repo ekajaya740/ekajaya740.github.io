@@ -27,25 +27,9 @@ api.all("/auth/*", (c) => {
 });
 
 api.get("/v1/users", async (c) => {
-  const d1 = c.env.DB as D1Database | undefined;
-
-  if (d1) {
-    const db = drizzle(d1, { schema: { users } });
-    const [row] = await db.select({ n: count() }).from(users);
-    return c.json({ count: Number(row?.n ?? 0) });
-  }
-
-  try {
-    const Database = require("better-sqlite3");
-    const db = new Database("local.db", { readonly: true });
-    const row = db.prepare("SELECT COUNT(*) as count FROM users").get() as
-      | { count: number }
-      | undefined;
-    db.close();
-    return c.json({ count: row?.count ?? 0 });
-  } catch {
-    return c.json({ count: 0 });
-  }
+  const db = createDb(c.env.DB as D1Database);
+  const [row] = await db.select({ n: count() }).from(users);
+  return c.json({ count: Number(row?.n ?? 0) });
 });
 
 api.get("/blog/posts", async (c) => {

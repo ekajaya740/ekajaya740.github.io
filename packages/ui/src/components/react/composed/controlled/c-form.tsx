@@ -42,7 +42,7 @@ export function CForm({
 
   return createElement(
     "form",
-    { onSubmit: handleSubmit, className: "space-y-4" },
+    { onSubmit: handleSubmit, method: "post", className: "space-y-4" },
     typeof children === "function" ? children(form) : children,
   );
 }

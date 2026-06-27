@@ -11,7 +11,7 @@
 			"binding": "DB",
 			"database_name": "portfolio-db",
 			"database_id": "3087a0db-726d-4684-ac70-fa814c488941",
-			"migrations_dir": "packages/database/src/migrations"
+			"migrations_dir": "../../packages/database/src/migrations"
 		}
 	],
 	"r2_buckets": [
