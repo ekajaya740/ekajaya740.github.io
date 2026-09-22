@@ -1,0 +1,36 @@
+---
+import '@/styles/global.css';
+import Head from '@/components/seo/Head.astro';
+---
+
+<!--
+  404 is deliberately lean: it imports global.css + Head only.
+  BaseLayout would drag in the section-dot nav (anchors that don't exist here), the
+  scroll-progress bar, and the Person JSON-LD — all dead weight on an error page.
+-->
+<html lang="en" dir="ltr">
+  <head>
+    <Head
+      title="404 — Work of Ekajaya"
+      description="That page doesn't exist. Head back to the homepage."
+      indexable={false}
+    />
+  </head>
+  <body class="min-h-screen flex items-center justify-center px-6">
+    <main class="max-w-3xl w-full">
+      <p class="font-mono text-xs tracking-[0.3em] text-accent mb-3">ERROR 404</p>
+      <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-6xl font-bold text-foreground text-balance">
+        Nothing here.
+      </h1>
+      <p class="mt-6 text-muted-foreground leading-relaxed max-w-xl">
+        The page you're looking for doesn't exist, or it moved. The work is still one click away.
+      </p>
+      <a
+        href="/"
+        class="mt-10 inline-flex items-center gap-2 font-mono text-sm text-accent hover:text-accent/80 transition-colors"
+      >
+        <span aria-hidden="true">←</span> Back to the homepage
+      </a>
+    </main>
+  </body>
+</html>

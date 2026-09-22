@@ -20,7 +20,7 @@ export async function GET(context: { site: string | URL | undefined; }) {
     customData: `
       <language>en</language>
       <image>
-        <url>https://workofekajaya.com/og-default.png</url>
+        <url>https://workofekajaya.com/index.webp</url>
         <title>Work of Ekajaya</title>
         <link>https://workofekajaya.com</link>
       </image>

@@ -19,13 +19,10 @@
     "@paper-design/shaders-react": "^0.0.76",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "6.4.4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
+    "cn": "^0.3.2",
     "motion": "^12.38.0",
-    "ollama": "^0.6.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
@@ -35,6 +32,7 @@
     "@iconify-json/lucide": "^1.2.103",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro-icon": "^1.1.5"
+    "astro-icon": "^1.1.5",
+    "astro-takumi": "^2.0.4"
   }
 }

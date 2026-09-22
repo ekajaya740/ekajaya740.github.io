@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   motion,
   useScroll,
@@ -19,14 +19,19 @@ export function TracingBeam({ children, className }: TracingBeamProps) {
     target: ref,
     offset: ['start start', 'end start'],
   });
-
-  const contentRef = useRef<HTMLDivElement>(null);
   const [svgHeight, setSvgHeight] = useState(0);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      setSvgHeight(contentRef.current.offsetHeight);
-    }
+
+  // Measure on mount and on every resize. A one-shot offsetHeight read drifts as soon as
+  // content reflows (webfont swap, viewport change), leaving the beam's length out of sync
+  // with the timeline it traces. ResizeObserver keeps the two locked together.
+  const contentRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setSvgHeight(Math.round(entry.contentRect.height));
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
 
   const y1 = useSpring(

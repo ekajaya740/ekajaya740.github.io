@@ -24,7 +24,6 @@ export default function HeroSection() {
   const isShortScreen = useMediaQuery('(max-height: 600px)');
 
   const preset = getPreset(aspect);
-  console.log(aspect)
 
   const scale = isShortScreen ? Math.max(0.6, preset.scale - 0.15) : preset.scale;
   const offsetX = preset.offsetX;
@@ -38,7 +37,7 @@ export default function HeroSection() {
       id="hero"
       style={{
         position: 'relative',
-        width: '100vw',
+        width: '100%',
         height: '100vh',
         overflow: 'hidden',
       }}

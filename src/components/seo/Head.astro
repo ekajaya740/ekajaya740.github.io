@@ -1,28 +1,32 @@
 ---
+import { getImagePath } from 'astro-takumi';
+
 export interface Props {
   title: string;
   description?: string;
   canonical?: string;
-  image?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
+  /** Set false on redirect stubs and error pages to emit `noindex` instead of the default. */
+  indexable?: boolean;
 }
 
 const {
   title,
   description = 'Full-stack engineer building scalable, production-ready web applications.',
   canonical,
-  image = '/og-default.png',
   type = 'website',
   publishedTime,
   modifiedTime,
+  indexable = true,
 } = Astro.props;
 
 const siteName = 'Work of Ekajaya';
 const siteUrl = Astro.site ? Astro.site.toString() : 'https://workofekajaya.com';
 const canonicalURL = canonical ? new URL(canonical, siteUrl).toString() : new URL(Astro.url.pathname, siteUrl).toString();
-const imageURL = new URL(image, siteUrl).toString();
+// Generated at build time by astro-takumi; this path must match the emitted file exactly.
+const imageURL = getImagePath({ url: Astro.url, site: Astro.site, format: 'webp' });
 ---
 
 <meta charset="utf-8" />
@@ -34,7 +38,12 @@ const imageURL = new URL(image, siteUrl).toString();
 <link rel="canonical" href={canonicalURL} />
 
 <meta name="author" content="I Putu Ekajaya Awidya Putra" />
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta
+  name="robots"
+  content={indexable
+    ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+    : 'noindex, follow'}
+/>
 
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
@@ -61,8 +70,7 @@ const imageURL = new URL(image, siteUrl).toString();
 <link rel="icon" href="/favicon.ico" sizes="48x48" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
 <slot />

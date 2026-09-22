@@ -6,7 +6,6 @@ import PersonSchema from '@/components/seo/PersonSchema.astro';
 export interface Props {
   title: string;
   description?: string;
-  image?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
@@ -15,7 +14,6 @@ export interface Props {
 const { 
   title, 
   description, 
-  image, 
   type, 
   publishedTime, 
   modifiedTime 
@@ -27,7 +25,6 @@ const {
     <Head 
       title={title} 
       description={description} 
-      image={image} 
       type={type}
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}

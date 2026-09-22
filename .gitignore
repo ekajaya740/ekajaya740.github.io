@@ -40,7 +40,10 @@ bun-debug.log*
 *.sublime-workspace
 
 # agent / tool directories (local config, not project source)
-.agents/
+# .agents/skills is a tracked submodule (design-system skills); everything else stays local
+.agents/*
+!.agents/skills
+!.agents/skills/**
 .claude/
 .qwen/
 .sisyphus/
