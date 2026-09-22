@@ -103,5 +103,6 @@ Before starting related work, you MUST read the corresponding skill instructions
 | `agent-browser` | Browser automation, screenshots, form testing |
 | `find-keywords` | Keyword research for blog posts or SEO |
 | `github-actions` | CI/CD workflows, `.github/workflows/` changes, deployment automation |
+| `design-system` | Any UI work on this site: sections, components, OG images, visual polish |
 
 Read via `read("skill://<name>")` before the first related edit.
