@@ -35,7 +35,9 @@ export default defineConfig({
       },
       render: ogRenderer,
     }),
-    sitemap({ changefreq: 'weekly', priority: 0.7, lastmod: new Date(), filter: (page) => !page.includes('/blog') }),
+    // Exclude only the /blog index stub (a redirect while the section is "coming
+    // soon"); individual posts stay listed so they remain discoverable.
+    sitemap({ changefreq: 'weekly', priority: 0.7, lastmod: new Date(), filter: (page) => page !== 'https://workofekajaya.com/blog/' }),
     icon({
       include: {
         lucide: ['mail', 'github', 'link', 'linkedin', 'external-link'],

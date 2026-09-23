@@ -67,6 +67,7 @@ const imageURL = getImagePath({ url: Astro.url, site: Astro.site, format: 'webp'
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title="Work of Ekajaya — Blog" href={`${siteUrl.replace(/\/$/, '')}/rss.xml`} />
 <link rel="icon" href="/favicon.ico" sizes="48x48" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
