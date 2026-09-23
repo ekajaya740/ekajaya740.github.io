@@ -126,6 +126,7 @@ const {
       </p>
     </footer>
 
+    {chrome && (
     <script is:inline>
       // Scroll progress bar
       const progressBar = document.getElementById('scroll-progress');
@@ -202,5 +203,6 @@ const {
         });
       });
     </script>
+    )}
   </body>
 </html>
