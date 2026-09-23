@@ -38,11 +38,11 @@ export default function HeroSection() {
       style={{
         position: 'relative',
         width: '100%',
-        height: '100vh',
+        height: '100dvh',
         overflow: 'hidden',
       }}
     >
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, height: '100%' }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, height: '100%' }} aria-hidden="true">
         <WoeHeatmap {...shaderProps} />
       </div>
 

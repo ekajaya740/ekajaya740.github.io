@@ -15,7 +15,7 @@ const projects = [
     period: 'Jan — May 2024',
     description:
       'End-to-end web-based information system for CV. Khris Production, from UI/UX design to deployment.',
-    stack: ['Next.js', 'TypeScript', 'Google Cloud Run'],
+    stack: ['Next.js', 'TypeScript', 'Fiber', 'Google Cloud Run'],
   },
 ];
 
@@ -36,7 +36,7 @@ const projects = [
           <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-3">
             <h3 class="text-lg font-bold text-foreground group-hover:text-accent transition-colors">
               {p.href
-                ? <a href={p.href} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:underline underline-offset-4 decoration-accent/50">{p.name}<Icon name="lucide:external-link" size={14} class="opacity-50" /></a>
+                ? <a href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`Open ${p.name} in new tab`} class="inline-flex items-center gap-1.5 hover:underline underline-offset-4 decoration-accent/50">{p.name}<Icon name="lucide:external-link" size={14} class="opacity-50" /></a>
                 : p.name
               }
             </h3>

@@ -16,7 +16,7 @@ This is the portfolio website of I Putu Ekajaya Awidya Putra, a full-stack engin
 - Phone: +62 878-6411-1394
 
 ## Expertise
-- Backend: Spring Boot (Java), Node.js (Hono)
+- Backend: Spring Boot (Java), Node.js (Hono), Fiber
 - Frontend: Next.js, React, Vue, Nuxt, Astro, TypeScript, Tailwind CSS
 - Database: PostgreSQL, TimescaleDB, MySQL, Redis
 - DevOps: Docker, GitHub Actions, CI/CD, Cloudflare Workers, Vercel, Google Cloud
@@ -34,7 +34,7 @@ This is the portfolio website of I Putu Ekajaya Awidya Putra, a full-stack engin
 
 ## Notable Projects
 - Profill.link: High-performance digital identity platform (Astro + Hono, Cloudflare Workers, TimescaleDB analytics)
-- Confection Information System: Full-stack web app (Next.js, deployed to Google Cloud Run)
+- Confection Information System: Full-stack web app (Next.js + Fiber, deployed to Google Cloud Run)
 
 ## Education
 - Bachelor of Information Systems, Stikom Bali Institute of Technology and Business (GPA 3.79/4.0, 2020 — 2024)
