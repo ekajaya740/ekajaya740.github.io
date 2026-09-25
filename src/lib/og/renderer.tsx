@@ -22,6 +22,9 @@ const C = {
   /** Site accent is #dd0303, but that reaches only 3.59:1 on the #141414 card,
    *  so the 22px mono eyebrow reads as blended. Same hue, lifted for the card. */
   accent: '#ff5a5a',
+  /** Site accent. Too low-contrast as thin type on the card, but fine as a solid
+   *  fill behind off-white type (4.71:1) — used for the eyebrow marker. */
+  brand: '#dd0303',
 } as const;
 
 const DISPLAY = 'Goldman';
@@ -34,19 +37,39 @@ const NAME = 'I Putu Ekajaya Awidya Putra';
 /** Brand mark, heat-gradient version (transparent field, safe on dark). */
 const MARK = '/logo-mark.png';
 
-function Eyebrow({ text }: { text: string }) {
+/** Eyebrow label. When `highlight` matches the leading text, that word is set in
+ *  a solid accent marker so the role reads before anything else. */
+function Eyebrow({ text, highlight }: { text: string; highlight?: string }) {
+  const base: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    fontFamily: MONO,
+    fontSize: 22,
+    letterSpacing: '0.3em',
+    textTransform: 'uppercase',
+    color: C.accent,
+  };
+
+  if (!highlight || !text.startsWith(highlight)) {
+    return <div style={base}>{text}</div>;
+  }
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        fontFamily: MONO,
-        fontSize: 22,
-        letterSpacing: '0.3em',
-        textTransform: 'uppercase',
-        color: C.accent,
-      }}
-    >
-      {text}
+    <div style={base}>
+      {/* Negative left margin cancels the marker's padding so the marked word
+          starts flush with the name below it. */}
+      <span
+        style={{
+          backgroundColor: C.brand,
+          color: C.fg,
+          padding: '4px 14px 6px',
+          marginLeft: -14,
+          marginRight: 10,
+        }}
+      >
+        {highlight}
+      </span>
+      <span>{text.slice(highlight.length).trimStart()}</span>
     </div>
   );
 }
@@ -99,7 +122,7 @@ function HeatCard() {
           width: '100%',
         }}
       >
-        <Eyebrow text="Full-Stack Engineer" />
+        <Eyebrow text="Full-Stack Engineer" highlight="Full-Stack" />
         <div
           style={{
             display: 'flex',
