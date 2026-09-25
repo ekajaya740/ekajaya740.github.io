@@ -19,7 +19,9 @@ const C = {
   fg: '#f5f5f5',
   muted: '#a0a0a0',
   border: '#2e2e2e',
-  accent: '#dd0303',
+  /** Site accent is #dd0303, but that reaches only 3.59:1 on the #141414 card,
+   *  so the 22px mono eyebrow reads as blended. Same hue, lifted for the card. */
+  accent: '#ff5a5a',
 } as const;
 
 const DISPLAY = 'Goldman';
