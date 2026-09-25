@@ -10,7 +10,8 @@ export interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   /** Set false on pages without the home section anchors (e.g. blog posts) so the
-   *  section-dot nav and scroll bar, which would have no targets, are not rendered. */
+   *  section-dot nav, the scroll bar, and the inline tracking script — all of which
+   *  would have no targets — are not rendered. */
   chrome?: boolean;
 }
 
