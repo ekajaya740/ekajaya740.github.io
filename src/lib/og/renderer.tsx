@@ -37,9 +37,9 @@ const NAME = 'I Putu Ekajaya Awidya Putra';
 /** Brand mark, heat-gradient version (transparent field, safe on dark). */
 const MARK = '/logo-mark.png';
 
-/** Eyebrow label. When `highlight` matches the leading text, that word is set in
- *  a solid accent marker so the role reads before anything else. */
-function Eyebrow({ text, highlight }: { text: string; highlight?: string }) {
+/** Eyebrow label. `mark` sets the whole label on a solid accent block — the home
+ *  role uses it so it reads at full accent strength over the busy mark field. */
+function Eyebrow({ text, mark }: { text: string; mark?: boolean }) {
   const base: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -50,26 +50,24 @@ function Eyebrow({ text, highlight }: { text: string; highlight?: string }) {
     color: C.accent,
   };
 
-  if (!highlight || !text.startsWith(highlight)) {
+  if (!mark) {
     return <div style={base}>{text}</div>;
   }
 
   return (
     <div style={base}>
-      {/* Negative left margin cancels the marker's padding so the marked word
-          starts flush with the name below it. */}
+      {/* The 14px left padding is cancelled by a negative margin so the marked
+          text starts flush with the name below it. */}
       <span
         style={{
           backgroundColor: C.brand,
           color: C.fg,
           padding: '4px 14px 6px',
           marginLeft: -14,
-          marginRight: 10,
         }}
       >
-        {highlight}
+        {text}
       </span>
-      <span>{text.slice(highlight.length).trimStart()}</span>
     </div>
   );
 }
@@ -122,7 +120,7 @@ function HeatCard() {
           width: '100%',
         }}
       >
-        <Eyebrow text="Full-Stack Engineer" highlight="Full-Stack" />
+        <Eyebrow text="Full-Stack Engineer" mark />
         <div
           style={{
             display: 'flex',
