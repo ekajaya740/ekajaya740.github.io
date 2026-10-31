@@ -1,43 +1,41 @@
-# Astro Starter Kit: Minimal
+# Work of Ekajaya — Turborepo
 
-```sh
-bun create astro@latest -- --template minimal
+Monorepo for [workofekajaya.com](https://workofekajaya.com) and future projects.
+
+## Layout
+
+```
+apps/
+  ekajaya740.github.io/   Astro 6 portfolio site (deployed to GitHub Pages)
+packages/                 shared packages (empty for now)
+turbo.json                Turborepo task graph
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Setup
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+git clone --recurse-submodules git@github.com:ekajaya740/ekajaya740.github.io.git
+cd ekajaya740.github.io
+bun install
+bun run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`--recurse-submodules` is required: `.agents/skills` is a submodule.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Commands
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Command | Action |
+| :-- | :-- |
+| `bun run dev` | Turbo dev for every workspace (site at `localhost:4321`) |
+| `bun run build` | Turbo build; site output in `apps/ekajaya740.github.io/dist` |
+| `bun run preview` | Preview the production build |
+| `bun run clean` | Clean task outputs and `node_modules` |
+| `bun run dev --filter=<package>` | Target a single workspace |
 
-## 🧞 Commands
+## Deploy
 
-All commands are run from the root of the project, from a terminal:
+`.github/workflows/deploy.yml` builds with Turbo and publishes
+`apps/ekajaya740.github.io/dist` to GitHub Pages on every push to `main`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Site docs: [`apps/ekajaya740.github.io/README.md`](apps/ekajaya740.github.io/README.md),
+agent conventions: [`AGENTS.md`](AGENTS.md).

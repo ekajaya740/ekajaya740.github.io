@@ -21,8 +21,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
       - name: Build site
-        uses: withastro/action@v4
+        run: bun run build --filter=ekajaya740.github.io
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/ekajaya740.github.io/dist
 
   deploy:
     environment:

@@ -1,9 +1,21 @@
-# AGENTS.md — Work of Ekajaya Portfolio
+# AGENTS.md — Work of Ekajaya (Turborepo)
+
+## Monorepo layout
+
+```
+apps/ekajaya740.github.io/   # Astro portfolio → GitHub Pages
+packages/                    # shared packages (add as needed)
+turbo.json                   # task graph + cache config
+```
+
+The site was previously the repo root; its files now live under `apps/ekajaya740.github.io/`.
+Paths in the sections below are relative to that app directory unless noted.
 
 ## Stack
 
+- **Monorepo**: Turborepo 2 + Bun workspaces (`apps/*`, `packages/*`)
 - **Runtime**: Bun (do not use npm/yarn/pnpm)
-- **Framework**: Astro 6 (`astro.config.mjs`), static output mode (SSG)
+- **Framework**: Astro 6 (`apps/ekajaya740.github.io/astro.config.mjs`), static output mode (SSG)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (NOT `@astrojs/tailwind`)
 - **React Islands**: Only `WoeHeatmap.tsx` uses `client:only="react"` — all other sections are `.astro` components
 - **Icons**: `astro-icon` with `@iconify-json/lucide` — icons are inlined as SVG at build time. Use `<Icon name="lucide:icon-name" size={16} />` from `astro-icon/components`. New icons must be added to the `include` list in `astro.config.mjs`.
@@ -12,13 +24,17 @@
 
 ## Commands
 
+Run from the repo root:
+
 ```bash
-bun dev          # Dev server (localhost:4321)
-bun run build    # SSG build → dist/
-bun run preview  # Preview production build
+bun install                                                   # install all workspaces
+bun run dev                                                   # turbo dev (localhost:4321)
+bun run build                                                 # turbo build → apps/ekajaya740.github.io/dist
+bun run dev --filter=ekajaya740.github.io                     # dev one app
+bun run --cwd apps/ekajaya740.github.io astro ...             # Astro CLI passthrough
 ```
 
-No test runner configured. No linter configured.
+No test runner configured. No linter configured. `astro check` is unavailable: `@astrojs/check` needs the TypeScript 6 programmatic API.
 
 ## Architecture
 
