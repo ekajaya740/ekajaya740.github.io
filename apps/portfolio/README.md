@@ -1,4 +1,4 @@
-# ekajaya740.github.io
+# portfolio
 
 Astro 6 portfolio site for Work of Ekajaya, a workspace in the root Turborepo.
 
@@ -8,8 +8,8 @@ From the repo root:
 
 ```bash
 bun install
-bun run dev --filter=ekajaya740.github.io   # http://localhost:4321
-bun run build --filter=ekajaya740.github.io # → apps/ekajaya740.github.io/dist
+bun run dev --filter=portfolio   # http://localhost:4321
+bun run build --filter=portfolio # → apps/portfolio/dist
 ```
 
 Or from this directory: `bun run dev`, `bun run build`, `bun run preview`.

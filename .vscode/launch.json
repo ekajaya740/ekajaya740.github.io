@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "bun run --cwd apps/ekajaya740.github.io dev",
+      "command": "bun run --cwd apps/portfolio dev",
       "name": "Development server",
       "request": "launch",
       "type": "node-terminal"

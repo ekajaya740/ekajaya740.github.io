@@ -38,12 +38,12 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build site
-        run: bun run build --filter=ekajaya740.github.io
+        run: bun run build --filter=portfolio
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/ekajaya740.github.io/dist
+          path: apps/portfolio/dist
 
   deploy:
     environment:
