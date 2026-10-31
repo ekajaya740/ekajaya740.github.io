@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "ekajaya740.github.io",
+      "name": "portfolio-monorepo",
       "devDependencies": {
         "turbo": "^2.11.10",
       },
