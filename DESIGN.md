@@ -8,6 +8,7 @@ colors:
   foreground: "#f5f5f5"
   card: "#1c1c1c"
   border: "#2e2e2e"
+  secondary: "#1e1e1e"
   muted: "#2a2a2a"
   muted-foreground: "#a0a0a0"
   accent: "#dd0303"
@@ -80,7 +81,7 @@ components:
     padding: 12px
     height: 44px
   tag-pill:
-    backgroundColor: "{colors.muted}"
+    backgroundColor: "{colors.secondary}"
     textColor: "{colors.muted-foreground}"
     typography: "{typography.code-label}"
     rounded: "{rounded.full}"
@@ -141,8 +142,10 @@ whose only appearance is accent.
 
 - **Background (#141414):** the only page field. Every section sits on it.
 - **Foreground (#f5f5f5):** all primary text. Headings and body both.
-- **Muted (#2a2a2a):** pill fills. **Card (#1c1c1c)** is defined and used only as the shader's
-  backdrop; no DOM surface is a card color, because cards are outlines, not raised fills.
+- **Secondary (#1e1e1e):** the only raised surface — pill fills and secondary-button hover.
+  **Card (#1c1c1c)** is defined and used only as the shader's backdrop; no DOM surface is a
+  card color, because cards are outlines, not raised fills. **Muted (#2a2a2a)** is defined by
+  the shadcn token set and currently has no use; prefer `secondary` for any new raised fill.
 - **Border (#2e2e2e):** the hairline that separates sections. One-pixel rules, never fills.
 - **Muted-foreground (#a0a0a0):** secondary prose, metadata. Everything that is true but not
   the point.
@@ -219,8 +222,8 @@ add a drop shadow, or place it inside a badge.
 
 - **`button-primary`** — light fill, dark text, one per view: the hero's "Explore" and the
   mail action in Contact. Everything else on the page is secondary.
-- **`button-secondary`** — outlined in `border`, transparent fill, hover fills `muted` and
-  brightens the border. Any number may appear.
+- **`button-secondary`** — outlined in `border`, transparent fill, hover fills `secondary`
+(#1e1e1e) and brightens the border to `foreground`. Any number may appear.
 - **`tag-pill`** — mono, uppercase-ish, `4px`/`8px` padding, full radius. Used for skills and
   stacks. A tag is never clickable and never accent-colored.
 - **`section-eyebrow`** — the site's most repeated motif. Mono, `0.3em` tracking, uppercase,
