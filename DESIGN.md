@@ -204,8 +204,9 @@ Anywhere else, a drop shadow is the fastest way to make this site look like gene
 ## Shapes
 
 Rounded corners are functional, not decorative: `8px` on buttons and inputs, `12px` on
-mid-size surfaces, `16px` on cards, full pills only for tags. Nothing is squared off and
-nothing is a large soft blob.
+mid-size surfaces, `16px` on cards, full pills only for tags. The hero's inline "Explore" and
+"View work" links are the one drift: they carry a 6px fallback radius. Treat that as debt, not
+a fourth token. Nothing is squared off and nothing is a large soft blob.
 
 The site's geometry is otherwise hard-edged: hairlines, tight circles in the dot nav, a
 rectangular heat field. Keep those hard edges — the contrast against rounded cards is
@@ -215,8 +216,8 @@ The **monogram** is a hard-edged `W`: no stroke, no outline, flat fill, one shar
 through the lower-right circle. It ships four ways and never gains a fifth — flat `#1C1C1C` on
 transparency for the shader mask (`logo.webp`), flat `#1C1C1C` on a white tile (`logo.svg`),
 heat gradient on transparency for the standalone mark (`logo-mark.svg` / `.png`, used in OG
-cards), and the same dark mark on white for favicons. Fill only; do not round it, outline it,
-add a drop shadow, or place it inside a badge.
+cards). The favicons are raster copies of the mark, not a fourth colorway. Fill only; do not
+round it, outline it, add a drop shadow, or place it inside a badge.
 
 ## Components
 
@@ -235,10 +236,12 @@ add a drop shadow, or place it inside a badge.
 - **`project-card`** — bordered `16px` card, title left and metadata baseline-aligned right,
   hover turns the border and the title accent.
 
-Every interactive element clears `44px` of touch height. Hover states that swap a color use
-Tailwind's default `transition-colors` (150ms); only the dot nav's label slide and dot fade
-run at `300ms`. Do not lengthen the fast ones — a 300ms border swap feels laggy on a card.
-Press states compress to `scale(0.96)` and never change color.
+Contact's three buttons enforce `min-h-[44px]`. The hero's inline links measure roughly 41px
+from padding and line height — the one place below the touch target; fix there, not by lowering
+the standard. Hover states that swap a color use Tailwind's default `transition-colors` (150ms);
+only the dot nav's label slide and dot fade run at `300ms`. Do not lengthen the fast ones — a
+300ms border swap feels laggy on a card. Press states compress to `scale(0.96)` and never change
+color.
 
 ## Do's and Don'ts
 
