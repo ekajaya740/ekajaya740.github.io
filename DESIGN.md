@@ -237,10 +237,10 @@ inside a badge.
 - **`project-card`** — bordered `16px` card, title left and metadata baseline-aligned right,
   hover turns the border and the title accent.
 
-The four Contact actions and the hero's CTAs are the only padding-built tap targets; inline
-prose links are exempt. The hero's inline links reach ~46px from padding and line height, and
-Contact's four buttons enforce `min-h-[44px]`. Hover states that swap a color use Tailwind's
-default `transition-colors` (150ms);
+The hero and Contact CTAs are the two padding-built tap-target clusters; inline prose links are
+exempt. Hero CTAs reach ~46px from padding and line height, Contact's four buttons enforce
+`min-h-[44px]`, and the dot-nav anchors clear 44px via `p-5`. Hover states that swap a color use
+Tailwind's default `transition-colors` (150ms);
 only the dot nav's label slide and dot fade run at `300ms`. Do not lengthen the fast ones — a
 300ms border swap feels laggy on a card. Press states compress to `scale(0.96)` and never change
 color.
